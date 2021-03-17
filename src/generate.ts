@@ -32,7 +32,7 @@ const readAndGenerateShex = async (file: string, outDir?: string) => {
   );
   const shapeSchema = parser.parse(shapeFile);
   const types = TypescriptVisitor.visitSchema(shapeSchema);
-  await writeShapeFile(file, JSON.stringify(types), outDir);
+  await writeShapeFile(file, types, outDir);
 };
 
 const writeShapeFile = (file: string, content: string, outDir?: string) => {
@@ -44,6 +44,7 @@ const writeShapeFile = (file: string, content: string, outDir?: string) => {
     writeFile(
       path.join(generatedDir, `${getFileName(file)}.ts`),
       content,
+      "binary",
       (err) => (err ? reject(err) : resolve())
     );
   });

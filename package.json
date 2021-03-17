@@ -5,7 +5,8 @@
   "main": "index.js",
   "scripts": {
     "build": "tsc",
-    "test": "yarn build && rimraf ./test/generated && mkdir test/generated && ts-node test/generate.test.ts"
+    "develop": "concurrently \"yarn build -w\" \"nodemon ./lib\"",
+    "test": "rimraf ./test/generated && mkdir test/generated && ts-node test/generate.test.ts"
   },
   "author": "Ludwig Schubert",
   "license": "GPL-3.0",
@@ -16,6 +17,8 @@
   },
   "devDependencies": {
     "@types/node": "^14.14.35",
+    "concurrently": "^6.0.0",
+    "nodemon": "^2.0.7",
     "rimraf": "^3.0.2",
     "ts-node": "^9.1.1",
     "typescript": "^4.2.3"
