@@ -1,3 +1,8 @@
+import camelcase from "camelcase";
+import path from "path";
+
+const ns = require("own-namespace")();
+
 const ShExUtil = require("@shexjs/core").Util;
 
 const _visitor = ShExUtil.Visitor();
@@ -41,10 +46,49 @@ _visitor._visitValue = function (v: any[]) {
   return Array.isArray(v) ? (v.length > 1 ? v.join("\n") : v.join("")) : v;
 };
 
+_visitor.visitTripleConstraint = function (expr: any) {
+  const visited = maybeGenerate(this, expr, [
+    "id",
+    "inverse",
+    "predicate",
+    "valueExpr",
+    "min",
+    "max",
+    "onShapeExpression",
+    "annotations",
+    "semActs",
+  ]);
+  const comment = visited.annotations?.find(
+    (annotation: any) => annotation.predicate === ns.rdfs("comment")
+  );
+
+  const predicateUrl = new URL(visited.predicate);
+
+  return `${
+    camelcase(predicateUrl.hash === ""
+      ? path.parse(predicateUrl.pathname).name
+      : predicateUrl.hash.replace(/#+/, ""))
+  }: ${generateTsType(visited.valueExpr)} ${
+    comment ? "// " + comment.object.value : ""
+  }`;
+};
+
+_visitor._visitGroup = function (expr: any) {
+  const visited = maybeGenerate(this, expr, [
+    "id",
+    "min",
+    "max",
+    "onShapeExpression",
+    "annotations",
+    "semActs",
+  ]);
+  return visited;
+};
+
 _visitor.visitShape = function (shape: any) {
   ShExUtil._expect(shape, "type", "Shape");
 
-  const shapeDeclaration = maybeGenerate(this, shape, [
+  const visited = maybeGenerate(this, shape, [
     "id",
     "abstract",
     "extends",
@@ -55,26 +99,54 @@ _visitor.visitShape = function (shape: any) {
     "annotations",
   ]);
 
-  console.debug(shapeDeclaration);
-
-  return shapeDeclaration.expression?.expressions
-    ? shapeDeclaration.expression?.expressions.length > 1
-      ? shapeDeclaration.expression.expressions.join("\n")
-      : shapeDeclaration.expression.expressions.join("")
-    : '';
+  return visited.expression?.expressions
+    ? visited.expression?.expressions.length > 1
+      ? visited.expression.expressions.join("\n\t")
+      : visited.expression.expressions.join("")
+    : "";
 };
 
 _visitor.visitShapes = function (shapes: any[]) {
   if (shapes === undefined) return undefined;
   return shapes.map(
     (shapeExpr: any) => `export type ${new URL(shapeExpr?.id).hash.replace(
-      "#",
+      /#+/,
       ""
     )} = {
     ${this.visitShapeDecl(shapeExpr)}
-}`
+}\n`
   );
 };
+
+function generateTsType(valueExpr: any) {
+  var type = '';
+  if (
+    valueExpr?.nodeKind === "iri" ||
+    valueExpr?.nodeKind === "literal" ||
+    valueExpr?.datatype === ns.xsd("string")
+  ) {
+    type = "string";
+  } else if (valueExpr.datatype === ns.xsd('integer')) {
+    type = "number";
+  } else if (valueExpr.datatype === ns.xsd('dateTime')) {
+    type = "Date";
+  } else if (valueExpr.datatype) {
+    type = valueExpr?.datatype;
+  } else if (valueExpr.values) {
+    type = valueExpr?.values.length > 1
+      ? `[${valueExpr?.values
+          .map((value: any, index: number) =>
+            index !== valueExpr.values.length - 1
+              ? `'${value}', `
+              : `'${value}'`
+          )
+          .join("")}]`
+      : `['${valueExpr.values[0]}']`;
+  } else if (typeof valueExpr === 'string') {
+    type = new URL(valueExpr).hash.replace(/#+/, ""))
+  }
+  return type + ';'
+}
 
 function maybeGenerate(Visitor: any, obj: any, members: string[]) {
   const generated: Record<string, any> = {};

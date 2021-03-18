@@ -2,7 +2,7 @@
   "name": "shex-codegen",
   "version": "0.0.0",
   "description": "",
-  "main": "index.js",
+  "main": "lib/index.js",
   "scripts": {
     "build": "tsc",
     "develop": "concurrently \"yarn build -w\" \"nodemon ./lib\"",
@@ -13,12 +13,14 @@
   "dependencies": {
     "@shexjs/core": "^1.0.0-alpha.10",
     "@shexjs/parser": "^1.0.0-alpha.10",
+    "camelcase": "^6.2.0",
     "findit": "^2.0.0"
   },
   "devDependencies": {
     "@types/node": "^14.14.35",
     "concurrently": "^6.0.0",
     "nodemon": "^2.0.7",
+    "own-namespace": "^0.4.5",
     "rimraf": "^3.0.2",
     "ts-node": "^9.1.1",
     "typescript": "^4.2.3"
