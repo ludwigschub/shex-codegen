@@ -64,13 +64,19 @@ _visitor.visitTripleConstraint = function (expr: any) {
 
   const predicateUrl = new URL(visited.predicate);
 
-  return `${
-    camelcase(predicateUrl.hash === ""
+  const required = visited.min > 0;
+
+  const multiple = visited.max === -1;
+
+  const type = generateTsType(visited.valueExpr);
+
+  return `${camelcase(
+    predicateUrl.hash === ""
       ? path.parse(predicateUrl.pathname).name
-      : predicateUrl.hash.replace(/#+/, ""))
-  }: ${generateTsType(visited.valueExpr)} ${
-    comment ? "// " + comment.object.value : ""
-  }`;
+      : predicateUrl.hash.replace(/#+/, "")
+  )}${required ? "?" : ""}: ${generateTsType(visited.valueExpr)}${
+    multiple ? ` | ${type}[]` : ""
+  }; ${comment ? "// " + comment.object.value : ""}`;
 };
 
 _visitor._visitGroup = function (expr: any) {
@@ -119,21 +125,20 @@ _visitor.visitShapes = function (shapes: any[]) {
 };
 
 function generateTsType(valueExpr: any) {
-  var type = '';
   if (
     valueExpr?.nodeKind === "iri" ||
     valueExpr?.nodeKind === "literal" ||
     valueExpr?.datatype === ns.xsd("string")
   ) {
-    type = "string";
-  } else if (valueExpr.datatype === ns.xsd('integer')) {
-    type = "number";
-  } else if (valueExpr.datatype === ns.xsd('dateTime')) {
-    type = "Date";
+    return "string";
+  } else if (valueExpr.datatype === ns.xsd("integer")) {
+    return "number";
+  } else if (valueExpr.datatype === ns.xsd("dateTime")) {
+    return "Date";
   } else if (valueExpr.datatype) {
-    type = valueExpr?.datatype;
+    return valueExpr?.datatype;
   } else if (valueExpr.values) {
-    type = valueExpr?.values.length > 1
+    return valueExpr?.values.length > 1
       ? `[${valueExpr?.values
           .map((value: any, index: number) =>
             index !== valueExpr.values.length - 1
@@ -142,10 +147,9 @@ function generateTsType(valueExpr: any) {
           )
           .join("")}]`
       : `['${valueExpr.values[0]}']`;
-  } else if (typeof valueExpr === 'string') {
-    type = new URL(valueExpr).hash.replace(/#+/, ""))
+  } else if (typeof valueExpr === "string") {
+    return new URL(valueExpr).hash.replace(/#+/, "");
   }
-  return type + ';'
 }
 
 function maybeGenerate(Visitor: any, obj: any, members: string[]) {
