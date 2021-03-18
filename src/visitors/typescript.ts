@@ -7,6 +7,10 @@ const ShExUtil = require("@shexjs/core").Util;
 
 const _visitor = ShExUtil.Visitor();
 
+_visitor._visitValue = function (v: any[]) {
+  return Array.isArray(v) ? (v.length > 1 ? v.join("\n") : v.join("")) : v;
+};
+
 _visitor.visitSchema = function (schema: any) {
   ShExUtil._expect(schema, "type", "Schema");
   const shapeDeclarations = this.visitShapes(schema["shapes"]);
@@ -21,29 +25,6 @@ ${this._visitShapeExprList(decl["restricts"])}
 ${this.visitShapeExpr(decl["shapeExpr"])}
 `
     : `${this.visitShapeExpr(decl, label)}`;
-};
-
-_visitor.visitShapeExpr = function (expr: any | string, label: any) {
-  if (isShapeRef(expr)) return this.visitShapeRef(expr);
-  return expr.type === "Shape"
-    ? this.visitShape(expr, label)
-    : expr.type === "NodeConstraint"
-    ? this.visitNodeConstraint(expr, label)
-    : expr.type === "ShapeAnd"
-    ? this.visitShapeAnd(expr, label)
-    : expr.type === "ShapeOr"
-    ? this.visitShapeOr(expr, label)
-    : expr.type === "ShapeNot"
-    ? this.visitShapeNot(expr, label)
-    : expr.type === "ShapeExternal"
-    ? this.visitShapeExternal(expr)
-    : (function () {
-        throw Error("unexpected shapeExpr type: " + expr.type);
-      })();
-};
-
-_visitor._visitValue = function (v: any[]) {
-  return Array.isArray(v) ? (v.length > 1 ? v.join("\n") : v.join("")) : v;
 };
 
 _visitor.visitTripleConstraint = function (expr: any) {
@@ -62,37 +43,52 @@ _visitor.visitTripleConstraint = function (expr: any) {
     (annotation: any) => annotation.predicate === ns.rdfs("comment")
   );
 
-  const predicateUrl = new URL(visited.predicate);
-
   const required = visited.min > 0;
 
   const multiple = visited.max === -1;
 
   const type = generateTsType(visited.valueExpr);
 
-  return `${camelcase(
-    predicateUrl.hash === ""
-      ? path.parse(predicateUrl.pathname).name
-      : predicateUrl.hash.replace(/#+/, "")
-  )}${required ? "?" : ""}: ${generateTsType(visited.valueExpr)}${
-    multiple ? ` | ${type}[]` : ""
-  }; ${comment ? "// " + comment.object.value : ""}`;
-};
-
-_visitor._visitGroup = function (expr: any) {
-  const visited = maybeGenerate(this, expr, [
-    "id",
-    "min",
-    "max",
-    "onShapeExpression",
-    "annotations",
-    "semActs",
-  ]);
-  return visited;
+  return `${normalizePredicate(visited.predicate)}${
+    required ? "?" : ""
+  }: ${generateTsType(visited.valueExpr)}${multiple ? ` | ${type}[]` : ""}; ${
+    comment ? "// " + comment.object.value : ""
+  }`;
 };
 
 _visitor.visitShape = function (shape: any) {
   ShExUtil._expect(shape, "type", "Shape");
+
+  shape.expression.expressions = shape.expression.expressions?.reduce(
+    (currentExpressions: any[], currentExpression: any) => {
+      const duplicate = currentExpressions?.find(
+        (expression) => expression.predicate === currentExpression.predicate
+      );
+      console.debug(currentExpressions);
+      return duplicate
+        ? [
+            ...currentExpressions.filter(
+              (expression) => expression.predicate !== duplicate.predicate
+            ),
+            {
+              ...currentExpression,
+              valueExpr:
+                duplicate?.valueExpr.values &&
+                currentExpression.valueExpr?.values
+                  ? {
+                      ...duplicate.valueExpr,
+                      values: [
+                        ...duplicate.valueExpr.values,
+                        ...currentExpression.valueExpr.values,
+                      ],
+                    }
+                  : currentExpression.valueExpr,
+            },
+          ]
+        : [...currentExpressions, currentExpression];
+    },
+    []
+  );
 
   const visited = maybeGenerate(this, shape, [
     "id",
@@ -105,10 +101,12 @@ _visitor.visitShape = function (shape: any) {
     "annotations",
   ]);
 
-  return visited.expression?.expressions
-    ? visited.expression?.expressions.length > 1
-      ? visited.expression.expressions.join("\n\t")
-      : visited.expression.expressions.join("")
+  const expressions = visited.expression?.expressions;
+
+  return expressions
+    ? expressions.length > 1
+      ? expressions.join("\n\t")
+      : expressions.join("")
     : "";
 };
 
@@ -119,7 +117,7 @@ _visitor.visitShapes = function (shapes: any[]) {
       /#+/,
       ""
     )} = {
-    ${this.visitShapeDecl(shapeExpr)}
+  ${this.visitShapeDecl(shapeExpr)}
 }\n`
   );
 };
@@ -170,10 +168,15 @@ function maybeGenerate(Visitor: any, obj: any, members: string[]) {
   return generated;
 }
 
+function normalizePredicate(predicate: string) {
+  const predicateUrl = new URL(predicate);
+  return camelcase(
+    predicateUrl.hash === ""
+      ? path.parse(predicateUrl.pathname).name
+      : predicateUrl.hash.replace(/#+/, "")
+  );
+}
+
 export const TypescriptVisitor = _visitor;
 
 export default _visitor;
-
-function isShapeRef(expr: any | string) {
-  return typeof expr === "string"; // test for JSON-LD @ID
-}
