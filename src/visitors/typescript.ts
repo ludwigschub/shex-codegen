@@ -224,7 +224,6 @@ _visitor.visitShape = function (shape: any) {
   ]);
 
   if (visited.expression.type === "TripleConstraint") {
-    console.debug(visited.expression);
     return `{
   ${visited.expression.generated}
 }`;
@@ -235,12 +234,18 @@ _visitor.visitShape = function (shape: any) {
 
 _visitor.visitShapes = function (shapes: any[]) {
   if (shapes === undefined) return undefined;
-  return shapes.map(
-    (shapeExpr: any) =>
-      `export type ${normalizeUrl(shapeExpr.id)} = ${this.visitShapeDecl(
-        shapeExpr
-      )}\n`
-  );
+
+  return shapes.map((shapeExpr: any) => {
+    if (shapeExpr.values) {
+      return `export enum ${normalizeUrl(shapeExpr.id)} {
+  ${shapeExpr.values.map((value) => `'${value}'`).join(",\n")}
+}\n`;
+    }
+
+    return `export type ${normalizeUrl(shapeExpr.id)} = ${this.visitShapeDecl(
+      shapeExpr
+    )}\n`;
+  });
 };
 
 function generateTsType(valueExpr: any) {
