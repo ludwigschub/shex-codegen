@@ -11,10 +11,110 @@ _visitor._visitValue = function (v: any[]) {
   return Array.isArray(v) ? (v.length > 1 ? v.join("\n") : v.join("")) : v;
 };
 
+_visitor._visitGroup = function (expr: any) {
+  const visited = maybeGenerate(this, expr, [
+    "id",
+    "min",
+    "max",
+    "onShapeExpression",
+    "annotations",
+    "semActs",
+  ]);
+  return visited;
+};
+
 _visitor.visitSchema = function (schema: any) {
   ShExUtil._expect(schema, "type", "Schema");
   const shapeDeclarations = this.visitShapes(schema["shapes"]);
   return shapeDeclarations.join("\n");
+};
+
+_visitor.visitExpression = function (expr: any) {
+  if (typeof expr === "string") return this.visitInclusion(expr);
+  const visited =
+    expr.type === "TripleConstraint"
+      ? this.visitTripleConstraint(expr)
+      : expr.type === "OneOf"
+      ? this.visitOneOf(expr)
+      : expr.type === "EachOf"
+      ? this.visitEachOf(expr)
+      : null;
+  if (visited === null) throw Error("unexpected expression type: " + expr.type);
+  else return visited;
+};
+
+_visitor.visitOneOf = function (expr: any) {
+  const required = expr.min > 0;
+  const predicate = expr.expressions.find((expr: any) => expr.predicate)
+    ?.predicate;
+  if (predicate) {
+    const generated = `\t${normalizeUrl(predicate)}${
+      !required ? "?" : ""
+    }: (${expr.expressions
+      .map((expression: any, index: number) => {
+        let type;
+        if (expression.type === "EachOf") {
+          type = this.visitEachOf(expression);
+        } else if (expression.type === "OneOf") {
+          type = this.visitOneOf(expression);
+        } else {
+          type = generateTsType(expression.valueExpr);
+        }
+        return `${type}${index === expr.expressions.length - 1 ? "" : " | "}`;
+      })
+      .join("")})`;
+    return this._maybeSet(
+      expr,
+      Object.assign("id" in expr ? { id: null, generated } : { generated }, {
+        type: expr.type,
+      }),
+      "expr",
+      ["id", "min", "max", "onShapeExpression", "annotations", "semActs"],
+      ["expressions"]
+    );
+  } else {
+    return "lala";
+  }
+};
+
+_visitor.visitEachOf = function (expr: any) {
+  const generated = `{
+${expr.expressions
+  .map((expression: any) => {
+    const required = expression.min > 0;
+    const predicate = expression.predicate;
+
+    if (expression.type === "TripleConstraint") {
+      return `\t${this.visitTripleConstraint(expression).generated}`;
+    }
+
+    let type: any = {};
+    if (expression.type === "EachOf") {
+      type = this.visitEachOf(expression);
+    } else if (expression.type === "OneOf") {
+      type = this.visitOneOf(expression);
+    }
+
+    if (predicate) {
+      return `${normalizeUrl(predicate)}${!required ? "?" : ""}: ${
+        type.generated
+      }`;
+    } else {
+      return `${type.generated};`;
+    }
+  })
+  .join("\n")}
+}`;
+
+  return this._maybeSet(
+    expr,
+    Object.assign("id" in expr ? { id: null, generated } : { generated }, {
+      type: expr.type,
+    }),
+    "expr",
+    ["id", "min", "max", "onShapeExpression", "annotations", "semActs"],
+    ["expressions"]
+  );
 };
 
 _visitor.visitShapeDecl = function (decl: any, label: string) {
@@ -39,6 +139,7 @@ _visitor.visitTripleConstraint = function (expr: any) {
     "annotations",
     "semActs",
   ]);
+
   const comment = visited.annotations?.find(
     (annotation: any) => annotation.predicate === ns.rdfs("comment")
   );
@@ -49,11 +150,33 @@ _visitor.visitTripleConstraint = function (expr: any) {
 
   const type = generateTsType(visited.valueExpr);
 
-  return `${normalizePredicate(visited.predicate)}${
-    required ? "?" : ""
+  const generated = `${normalizeUrl(visited.predicate)}${
+    !required ? "?" : ""
   }: ${generateTsType(visited.valueExpr)}${multiple ? ` | ${type}[]` : ""}; ${
     comment ? "// " + comment.object.value : ""
-  }`;
+  }`.trim();
+
+  return this._maybeSet(
+    expr,
+    Object.assign(
+      // pre-declare an id so it sorts to the top
+      "id" in expr ? { id: null, generated } : { generated },
+      { type: "TripleConstraint" }
+    ),
+    "TripleConstraint",
+    [
+      "id",
+      "inverse",
+      "predicate",
+      "valueExpr",
+      "min",
+      "max",
+      "onShapeExpression",
+      "annotations",
+      "semActs",
+    ],
+    ["expressions"]
+  );
 };
 
 _visitor.visitShape = function (shape: any) {
@@ -64,8 +187,7 @@ _visitor.visitShape = function (shape: any) {
       const duplicate = currentExpressions?.find(
         (expression) => expression.predicate === currentExpression.predicate
       );
-      console.debug(currentExpressions);
-      return duplicate
+      return duplicate && duplicate.valueExpr && currentExpression.valueExpr
         ? [
             ...currentExpressions.filter(
               (expression) => expression.predicate !== duplicate.predicate
@@ -73,7 +195,7 @@ _visitor.visitShape = function (shape: any) {
             {
               ...currentExpression,
               valueExpr:
-                duplicate?.valueExpr.values &&
+                duplicate.valueExpr?.values &&
                 currentExpression.valueExpr?.values
                   ? {
                       ...duplicate.valueExpr,
@@ -101,24 +223,23 @@ _visitor.visitShape = function (shape: any) {
     "annotations",
   ]);
 
-  const expressions = visited.expression?.expressions;
+  if (visited.expression.type === "TripleConstraint") {
+    console.debug(visited.expression);
+    return `{
+  ${visited.expression.generated}
+}`;
+  }
 
-  return expressions
-    ? expressions.length > 1
-      ? expressions.join("\n\t")
-      : expressions.join("")
-    : "";
+  return visited.expression?.generated;
 };
 
 _visitor.visitShapes = function (shapes: any[]) {
   if (shapes === undefined) return undefined;
   return shapes.map(
-    (shapeExpr: any) => `export type ${new URL(shapeExpr?.id).hash.replace(
-      /#+/,
-      ""
-    )} = {
-  ${this.visitShapeDecl(shapeExpr)}
-}\n`
+    (shapeExpr: any) =>
+      `export type ${normalizeUrl(shapeExpr.id)} = ${this.visitShapeDecl(
+        shapeExpr
+      )}\n`
   );
 };
 
@@ -146,7 +267,13 @@ function generateTsType(valueExpr: any) {
           .join("")}]`
       : `['${valueExpr.values[0]}']`;
   } else if (typeof valueExpr === "string") {
-    return new URL(valueExpr).hash.replace(/#+/, "");
+    try {
+      return normalizeUrl(valueExpr);
+    } catch {
+      return valueExpr
+        .trim()
+        .substr(valueExpr.lastIndexOf(":") + 1, valueExpr.length - 1);
+    }
   }
 }
 
@@ -168,8 +295,8 @@ function maybeGenerate(Visitor: any, obj: any, members: string[]) {
   return generated;
 }
 
-function normalizePredicate(predicate: string) {
-  const predicateUrl = new URL(predicate);
+function normalizeUrl(url: string) {
+  const predicateUrl = new URL(url);
   return camelcase(
     predicateUrl.hash === ""
       ? path.parse(predicateUrl.pathname).name
