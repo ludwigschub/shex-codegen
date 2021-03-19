@@ -11,42 +11,33 @@ _visitor._visitValue = function (v: any[]) {
   return Array.isArray(v) ? (v.length > 1 ? v.join("\n") : v.join("")) : v;
 };
 
-_visitor._visitGroup = function (expr: any) {
-  const visited = maybeGenerate(this, expr, [
-    "id",
-    "min",
-    "max",
-    "onShapeExpression",
-    "annotations",
-    "semActs",
-  ]);
-  return visited;
-};
-
 _visitor.visitSchema = function (schema: any) {
   ShExUtil._expect(schema, "type", "Schema");
-  const shapeDeclarations = this.visitShapes(schema["shapes"]);
+  const shapeDeclarations = this.visitShapes(
+    schema["shapes"],
+    schema._prefixes
+  );
   return shapeDeclarations.join("\n");
 };
 
-_visitor.visitExpression = function (expr: any, id?: string) {
+_visitor.visitExpression = function (expr: any, context?: any) {
   if (typeof expr === "string") return this.visitInclusion(expr);
   const visited =
     expr.type === "TripleConstraint"
-      ? this.visitTripleConstraint(expr, id)
+      ? this.visitTripleConstraint(expr, context)
       : expr.type === "OneOf"
-      ? this.visitOneOf(expr, id)
+      ? this.visitOneOf(expr, context)
       : expr.type === "EachOf"
-      ? this.visitEachOf(expr, id)
+      ? this.visitEachOf(expr, context)
       : null;
   if (visited === null) throw Error("unexpected expression type: " + expr.type);
   else return visited;
 };
 
-_visitor.visitOneOf = function (expr: any, id?: string) {
+_visitor.visitOneOf = function (expr: any, context?: any) {
   const visited = expr.expressions.map((expression: any) => {
     if (expression.type === "TripleConstraint") {
-      return this.visitTripleConstraint(expression, id);
+      return this.visitTripleConstraint(expression, context);
     }
 
     if (expression.type === "EachOf") {
@@ -86,10 +77,10 @@ _visitor.visitOneOf = function (expr: any, id?: string) {
   );
 };
 
-_visitor.visitEachOf = function (expr: any, id?: string) {
+_visitor.visitEachOf = function (expr: any, context?: any) {
   const visited = expr.expressions.map((expression: any) => {
     if (expression.type === "TripleConstraint") {
-      return this.visitTripleConstraint(expression, id);
+      return this.visitTripleConstraint(expression, context);
     }
 
     if (expression.type === "EachOf") {
@@ -139,7 +130,7 @@ ${this.visitShapeExpr(decl["shapeExpr"])}
     : `${this.visitShapeExpr(decl, label)}`;
 };
 
-_visitor.visitTripleConstraint = function (expr: any, id?: string) {
+_visitor.visitTripleConstraint = function (expr: any, context?: any) {
   const visited = maybeGenerate(this, expr, [
     "id",
     "inverse",
@@ -164,11 +155,12 @@ _visitor.visitTripleConstraint = function (expr: any, id?: string) {
   let type = "";
   if (visited.valueExpr.values) {
     type = generateEnumName(
-      id as string,
+      context.id as string,
       normalizeUrl(visited.predicate, true)
     );
     inlineEnum = `export enum ${type} ${generateEnumValues(
-      visited.valueExpr.values
+      visited.valueExpr.values,
+      context.prefixes
     )}`;
   } else {
     type = generateTsType(visited.valueExpr);
@@ -265,27 +257,41 @@ ${inlineEnums}`
     : generated;
 };
 
-_visitor.visitShapes = function (shapes: any[]) {
+_visitor.visitShapes = function (shapes: any[], prefixes: any) {
   if (shapes === undefined) return undefined;
 
   return shapes.map((shapeExpr: any) => {
     if (shapeExpr.values) {
       return `export enum ${generateEnumName(
         shapeExpr.id
-      )} ${generateEnumValues(shapeExpr.values)}\n`;
+      )} ${generateEnumValues(shapeExpr.values, prefixes)}\n`;
     }
 
     return `export type ${normalizeUrl(
       shapeExpr.id,
       true
-    )} = ${this.visitShapeDecl(shapeExpr)}\n`;
+    )} = ${this.visitShapeDecl({ ...shapeExpr, prefixes: prefixes })}\n`;
   });
 };
 
-function generateEnumValues(values: any) {
+function generateEnumValues(values: any, prefixes: any) {
   return `{
 ${values
-  .map((value: string) => `\t${normalizeUrl(value)} = '${value}'`)
+  .map((value: any, _index: number, values: any[]) => {
+    let normalizedValue = normalizeUrl(value, true);
+    if (
+      values.find(
+        (otherValue) =>
+          normalizeUrl(otherValue, true) === normalizedValue &&
+          otherValue !== value
+      )
+    ) {
+      normalizedValue = normalizeUrl(value, false, normalizedValue, prefixes);
+      return { name: normalizedValue, value: value };
+    }
+    return { name: normalizedValue, value: value };
+  })
+  .map((value: any) => `\t${value.name} = '${value.value}'`)
   .join(",\n")}
 }`;
 }
@@ -327,7 +333,10 @@ function maybeGenerate(Visitor: any, obj: any, members: string[]) {
       if (typeof f !== "function") {
         throw Error(methodName + " not found in Visitor");
       }
-      var t = f.call(Visitor, obj[member], obj?.id);
+      var t = f.call(Visitor, obj[member], {
+        id: obj?.id,
+        prefixes: obj?.prefixes,
+      });
       if (t !== undefined) {
         generated[member] = t;
       }
@@ -336,16 +345,38 @@ function maybeGenerate(Visitor: any, obj: any, members: string[]) {
   return generated;
 }
 
-function normalizeUrl(url: string, capitalize?: boolean) {
-  const predicateUrl = new URL(url);
-  const normalized = camelcase(
-    predicateUrl.hash === ""
-      ? path.parse(predicateUrl.pathname).name
-      : predicateUrl.hash.replace(/#+/, "")
+function normalizeUrl(
+  url: string,
+  capitalize?: boolean,
+  not?: string,
+  prefixes?: any
+) {
+  const urlObject = new URL(url);
+  let normalized = camelcase(
+    urlObject.hash === ""
+      ? path.parse(urlObject.pathname).name
+      : urlObject.hash.replace(/#+/, "")
   );
-  return capitalize
-    ? normalized.replace(/^\w/, (c) => c.toUpperCase())
-    : normalized;
+
+  if (not && normalized.toLowerCase() === not.toLowerCase()) {
+    const namespaceUrl = url.replace(
+      urlObject.hash === ""
+        ? path.parse(urlObject.pathname).name
+        : urlObject.hash,
+      ""
+    );
+    const namespacePrefix = Object.keys(prefixes).find(
+      (key) => prefixes[key] === namespaceUrl
+    );
+    normalized =
+      namespacePrefix + normalized.replace(/^\w/, (c) => c.toUpperCase());
+  }
+
+  if (capitalize) {
+    return normalized.replace(/^\w/, (c) => c.toUpperCase());
+  }
+
+  return normalized;
 }
 
 export const TypescriptVisitor = _visitor;
