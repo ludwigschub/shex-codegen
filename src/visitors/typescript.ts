@@ -37,19 +37,39 @@ _visitor.visitExpression = function (expr: any, context?: any) {
 _visitor.visitOneOf = function (expr: any, context?: any) {
   const visited = expr.expressions.map((expression: any) => {
     if (expression.type === "TripleConstraint") {
-      return this.visitTripleConstraint(expression, context);
+      const visitedExpression = this.visitTripleConstraint(expression, context);
+      visitedExpression.generated = visitedExpression.generated
+        ? `{ ${visitedExpression.generated} }`
+        : "";
+      visitedExpression.extra = visitedExpression.extra
+        ? `{ ${visitedExpression.extra} }`
+        : "";
+      return visitedExpression;
     }
 
     if (expression.type === "EachOf") {
-      return this.visitEachOf(expression);
+      return this.visitEachOf(expression, context);
     } else if (expression.type === "OneOf") {
-      return this.visitOneOf(expression);
+      return this.visitOneOf(expression, context);
     }
   });
 
-  const generated = `(${visited
+  const generated = `${visited
+    .filter((expression: any) => !!expression.generated)
     .map((expression: any) => expression.generated)
-    .join(" | ")})`;
+    .join(" | ")}`;
+
+  const extras = visited
+    .reduce(
+      (extras: any[], expression: any) =>
+        expression.extra
+          ? [...extras, expression.extra]
+          : expression.extras
+          ? [...extras, expression.extras]
+          : extras,
+      []
+    )
+    .join(" | ");
 
   const inlineEnums = visited
     .reduce(
@@ -65,8 +85,8 @@ _visitor.visitOneOf = function (expr: any, context?: any) {
     expr,
     Object.assign(
       "id" in expr
-        ? { id: null, generated, inlineEnums }
-        : { generated, inlineEnums },
+        ? { id: null, generated, inlineEnums, extras }
+        : { generated, inlineEnums, extras },
       {
         type: expr.type,
       }
@@ -84,15 +104,30 @@ _visitor.visitEachOf = function (expr: any, context?: any) {
     }
 
     if (expression.type === "EachOf") {
-      return this.visitEachOf(expression);
+      return this.visitEachOf(expression, context);
     } else if (expression.type === "OneOf") {
-      return this.visitOneOf(expression);
+      return this.visitOneOf(expression, context);
     }
   });
 
   const generated = `{
-  ${visited.map((expression: any) => expression.generated).join("\n\t")}
+  ${visited
+    .filter((expression: any) => !!expression.generated)
+    .map((expression: any) => expression.generated)
+    .join("\n\t")}
 }`;
+
+  const extras = visited
+    .reduce(
+      (extras: any[], expression: any) =>
+        expression.extra
+          ? [...extras, expression.extra]
+          : expression.extras
+          ? [...extras, expression.extras]
+          : extras,
+      []
+    )
+    .join(" | ");
 
   const inlineEnums = visited
     .reduce(
@@ -108,8 +143,8 @@ _visitor.visitEachOf = function (expr: any, context?: any) {
     expr,
     Object.assign(
       "id" in expr
-        ? { id: null, generated, inlineEnums }
-        : { generated, inlineEnums },
+        ? { id: null, generated, inlineEnums, extras }
+        : { generated, inlineEnums, extras },
       {
         type: expr.type,
       }
@@ -166,19 +201,28 @@ _visitor.visitTripleConstraint = function (expr: any, context?: any) {
     type = generateTsType(visited.valueExpr);
   }
 
-  const generated = `${normalizeUrl(visited.predicate)}${
+  let generated = `${normalizeUrl(visited.predicate)}${
     !required ? "?" : ""
   }: ${type}${multiple ? ` | ${type}[]` : ""}; ${
     comment ? "// " + comment.object.value : ""
   }`.trim();
+
+  let extra;
+  if (
+    context?.extra?.includes(visited.predicate) &&
+    !visited.valueExpr.values
+  ) {
+    extra = generated;
+    generated = "";
+  }
 
   return this._maybeSet(
     expr,
     Object.assign(
       // pre-declare an id so it sorts to the top
       "id" in expr
-        ? { id: null, generated, inlineEnum }
-        : { generated, inlineEnum },
+        ? { id: null, generated, inlineEnum, extra }
+        : { generated, inlineEnum, extra },
       { type: "TripleConstraint" }
     ),
     "TripleConstraint",
@@ -236,25 +280,30 @@ _visitor.visitShape = function (shape: any) {
     "extends",
     "closed",
     "expression",
-    "extra",
     "semActs",
     "annotations",
   ]);
 
-  let generated = visited.expression.generated;
+  const extras = visited.expression.extras ?? visited.expression.extra;
+  const generated = visited.expression.generated;
+  let output = extras
+    ? generated
+      ? `${generated} & (${extras})`
+      : `${extras}`
+    : generated;
   const inlineEnums =
     visited.expression.inlineEnums ?? visited.expression.inlineEnum;
 
   if (visited.expression?.type === "TripleConstraint") {
-    generated = `{
+    output = `{
   ${visited.expression.generated}
 }`;
   }
 
   return inlineEnums
-    ? `${generated}\n
+    ? `${output}\n
 ${inlineEnums}`
-    : generated;
+    : output;
 };
 
 _visitor.visitShapes = function (shapes: any[], prefixes: any) {
@@ -317,9 +366,7 @@ function generateTsType(valueExpr: any) {
     try {
       return normalizeUrl(valueExpr, true);
     } catch {
-      return valueExpr
-        .trim()
-        .substr(valueExpr.lastIndexOf(":") + 1, valueExpr.length - 1);
+      return valueExpr;
     }
   }
 }
@@ -336,6 +383,7 @@ function maybeGenerate(Visitor: any, obj: any, members: string[]) {
       var t = f.call(Visitor, obj[member], {
         id: obj?.id,
         prefixes: obj?.prefixes,
+        extra: obj?.extra,
       });
       if (t !== undefined) {
         generated[member] = t;
