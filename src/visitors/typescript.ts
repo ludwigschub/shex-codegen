@@ -29,88 +29,100 @@ _visitor.visitSchema = function (schema: any) {
   return shapeDeclarations.join("\n");
 };
 
-_visitor.visitExpression = function (expr: any) {
+_visitor.visitExpression = function (expr: any, id?: string) {
   if (typeof expr === "string") return this.visitInclusion(expr);
   const visited =
     expr.type === "TripleConstraint"
-      ? this.visitTripleConstraint(expr)
+      ? this.visitTripleConstraint(expr, id)
       : expr.type === "OneOf"
-      ? this.visitOneOf(expr)
+      ? this.visitOneOf(expr, id)
       : expr.type === "EachOf"
-      ? this.visitEachOf(expr)
+      ? this.visitEachOf(expr, id)
       : null;
   if (visited === null) throw Error("unexpected expression type: " + expr.type);
   else return visited;
 };
 
-_visitor.visitOneOf = function (expr: any) {
-  const required = expr.min > 0;
-  const predicate = expr.expressions.find((expr: any) => expr.predicate)
-    ?.predicate;
-  if (predicate) {
-    const generated = `\t${normalizeUrl(predicate)}${
-      !required ? "?" : ""
-    }: (${expr.expressions
-      .map((expression: any, index: number) => {
-        let type;
-        if (expression.type === "EachOf") {
-          type = this.visitEachOf(expression);
-        } else if (expression.type === "OneOf") {
-          type = this.visitOneOf(expression);
-        } else {
-          type = generateTsType(expression.valueExpr);
-        }
-        return `${type}${index === expr.expressions.length - 1 ? "" : " | "}`;
-      })
-      .join("")})`;
-    return this._maybeSet(
-      expr,
-      Object.assign("id" in expr ? { id: null, generated } : { generated }, {
-        type: expr.type,
-      }),
-      "expr",
-      ["id", "min", "max", "onShapeExpression", "annotations", "semActs"],
-      ["expressions"]
-    );
-  } else {
-    return "lala";
-  }
-};
-
-_visitor.visitEachOf = function (expr: any) {
-  const generated = `{
-${expr.expressions
-  .map((expression: any) => {
-    const required = expression.min > 0;
-    const predicate = expression.predicate;
-
+_visitor.visitOneOf = function (expr: any, id?: string) {
+  const visited = expr.expressions.map((expression: any) => {
     if (expression.type === "TripleConstraint") {
-      return `\t${this.visitTripleConstraint(expression).generated}`;
+      return this.visitTripleConstraint(expression, id);
     }
 
-    let type: any = {};
     if (expression.type === "EachOf") {
-      type = this.visitEachOf(expression);
+      return this.visitEachOf(expression);
     } else if (expression.type === "OneOf") {
-      type = this.visitOneOf(expression);
+      return this.visitOneOf(expression);
     }
+  });
 
-    if (predicate) {
-      return `${normalizeUrl(predicate)}${!required ? "?" : ""}: ${
-        type.generated
-      }`;
-    } else {
-      return `${type.generated};`;
-    }
-  })
-  .join("\n")}
-}`;
+  const generated = `(${visited
+    .map((expression: any) => expression.generated)
+    .join(" | ")})`;
+
+  const inlineEnums = visited
+    .reduce(
+      (inlineEnums: any[], expression: any) =>
+        expression.inlineEnum
+          ? [...inlineEnums, expression.inlineEnum]
+          : inlineEnums,
+      []
+    )
+    .join("\n");
 
   return this._maybeSet(
     expr,
-    Object.assign("id" in expr ? { id: null, generated } : { generated }, {
-      type: expr.type,
-    }),
+    Object.assign(
+      "id" in expr
+        ? { id: null, generated, inlineEnums }
+        : { generated, inlineEnums },
+      {
+        type: expr.type,
+      }
+    ),
+    "expr",
+    ["id", "min", "max", "onShapeExpression", "annotations", "semActs"],
+    ["expressions"]
+  );
+};
+
+_visitor.visitEachOf = function (expr: any, id?: string) {
+  const visited = expr.expressions.map((expression: any) => {
+    if (expression.type === "TripleConstraint") {
+      return this.visitTripleConstraint(expression, id);
+    }
+
+    if (expression.type === "EachOf") {
+      return this.visitEachOf(expression);
+    } else if (expression.type === "OneOf") {
+      return this.visitOneOf(expression);
+    }
+  });
+
+  const generated = `{
+  ${visited.map((expression: any) => expression.generated).join("\n\t")}
+}`;
+
+  const inlineEnums = visited
+    .reduce(
+      (inlineEnums: any[], expression: any) =>
+        expression.inlineEnum
+          ? [...inlineEnums, expression.inlineEnum]
+          : inlineEnums,
+      []
+    )
+    .join("\n");
+
+  return this._maybeSet(
+    expr,
+    Object.assign(
+      "id" in expr
+        ? { id: null, generated, inlineEnums }
+        : { generated, inlineEnums },
+      {
+        type: expr.type,
+      }
+    ),
     "expr",
     ["id", "min", "max", "onShapeExpression", "annotations", "semActs"],
     ["expressions"]
@@ -127,7 +139,7 @@ ${this.visitShapeExpr(decl["shapeExpr"])}
     : `${this.visitShapeExpr(decl, label)}`;
 };
 
-_visitor.visitTripleConstraint = function (expr: any) {
+_visitor.visitTripleConstraint = function (expr: any, id?: string) {
   const visited = maybeGenerate(this, expr, [
     "id",
     "inverse",
@@ -148,11 +160,23 @@ _visitor.visitTripleConstraint = function (expr: any) {
 
   const multiple = visited.max === -1;
 
-  const type = generateTsType(visited.valueExpr);
+  let inlineEnum = "";
+  let type = "";
+  if (visited.valueExpr.values) {
+    type = generateEnumName(
+      id as string,
+      normalizeUrl(visited.predicate, true)
+    );
+    inlineEnum = `export enum ${type} ${generateEnumValues(
+      visited.valueExpr.values
+    )}`;
+  } else {
+    type = generateTsType(visited.valueExpr);
+  }
 
   const generated = `${normalizeUrl(visited.predicate)}${
     !required ? "?" : ""
-  }: ${generateTsType(visited.valueExpr)}${multiple ? ` | ${type}[]` : ""}; ${
+  }: ${type}${multiple ? ` | ${type}[]` : ""}; ${
     comment ? "// " + comment.object.value : ""
   }`.trim();
 
@@ -160,7 +184,9 @@ _visitor.visitTripleConstraint = function (expr: any) {
     expr,
     Object.assign(
       // pre-declare an id so it sorts to the top
-      "id" in expr ? { id: null, generated } : { generated },
+      "id" in expr
+        ? { id: null, generated, inlineEnum }
+        : { generated, inlineEnum },
       { type: "TripleConstraint" }
     ),
     "TripleConstraint",
@@ -223,13 +249,20 @@ _visitor.visitShape = function (shape: any) {
     "annotations",
   ]);
 
-  if (visited.expression.type === "TripleConstraint") {
-    return `{
+  let generated = visited.expression.generated;
+  const inlineEnums =
+    visited.expression.inlineEnums ?? visited.expression.inlineEnum;
+
+  if (visited.expression?.type === "TripleConstraint") {
+    generated = `{
   ${visited.expression.generated}
 }`;
   }
 
-  return visited.expression?.generated;
+  return inlineEnums
+    ? `${generated}\n
+${inlineEnums}`
+    : generated;
 };
 
 _visitor.visitShapes = function (shapes: any[]) {
@@ -237,16 +270,29 @@ _visitor.visitShapes = function (shapes: any[]) {
 
   return shapes.map((shapeExpr: any) => {
     if (shapeExpr.values) {
-      return `export enum ${normalizeUrl(shapeExpr.id)} {
-  ${shapeExpr.values.map((value) => `'${value}'`).join(",\n")}
-}\n`;
+      return `export enum ${generateEnumName(
+        shapeExpr.id
+      )} ${generateEnumValues(shapeExpr.values)}\n`;
     }
 
-    return `export type ${normalizeUrl(shapeExpr.id)} = ${this.visitShapeDecl(
-      shapeExpr
-    )}\n`;
+    return `export type ${normalizeUrl(
+      shapeExpr.id,
+      true
+    )} = ${this.visitShapeDecl(shapeExpr)}\n`;
   });
 };
+
+function generateEnumValues(values: any) {
+  return `{
+${values
+  .map((value: string) => `\t${normalizeUrl(value)} = '${value}'`)
+  .join(",\n")}
+}`;
+}
+
+function generateEnumName(name: string, suffix = "") {
+  return normalizeUrl(name, true) + suffix;
+}
 
 function generateTsType(valueExpr: any) {
   if (
@@ -255,25 +301,15 @@ function generateTsType(valueExpr: any) {
     valueExpr?.datatype === ns.xsd("string")
   ) {
     return "string";
-  } else if (valueExpr.datatype === ns.xsd("integer")) {
+  } else if (valueExpr?.datatype === ns.xsd("integer")) {
     return "number";
-  } else if (valueExpr.datatype === ns.xsd("dateTime")) {
+  } else if (valueExpr?.datatype === ns.xsd("dateTime")) {
     return "Date";
-  } else if (valueExpr.datatype) {
+  } else if (valueExpr?.datatype) {
     return valueExpr?.datatype;
-  } else if (valueExpr.values) {
-    return valueExpr?.values.length > 1
-      ? `[${valueExpr?.values
-          .map((value: any, index: number) =>
-            index !== valueExpr.values.length - 1
-              ? `'${value}', `
-              : `'${value}'`
-          )
-          .join("")}]`
-      : `['${valueExpr.values[0]}']`;
   } else if (typeof valueExpr === "string") {
     try {
-      return normalizeUrl(valueExpr);
+      return normalizeUrl(valueExpr, true);
     } catch {
       return valueExpr
         .trim()
@@ -291,7 +327,7 @@ function maybeGenerate(Visitor: any, obj: any, members: string[]) {
       if (typeof f !== "function") {
         throw Error(methodName + " not found in Visitor");
       }
-      var t = f.call(Visitor, obj[member]);
+      var t = f.call(Visitor, obj[member], obj?.id);
       if (t !== undefined) {
         generated[member] = t;
       }
@@ -300,13 +336,16 @@ function maybeGenerate(Visitor: any, obj: any, members: string[]) {
   return generated;
 }
 
-function normalizeUrl(url: string) {
+function normalizeUrl(url: string, capitalize?: boolean) {
   const predicateUrl = new URL(url);
-  return camelcase(
+  const normalized = camelcase(
     predicateUrl.hash === ""
       ? path.parse(predicateUrl.pathname).name
       : predicateUrl.hash.replace(/#+/, "")
   );
+  return capitalize
+    ? normalized.replace(/^\w/, (c) => c.toUpperCase())
+    : normalized;
 }
 
 export const TypescriptVisitor = _visitor;
