@@ -166,17 +166,22 @@ ${this.visitShapeExpr(decl["shapeExpr"])}
 };
 
 _visitor.visitTripleConstraint = function (expr: any, context?: any) {
-  const visited = maybeGenerate(this, expr, [
-    "id",
-    "inverse",
-    "predicate",
-    "valueExpr",
-    "min",
-    "max",
-    "onShapeExpression",
-    "annotations",
-    "semActs",
-  ]);
+  const visited = maybeGenerate(
+    this,
+    expr,
+    [
+      "id",
+      "inverse",
+      "predicate",
+      "valueExpr",
+      "min",
+      "max",
+      "onShapeExpression",
+      "annotations",
+      "semActs",
+    ],
+    context
+  );
 
   const comment = visited.annotations?.find(
     (annotation: any) => annotation.predicate === ns.rdfs("comment")
@@ -241,7 +246,7 @@ _visitor.visitTripleConstraint = function (expr: any, context?: any) {
   );
 };
 
-_visitor.visitShape = function (shape: any) {
+_visitor.visitShape = function (shape: any, context: any) {
   ShExUtil._expect(shape, "type", "Shape");
 
   shape.expression.expressions = shape.expression.expressions?.reduce(
@@ -274,15 +279,20 @@ _visitor.visitShape = function (shape: any) {
     []
   );
 
-  const visited = maybeGenerate(this, shape, [
-    "id",
-    "abstract",
-    "extends",
-    "closed",
-    "expression",
-    "semActs",
-    "annotations",
-  ]);
+  const visited = maybeGenerate(
+    this,
+    shape,
+    [
+      "id",
+      "abstract",
+      "extends",
+      "closed",
+      "expression",
+      "semActs",
+      "annotations",
+    ],
+    context
+  );
 
   const extras = visited.expression.extras ?? visited.expression.extra;
   const generated = visited.expression.generated;
@@ -319,7 +329,7 @@ _visitor.visitShapes = function (shapes: any[], prefixes: any) {
     return `export type ${normalizeUrl(
       shapeExpr.id,
       true
-    )} = ${this.visitShapeDecl({ ...shapeExpr, prefixes: prefixes })}\n`;
+    )} = ${this.visitShapeDecl({ ...shapeExpr, prefixes: prefixes })};\n`;
   });
 };
 
@@ -340,7 +350,7 @@ ${values
     }
     return { name: normalizedValue, value: value };
   })
-  .map((value: any) => `\t${value.name} = '${value.value}'`)
+  .map((value: any) => `\t${value.name} = "${value.value}"`)
   .join(",\n")}
 }`;
 }
@@ -371,7 +381,12 @@ function generateTsType(valueExpr: any) {
   }
 }
 
-function maybeGenerate(Visitor: any, obj: any, members: string[]) {
+function maybeGenerate(
+  Visitor: any,
+  obj: any,
+  members: string[],
+  context?: any
+) {
   const generated: Record<string, any> = {};
   members.forEach(function (member) {
     var methodName = "visit" + member.charAt(0).toUpperCase() + member.slice(1);
@@ -380,11 +395,15 @@ function maybeGenerate(Visitor: any, obj: any, members: string[]) {
       if (typeof f !== "function") {
         throw Error(methodName + " not found in Visitor");
       }
-      var t = f.call(Visitor, obj[member], {
-        id: obj?.id,
-        prefixes: obj?.prefixes,
-        extra: obj?.extra,
-      });
+      var t = f.call(
+        Visitor,
+        obj[member],
+        context ?? {
+          id: obj?.id,
+          prefixes: obj?.prefixes,
+          extra: obj?.extra,
+        }
+      );
       if (t !== undefined) {
         generated[member] = t;
       }
