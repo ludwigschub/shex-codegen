@@ -1,0 +1,37 @@
+PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
+PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+PREFIX wd: <http://www.wikidata.org/entity/>
+PREFIX wdt: <http://www.wikidata.org/prop/direct/>
+
+#all non-historical sovereign states
+#SELECT ?item WHERE { ?item wdt:P31 wd:Q3624078 . OPTIONAL { ?item wdt:P576 ?end_time. } FILTER (!BOUND(?end_time)) }
+
+start = @<state>
+
+<state> EXTRA wdt:P31 {
+  wdt:P31 [wd:Q3624078]; #instance of "sovereign state" and possibly other classes;
+  wdt:P1448 LITERAL+; #has one or more official names in various languages
+  wdt:P1705 LITERAL+; #has one or more native labels
+  wdt:P487 LITERAL; #has Unicode character
+  wdt:P30 EXTRA wdt:P31 {wdt:P31 [wd:Q5107]}; #exists on a continent
+  wdt:P3896 IRI; #has geoshape
+  wdt:P935 LITERAL; #has Commons gallery
+  wdt:P373 LITERAL; #has Commons category
+  wdt:P3722 LITERAL; #has Commons maps category
+  wdt:P910 {wdt:P31 [wd:Q4167836]}; #has Wikipedia main category
+  wdt:P5125 EXTRA wdt:P31 {wdt:P31 [wd:Q26884324]}; #has Wikipedia outline article
+  wdt:P1151 {wdt:P31 [wd:Q4663903]}; #has Wikipedia portal
+  wdt:P1792 {wdt:P31 [wd:Q4167836]}; #has category of associated people
+  wdt:P1464 {wdt:P31 [wd:Q4167836]}; #has category of people born there
+  wdt:P1465 {wdt:P31 [wd:Q4167836]}; #has category of people who died there
+  wdt:P1791 {wdt:P31 [wd:Q4167836]}; #has category of people who are buried there
+  wdt:P1740 {wdt:P31 [wd:Q4167836]}; #has category of films shot there
+  wdt:P2633 {wdt:P31 [wd:Q46865913]}; #has geography article
+  wdt:P2184 {wdt:P31 [wd:Q17544377]}; #has history article
+  wdt:P948 IRI; #has page banner
+  wdt:P85 EXTRA wdt:P31 {wdt:P31 [wd:Q23691]}; #has national anthem
+  wdt:P163 EXTRA wdt:P31 {wdt:P31 [wd:Q186516]}; #has national flag
+  wdt:P237 EXTRA wdt:P31 {wdt:P31 [wd:Q645466]}; #has national coat of arms
+  wdt:P36 EXTRA wdt:P31 {wdt:P31 [wd:Q5119]}; #has capital city
+  wdt:P122 EXTRA wdt:P31 {wdt:P31 [wd:Q1307214]}; #has form of government
+}
