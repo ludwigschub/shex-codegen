@@ -1,0 +1,29 @@
+PREFIX p: <http://www.wikidata.org/prop/>
+PREFIX ps: <http://www.wikidata.org/prop/statement/>
+PREFIX pq: <http://www.wikidata.org/prop/qualifier/>
+PREFIX wd: <http://www.wikidata.org/entity/>
+PREFIX wdt: <http://www.wikidata.org/prop/direct/>
+PREFIX xsd: <http://www.w3.org/2001/XMLSchema#>
+
+start=@<#operating_system>
+
+<#operating_system> {
+# instance of; 
+    p:P31 { ps:P31 { p:P279 {ps:P279 [wd:Q9135]}+} } ;
+# license; 
+    p:P275 { ps:P275 IRI + } ;
+# developer; 
+    p:P178 { ps:P178 IRI } ? ;
+# manufacturer; 
+    p:P176 { ps:P176 IRI } ? ;
+# topic's main category; 
+    p:P910 { ps:P910 IRI } ? ;
+# Commons category;
+    p:P373 { ps:P373 xsd:string * } ? ;
+# IGDB platform ID; 
+    p:P5795 { ps:P5795 xsd:string * } ? ;
+# MobyGames platform ID; 
+    p:P5868 { ps:P5868 xsd:string * } ? ;
+# BnF ID; 
+    p:P268 {ps:P268 xsd:string * } ? ;
+}

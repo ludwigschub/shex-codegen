@@ -68,9 +68,23 @@ _visitor.visitOneOf = function (expr: any, context?: any) {
     }
 
     if (expression.type === "EachOf") {
-      return this.visitEachOf(expression, context);
+      const result = this.visitEachOf(expression, context);
+      if (
+        context?.id ===
+        "https://shaperepo.com/schemas/solidProfile##cryptocurrency"
+      ) {
+        console.debug(result, expression.type);
+      }
+      return result;
     } else if (expression.type === "OneOf") {
-      return this.visitOneOf(expression, context);
+      const result = this.visitOneOf(expression, context);
+      if (
+        context?.id ===
+        "https://shaperepo.com/schemas/solidProfile##cryptocurrency"
+      ) {
+        console.debug(result, expression.type);
+      }
+      return result;
     }
   });
 
@@ -121,9 +135,23 @@ _visitor.visitEachOf = function (expr: any, context?: any) {
     }
 
     if (expression.type === "EachOf") {
-      return this.visitEachOf(expression, context);
+      const result = this.visitEachOf(expression, context);
+      if (
+        context?.id ===
+        "https://shaperepo.com/schemas/solidProfile##cryptocurrency"
+      ) {
+        console.debug(result, expression.type);
+      }
+      return result;
     } else if (expression.type === "OneOf") {
-      return this.visitOneOf(expression, context);
+      const result = this.visitOneOf(expression, context);
+      if (
+        context?.id ===
+        "https://shaperepo.com/schemas/solidProfile##cryptocurrency"
+      ) {
+        console.debug(result, expression.type);
+      }
+      return result;
     }
   });
 
@@ -191,11 +219,29 @@ _visitor.visitTripleConstraint = function (expr: any, context?: any) {
 
   if (typeof visited.valueExpr === "string") {
     visited.typeValue = generateTsType(visited.valueExpr);
-  } else if (visited.valueExpr.typeValue) {
+  } else if (visited.valueExpr?.typeValue) {
     visited.inlineEnum = visited.valueExpr.inlineEnum;
-    visited.typeValue = visited.valueExpr.typeValue;
-  } else {
+    visited.typeValue = visited.valueExpr.values
+      ? visited.valueExpr.values
+          .map((value: string, index: number) => {
+            const otherValue = visited.valueExpr.values.find(
+              (otherValue: string, otherIndex: number) =>
+                index !== otherIndex &&
+                normalizeUrl(otherValue, true) === normalizeUrl(value, true)
+            );
+            return `${visited.valueExpr.typeValue}.${normalizeUrl(
+              value,
+              true,
+              otherValue ? normalizeUrl(otherValue, true) : "",
+              context?.prefixes
+            )}`;
+          })
+          .join(" | ")
+      : visited.valueExpr.typeValue;
+  } else if (visited.valueExpr?.generatedShape) {
     visited.typeValue = visited.valueExpr.generatedShape;
+  } else {
+    visited.typeValue = "string";
   }
 
   const comment = visited.annotations?.find(
@@ -208,7 +254,9 @@ _visitor.visitTripleConstraint = function (expr: any, context?: any) {
   const multiple = visited.max === -1;
   if (multiple) {
     visited.typeValue += ` | ${
-      visited.valueExpr.nodeKind === "iri" ? `(${visited.typeValue})` : visited.typeValue
+      visited.valueExpr?.nodeKind === "iri" || visited.valueExpr?.values
+        ? `(${visited.typeValue})`
+        : visited.typeValue
     }[]`;
   }
 
@@ -383,6 +431,11 @@ _visitor.visitShapes = function (shapes: any[], prefixes: any) {
     if (typeof shape === "string") {
       return shape;
     } else {
+      // if (
+      //   shape?.id ===
+      //   "https://shaperepo.com/schemas/solidProfile##cryptocurrency"
+      // )
+      //   console.debug(shape);
       return `export type ${normalizeUrl(shape.id, true)} = ${
         shape.generatedShape
       };\n`;
@@ -411,7 +464,7 @@ ${values
           otherValue !== value
       )
     ) {
-      normalizedValue = normalizeUrl(value, false, normalizedValue, prefixes);
+      normalizedValue = normalizeUrl(value, true, normalizedValue, prefixes);
       return { name: normalizedValue, value: value };
     }
     return { name: normalizedValue, value: value };

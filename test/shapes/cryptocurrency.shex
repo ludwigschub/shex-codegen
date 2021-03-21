@@ -1,0 +1,39 @@
+PREFIX p: <http://www.wikidata.org/prop/>
+PREFIX ps: <http://www.wikidata.org/prop/statement/>
+PREFIX pq: <http://www.wikidata.org/prop/qualifier/>
+PREFIX wd: <http://www.wikidata.org/entity/>
+PREFIX wdt: <http://www.wikidata.org/prop/direct/>
+PREFIX xsd: <http://www.w3.org/2001/XMLSchema#>
+
+# QUERY MAP: SELECT ?item WHERE {?item wdt:P31 wd:Q13479982}  LIMIT 10
+
+start=@<#cryptocurrency>
+
+<#cryptocurrency> EXTRA p:P31 {
+	# instance of
+	p:P31 { ps:P31  [wd:Q13479982] }* ;
+
+	# subclass of
+        p:P279 { ps:P279 IRI }? ;
+
+	# publication date or inception date 
+	(  p:P577 { ps:P577 xsd:dateTime } ; p:P571 { ps:P571 xsd:dateTime } ?
+	 | p:P571 { ps:P571 xsd:dateTime } ) ;
+
+	# developer
+	p:P178 { ps:P178 IRI }? ;
+
+	# creator 
+	p:P170 {ps:P170 IRI} ? ;
+
+	# uses
+	p:P2283 {ps:P2283 [wd:Q17083510 wd:Q7249984 wd:Q48834328]}+ ;
+
+	## Identifiers
+
+	# CoinMarketCap cryptocurrency ID 
+	p:P5777  . * ;
+
+	# WordLift ID
+	wdt:P6363  . * ;
+}
