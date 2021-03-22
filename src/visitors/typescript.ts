@@ -222,21 +222,28 @@ _visitor.visitTripleConstraint = function (expr: any, context?: any) {
   } else if (visited.valueExpr?.typeValue) {
     visited.inlineEnum = visited.valueExpr.inlineEnum;
     visited.typeValue = visited.valueExpr.values
-      ? visited.valueExpr.values
-          .map((value: string, index: number) => {
-            const otherValue = visited.valueExpr.values.find(
-              (otherValue: string, otherIndex: number) =>
-                index !== otherIndex &&
-                normalizeUrl(otherValue, true) === normalizeUrl(value, true)
-            );
-            return `${visited.valueExpr.typeValue}.${normalizeUrl(
-              value,
-              true,
-              otherValue ? normalizeUrl(otherValue, true) : "",
-              context?.prefixes
-            )}`;
-          })
-          .join(" | ")
+      ? visited.valueExpr.values.length > 1
+        ? `(${visited.valueExpr.values
+            .map((value: string, index: number) => {
+              const otherValue = visited.valueExpr.values.find(
+                (otherValue: string, otherIndex: number) =>
+                  index !== otherIndex &&
+                  normalizeUrl(otherValue, true) === normalizeUrl(value, true)
+              );
+              return `${visited.valueExpr.typeValue}.${normalizeUrl(
+                value,
+                true,
+                otherValue ? normalizeUrl(otherValue, true) : "",
+                context?.prefixes
+              )}`;
+            })
+            .join(" | ")})[]`
+        : `${visited.valueExpr.typeValue}.${normalizeUrl(
+            visited.valueExpr.values[0],
+            true,
+            undefined,
+            context?.prefixes
+          )}`
       : visited.valueExpr.typeValue;
   } else if (visited.valueExpr?.generatedShape) {
     visited.typeValue = visited.valueExpr.generatedShape;
@@ -254,7 +261,7 @@ _visitor.visitTripleConstraint = function (expr: any, context?: any) {
   const multiple = visited.max === -1;
   if (multiple) {
     visited.typeValue += ` | ${
-      visited.valueExpr?.nodeKind === "iri" || visited.valueExpr?.values
+      visited.valueExpr?.nodeKind === "iri" || !visited.valueExpr?.values
         ? `(${visited.typeValue})`
         : visited.typeValue
     }[]`;
