@@ -22,7 +22,7 @@ _visitor.visitSchema = function (schema: any) {
 
 _visitor.visitShapeExpr = function (expr: any, context: any) {
   if (isShapeRef(expr)) return this.visitShapeRef(expr);
-  var r =
+  var visited =
     expr.type === "Shape"
       ? this.visitShape(expr, context)
       : expr.type === "NodeConstraint"
@@ -36,8 +36,8 @@ _visitor.visitShapeExpr = function (expr: any, context: any) {
       : expr.type === "ShapeExternal"
       ? this.visitShapeExternal(expr)
       : null; // if (expr.type === "ShapeRef") r = 0; // console.warn("visitShapeExpr:", r);
-  if (r === null) throw Error("unexpected shapeExpr type: " + expr.type);
-  else return r;
+  if (visited === null) throw Error("unexpected shapeExpr type: " + expr.type);
+  else return visited;
 };
 
 _visitor.visitExpression = function (expr: any, context?: any) {
@@ -97,17 +97,13 @@ _visitor.visitOneOf = function (expr: any, context?: any) {
     .join(" & ");
 
   const inlineEnums = visited.expressions
-    .filter(
-      (expression: any) =>
-        !!expression.valueExpr?.inlineEnum ||
-        !!expression.valueExpr?.inlineEnums
-    )
+    .filter((expression: any) => {
+      return !!expression?.inlineEnums;
+    })
     .reduce(
       (inlineEnums: any, expression: any) =>
-        expression.valueExpr.inlineEnum
-          ? [...inlineEnums, expression.valueExpr.inlineEnum]
-          : expression.valueExpr.inlineEnums
-          ? [...inlineEnums, ...expression.valueExpr.inlineEnums]
+        expression.inlineEnums
+          ? [...inlineEnums, ...expression.inlineEnums]
           : inlineEnums,
       []
     );
@@ -128,8 +124,11 @@ _visitor.visitEachOf = function (expr: any, context?: any) {
           context
         );
         visitedExpression.extra = visitedExpression.extra
-          ? `{ ${visitedExpression.extra} }`
+          ? `{ 
+            ${visitedExpression.extra} 
+          }`
           : "";
+
         return visitedExpression;
       }
 
@@ -164,17 +163,13 @@ _visitor.visitEachOf = function (expr: any, context?: any) {
     .join(" & ");
 
   const inlineEnums = visited.expressions
-    .filter(
-      (expression: any) =>
-        !!expression.valueExpr?.inlineEnum ||
-        !!expression.valueExpr?.inlineEnums
-    )
+    .filter((expression: any) => {
+      return !!expression.inlineEnums;
+    })
     .reduce(
       (inlineEnums: any, expression: any) =>
-        expression.valueExpr.inlineEnum
-          ? [...inlineEnums, expression.valueExpr.inlineEnum]
-          : expression.valueExpr.inlineEnums
-          ? [...inlineEnums, ...expression.valueExpr.inlineEnums]
+        expression.inlineEnums
+          ? [...inlineEnums, ...expression.inlineEnums]
           : inlineEnums,
       []
     );
@@ -200,16 +195,21 @@ _visitor.visitTripleConstraint = function (expr: any, context?: any) {
   ];
   const visited = {
     ...expr,
-    ...maybeGenerate(this, expr, members, {
+    expression: maybeGenerate(this, expr, members, {
       ...context,
       predicate: expr.predicate,
     }),
   };
 
-  if (typeof visited.valueExpr === "string") {
-    visited.typeValue = generateTsType(visited.valueExpr);
-  } else if (visited.valueExpr?.typeValue) {
-    visited.inlineEnum = visited.valueExpr.inlineEnum;
+  if (typeof visited.expression.valueExpr === "string") {
+    visited.typeValue = generateTsType(visited.expression.valueExpr);
+  } else if (visited.expression.valueExpr?.typeValue) {
+    visited.typeValue = visited.expression.valueExpr.typeValue;
+    if (visited.expression.valueExpr.inlineEnum) {
+      visited.inlineEnums = [visited.expression.valueExpr.inlineEnum];
+    } else if (visited.expression.valueExpr?.inlineEnums) {
+      visited.inlineEnums = visited.expression.valueExpr.inlineEnums;
+    }
     visited.typeValue = visited.valueExpr.values
       ? visited.valueExpr.values.length > 1
         ? `(${visited.valueExpr.values
@@ -219,7 +219,7 @@ _visitor.visitTripleConstraint = function (expr: any, context?: any) {
                   index !== otherIndex &&
                   normalizeUrl(otherValue, true) === normalizeUrl(value, true)
               );
-              return `${visited.valueExpr.typeValue}.${normalizeUrl(
+              return `${visited.typeValue}.${normalizeUrl(
                 value,
                 true,
                 otherValue ? normalizeUrl(otherValue, true) : "",
@@ -227,15 +227,16 @@ _visitor.visitTripleConstraint = function (expr: any, context?: any) {
               )}`;
             })
             .join(" | ")})[]`
-        : `${visited.valueExpr.typeValue}.${normalizeUrl(
+        : `${visited.typeValue}.${normalizeUrl(
             visited.valueExpr.values[0],
             true,
             undefined,
             context?.prefixes
           )}`
-      : visited.valueExpr.typeValue;
-  } else if (visited.valueExpr?.generatedShape) {
-    visited.typeValue = visited.valueExpr.generatedShape;
+      : visited.typeValue;
+  } else if (visited.expression.valueExpr?.generatedShape) {
+    visited.inlineEnums = visited.expression.valueExpr.inlineEnums;
+    visited.typeValue = visited.expression.valueExpr.generatedShape;
   } else {
     visited.typeValue = "string";
   }
@@ -250,7 +251,8 @@ _visitor.visitTripleConstraint = function (expr: any, context?: any) {
   const multiple = visited.max === -1;
   if (multiple) {
     visited.typeValue += ` | ${
-      visited.valueExpr?.nodeKind === "iri" || !visited.valueExpr?.values
+      visited.expression.valueExpr?.nodeKind === "iri" ||
+      !visited.expression.valueExpr?.values
         ? `(${visited.typeValue})`
         : visited.typeValue
     }[]`;
@@ -262,7 +264,7 @@ _visitor.visitTripleConstraint = function (expr: any, context?: any) {
 
   if (
     context?.extra?.includes(visited.predicate) &&
-    !visited.valueExpr.values
+    !visited.expression.valueExpr.values
   ) {
     visited.extra = visited.generated;
     visited.generated = "";
@@ -295,16 +297,18 @@ _visitor.visitNodeConstraint = function (shape: any, context: any) {
     "semActs",
   ];
 
-  const visited = maybeGenerate(this, shape, members, context);
+  const visited: Record<string, any> = {
+    expression: maybeGenerate(this, shape, members, context),
+  };
 
-  if (visited.values) {
+  if (visited.expression.values) {
     visited.typeValue = generateEnumName(
       context.id as string,
       context.predicate
     );
     visited.inlineEnum = {
       [visited.typeValue]: [
-        ...visited.values,
+        ...visited.expression.values,
         ...(context.inlineEnums ? context.inlineEnums[visited.typeValue] : []),
       ],
     };
@@ -364,14 +368,14 @@ _visitor.visitShape = function (shape: any, context: any) {
   );
 
   const extras = visited.expression.extras ?? visited.expression.extra;
-  const { generated, inlineEnums, inlineEnum } = visited.expression;
+  const { generated } = visited.expression;
   visited.generatedShape = extras
     ? generated
       ? `${generated} & (${extras})`
       : `${extras}`
     : generated;
 
-  visited.inlineEnums = inlineEnums ?? (inlineEnum ? [inlineEnum] : null);
+  visited.inlineEnums = visited.expression.inlineEnums;
 
   if (visited.expression?.type === "TripleConstraint") {
     if (context?.id) {
