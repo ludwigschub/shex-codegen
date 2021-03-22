@@ -55,45 +55,36 @@ _visitor.visitExpression = function (expr: any, context?: any) {
 };
 
 _visitor.visitOneOf = function (expr: any, context?: any) {
-  const visited = expr.expressions.map((expression: any) => {
-    if (expression.type === "TripleConstraint") {
-      const visitedExpression = this.visitTripleConstraint(expression, context);
-      visitedExpression.generated = visitedExpression.generated
-        ? `{ ${visitedExpression.generated} }`
-        : "";
-      visitedExpression.extra = visitedExpression.extra
-        ? `{ ${visitedExpression.extra} }`
-        : "";
-      return visitedExpression;
-    }
-
-    if (expression.type === "EachOf") {
-      const result = this.visitEachOf(expression, context);
-      if (
-        context?.id ===
-        "https://shaperepo.com/schemas/solidProfile##cryptocurrency"
-      ) {
-        console.debug(result, expression.type);
+  const visited: Record<string, any> = {
+    expressions: expr.expressions.map((expression: any) => {
+      if (expression.type === "TripleConstraint") {
+        const visitedExpression = this.visitTripleConstraint(
+          expression,
+          context
+        );
+        visitedExpression.generated = visitedExpression.generated
+          ? `{ ${visitedExpression.generated} }`
+          : "";
+        visitedExpression.extra = visitedExpression.extra
+          ? `{ ${visitedExpression.extra} }`
+          : "";
+        return visitedExpression;
       }
-      return result;
-    } else if (expression.type === "OneOf") {
-      const result = this.visitOneOf(expression, context);
-      if (
-        context?.id ===
-        "https://shaperepo.com/schemas/solidProfile##cryptocurrency"
-      ) {
-        console.debug(result, expression.type);
-      }
-      return result;
-    }
-  });
 
-  visited.generated = `${visited
+      if (expression.type === "EachOf") {
+        return this.visitEachOf(expression, context);
+      } else if (expression.type === "OneOf") {
+        return this.visitOneOf(expression, context);
+      }
+    }),
+  };
+
+  visited.generated = `${visited.expressions
     .filter((expression: any) => !!expression.generated)
     .map((expression: any) => expression.generated)
     .join(" | ")}`;
 
-  visited.extras = visited
+  visited.extras = visited.expressions
     .reduce(
       (extras: any[], expression: any) =>
         expression.extra
@@ -103,9 +94,9 @@ _visitor.visitOneOf = function (expr: any, context?: any) {
           : extras,
       []
     )
-    .join(" | ");
+    .join(" & ");
 
-  const inlineEnums = visited
+  const inlineEnums = visited.expressions
     .filter(
       (expression: any) =>
         !!expression.valueExpr?.inlineEnum ||
@@ -129,40 +120,38 @@ _visitor.visitOneOf = function (expr: any, context?: any) {
 };
 
 _visitor.visitEachOf = function (expr: any, context?: any) {
-  const visited = expr.expressions.map((expression: any) => {
-    if (expression.type === "TripleConstraint") {
-      return this.visitTripleConstraint(expression, context);
-    }
+  const visited: Record<string, any> = {
+    expressions: expr.expressions.map((expression: any) => {
+      if (expression.type === "TripleConstraint") {
+        const visitedExpression = this.visitTripleConstraint(
+          expression,
+          context
+        );
+        visitedExpression.extra = visitedExpression.extra
+          ? `{ ${visitedExpression.extra} }`
+          : "";
+        return visitedExpression;
+      }
 
-    if (expression.type === "EachOf") {
-      const result = this.visitEachOf(expression, context);
-      if (
-        context?.id ===
-        "https://shaperepo.com/schemas/solidProfile##cryptocurrency"
-      ) {
-        console.debug(result, expression.type);
+      if (expression.type === "EachOf") {
+        return this.visitEachOf(expression, context);
+      } else if (expression.type === "OneOf") {
+        const result = this.visitOneOf(expression, context);
+        result.extras = result.generated;
+        result.generated = "";
+        return result;
       }
-      return result;
-    } else if (expression.type === "OneOf") {
-      const result = this.visitOneOf(expression, context);
-      if (
-        context?.id ===
-        "https://shaperepo.com/schemas/solidProfile##cryptocurrency"
-      ) {
-        console.debug(result, expression.type);
-      }
-      return result;
-    }
-  });
+    }),
+  };
 
   visited.generated = `{
-  ${visited
-    .filter((expression: any) => !!expression.generated)
-    .map((expression: any) => expression.generated)
-    .join("\n\t")}
+    ${visited.expressions
+      .filter((expression: any) => !!expression.generated)
+      .map((expression: any) => expression.generated)
+      .join("\n\t")}
 }`;
 
-  visited.extras = visited
+  visited.extras = visited.expressions
     .reduce(
       (extras: any[], expression: any) =>
         expression.extra
@@ -172,9 +161,9 @@ _visitor.visitEachOf = function (expr: any, context?: any) {
           : extras,
       []
     )
-    .join(" | ");
+    .join(" & ");
 
-  const inlineEnums = visited
+  const inlineEnums = visited.expressions
     .filter(
       (expression: any) =>
         !!expression.valueExpr?.inlineEnum ||
@@ -456,7 +445,7 @@ _visitor.visitShapes = function (shapes: any[], prefixes: any) {
     )};\n`;
   });
 
-  return [...generatedShapes, ...generatedInlineEnums];
+  return [...generatedInlineEnums, ...generatedShapes];
 };
 
 function generateEnumValues(values: any, prefixes: any) {
