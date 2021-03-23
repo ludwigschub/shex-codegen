@@ -1,6 +1,7 @@
 import ShExParser from "@shexjs/parser";
 import { readFileSync, writeFile, existsSync, mkdirSync } from "fs";
 import path from "path";
+import prettier from "prettier";
 import find from "findit";
 
 import TypescriptVisitor from "./visitors/typescript";
@@ -36,14 +37,16 @@ const readAndGenerateShex = async (file: string, outDir?: string) => {
 };
 
 const writeShapeFile = (file: string, content: string, outDir?: string) => {
-  return new Promise<void>((resolve, reject) => {
+  return new Promise<void>(async (resolve, reject) => {
     const generatedDir = path.join(process.cwd(), outDir ?? "/generated/");
     if (!existsSync(generatedDir)) {
       mkdirSync(generatedDir);
     }
+    const filepath = path.join(generatedDir, `${getFileName(file)}.ts`);
+    const config = await prettier.resolveConfig(filepath);
     writeFile(
-      path.join(generatedDir, `${getFileName(file)}.ts`),
-      content,
+      filepath,
+      prettier.format(content, { ...config, filepath }),
       "binary",
       (err) => (err ? reject(err) : resolve())
     );

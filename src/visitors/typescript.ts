@@ -88,9 +88,9 @@ _visitor.visitOneOf = function (expr: any, context?: any) {
     .reduce(
       (extras: any[], expression: any) =>
         expression.extra
-          ? [...extras, expression.extra]
+          ? [...extras, expression.extra.trim()]
           : expression.extras
-          ? [...extras, expression.extras]
+          ? [...extras, expression.extras.trim()]
           : extras,
       []
     )
@@ -125,8 +125,8 @@ _visitor.visitEachOf = function (expr: any, context?: any) {
         );
         visitedExpression.extra = visitedExpression.extra
           ? `{ 
-            ${visitedExpression.extra} 
-          }`
+  ${visitedExpression.extra} 
+}`
           : "";
 
         return visitedExpression;
@@ -144,10 +144,10 @@ _visitor.visitEachOf = function (expr: any, context?: any) {
   };
 
   visited.generated = `{
-    ${visited.expressions
-      .filter((expression: any) => !!expression.generated)
-      .map((expression: any) => expression.generated)
-      .join("\n\t")}
+  ${visited.expressions
+    .filter((expression: any) => !!expression.generated)
+    .map((expression: any) => expression.generated)
+    .join("\n  ")}
 }`;
 
   visited.extras = visited.expressions
@@ -236,7 +236,13 @@ _visitor.visitTripleConstraint = function (expr: any, context?: any) {
       : visited.typeValue;
   } else if (visited.expression.valueExpr?.generatedShape) {
     visited.inlineEnums = visited.expression.valueExpr.inlineEnums;
-    visited.typeValue = visited.expression.valueExpr.generatedShape;
+    if (visited.expression.valueExpr.expression.generated) {
+      visited.typeValue = visited.expression.valueExpr.generatedShape;
+    }
+    if (visited.expression.valueExpr.extras) {
+      visited.typeValue =
+        visited.typeValue ?? "" + visited.expression.valueExpr.extras;
+    }
   } else {
     visited.typeValue = "string";
   }
@@ -367,21 +373,23 @@ _visitor.visitShape = function (shape: any, context: any) {
     context
   );
 
-  const extras = visited.expression.extras ?? visited.expression.extra;
+  visited.extras =
+    visited.expression.extras ??
+    (visited.expression.extra && `{ ${visited.expression.extra} }`);
   const { generated } = visited.expression;
-  visited.generatedShape = extras
+  visited.generatedShape = visited.extras
     ? generated
-      ? `${generated} & (${extras})`
-      : `${extras}`
+      ? `${generated} & (${visited.extras})`
+      : `${visited.extras}`
     : generated;
 
   visited.inlineEnums = visited.expression.inlineEnums;
 
   if (visited.expression?.type === "TripleConstraint") {
     if (context?.id) {
-      visited.generatedShape = `{\n\t\t${visited.expression.generated}\n\t}`;
+      visited.generatedShape = `{\n    ${visited.expression.generated}\n  }`;
     } else {
-      visited.generatedShape = `{\n\t${visited.expression.generated}\n}`;
+      visited.generatedShape = `{\n  ${visited.expression.generated}\n}`;
     }
   }
 
@@ -469,7 +477,7 @@ ${values
     }
     return { name: normalizedValue, value: value };
   })
-  .map((value: any) => `\t${value.name} = "${value.value}"`)
+  .map((value: any) => `  ${value.name} = "${value.value}"`)
   .join(",\n")}
 }`;
 }
