@@ -88,9 +88,9 @@ _visitor.visitOneOf = function (expr: any, context?: any) {
     .reduce(
       (extras: any[], expression: any) =>
         expression.extra
-          ? [...extras, expression.extra.trim()]
+          ? [...extras, expression.extra]
           : expression.extras
-          ? [...extras, expression.extras.trim()]
+          ? [...extras, expression.extras]
           : extras,
       []
     )
@@ -386,11 +386,7 @@ _visitor.visitShape = function (shape: any, context: any) {
   visited.inlineEnums = visited.expression.inlineEnums;
 
   if (visited.expression?.type === "TripleConstraint") {
-    if (context?.id) {
-      visited.generatedShape = `{\n    ${visited.expression.generated}\n  }`;
-    } else {
-      visited.generatedShape = `{\n  ${visited.expression.generated}\n}`;
-    }
+    visited.generatedShape = `{\n${visited.expression.generated}\n}`;
   }
 
   return visited;
