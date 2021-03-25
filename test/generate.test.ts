@@ -1,3 +1,8 @@
 import { generate } from "../lib";
 
-generate('test', 'test/generated')
+jest.useFakeTimers();
+
+it("matches snapshots", async () => {
+  const generated = await generate("test", "test/generated");
+  expect(generated).toMatchSnapshot();
+});

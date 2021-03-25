@@ -6,21 +6,23 @@ import find from "findit";
 
 import TypescriptVisitor from "./visitors/typescript";
 
-export const generate = async (
-  dir?: string,
-  outDir?: string,
-  suffix?: string
-) => {
-  const finder = find(dir ?? process.cwd());
+export const generate = (dir?: string, outDir?: string, suffix?: string) =>
+  new Promise((resolve) => {
+    const finder = find(dir ?? process.cwd());
 
-  //This listens for files found
-  finder.on("file", function (file: string) {
-    if (file.endsWith(suffix ?? "shex")) {
-      readAndGenerateShex(file, outDir);
-    }
+    const generated: Promise<string>[] = [];
+
+    //This listens for files found
+    finder.on("file", async function (file: string) {
+      if (file.endsWith(suffix ?? "shex")) {
+        generated.push(readAndGenerateShex(file, outDir));
+      }
+    });
+
+    finder.on("end", function () {
+      resolve(Promise.all(generated));
+    });
   });
-};
-
 const readAndGenerateShex = async (file: string, outDir?: string) => {
   // Read shape file
   const shapeFile = readFileSync(file, { encoding: "utf8" });
@@ -33,22 +35,20 @@ const readAndGenerateShex = async (file: string, outDir?: string) => {
   );
   const shapeSchema = parser.parse(shapeFile);
   const types = TypescriptVisitor.visitSchema(shapeSchema);
-  await writeShapeFile(file, types, outDir);
+  return await writeShapeFile(file, types, outDir);
 };
 
 const writeShapeFile = (file: string, content: string, outDir?: string) => {
-  return new Promise<void>(async (resolve, reject) => {
+  return new Promise<string>(async (resolve, reject) => {
     const generatedDir = path.join(process.cwd(), outDir ?? "/generated/");
     if (!existsSync(generatedDir)) {
       mkdirSync(generatedDir);
     }
     const filepath = path.join(generatedDir, `${getFileName(file)}.ts`);
-    const config = await prettier.resolveConfig(filepath);
-    writeFile(
-      filepath,
-      prettier.format(content, { ...config, filepath }),
-      "binary",
-      (err) => (err ? reject(err) : resolve())
+    const prettierConfig = await prettier.resolveConfig(filepath);
+    const formatted = prettier.format(content, { ...prettierConfig, filepath });
+    writeFile(filepath, formatted, "binary", (err) =>
+      err ? reject(err) : resolve(formatted)
     );
   });
 };
