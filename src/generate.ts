@@ -1,3 +1,5 @@
+#!/usr/bin/env node
+
 import ShExParser from "@shexjs/parser";
 import { readFileSync, writeFile, existsSync, mkdirSync } from "fs";
 import path from "path";
@@ -6,7 +8,7 @@ import find from "findit";
 
 import TypescriptVisitor from "./visitors/typescript";
 
-export const generate = (dir?: string, outDir?: string, suffix?: string) =>
+export const generate = (dir = "./", outDir = "./generated", suffix?: string) =>
   new Promise((resolve) => {
     const finder = find(dir ?? process.cwd());
 
@@ -23,6 +25,7 @@ export const generate = (dir?: string, outDir?: string, suffix?: string) =>
       resolve(Promise.all(generated));
     });
   });
+
 const readAndGenerateShex = async (file: string, outDir?: string) => {
   // Read shape file
   const shapeFile = readFileSync(file, { encoding: "utf8" });
@@ -54,3 +57,5 @@ const writeShapeFile = (file: string, content: string, outDir?: string) => {
 };
 
 const getFileName = (file: string) => path.parse(file).name;
+
+generate(process.argv[2], process.argv[3]);
