@@ -1,6 +1,6 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
-exports[`matches snapshots with config 1`] = `
+exports[`matches snapshots with config file 1`] = `
 Array [
   "export enum SolidProfileShapeType {
   SchemPerson = \\"http://schema.org/Person\\",
@@ -128,7 +128,7 @@ export type RsaPublicKeyShape = {
 ]
 `;
 
-exports[`matches snapshots without config 1`] = `
+exports[`matches snapshots without config file 1`] = `
 Array [
   "export enum SolidProfileShapeType {
   SchemPerson = \\"http://schema.org/Person\\",

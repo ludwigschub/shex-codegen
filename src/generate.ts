@@ -38,10 +38,12 @@ export const generate = (
     const visitors: Record<string, any> = Object.assign(
       {},
       ...generatesFiles.map((key) => ({
-        [key]: generates[key].map((visitor: string) => {
-          const visitorPath = "./visitors/" + visitor + ".js";
-          return require(visitorPath).default;
-        }),
+        [key]: (generates as Record<string, string[]>)[key].map(
+          (visitor: string) => {
+            const visitorPath = "./visitors/" + visitor + ".js";
+            return require(visitorPath).default;
+          }
+        ),
       }))
     );
 
@@ -54,14 +56,14 @@ export const generate = (
     if (!stats.isDirectory()) {
       generatesFiles.forEach((file: string) => {
         visitFile(file, workPath);
-        resolve(Promise.all(generated));
       });
+      resolve(Promise.all(generated));
     } else {
       const finder = find(workPath);
 
       // The listeners for files found
       finder.on("file", async function (file: string) {
-        if (file.endsWith(config.matchSuffix ?? "shex")) {
+        if (file.endsWith(config?.matchSuffix ?? "shex")) {
           generatesFiles.forEach((generatesFile: string) => {
             visitFile(generatesFile, file);
             resolve(Promise.all(generated));
@@ -108,26 +110,24 @@ const writeShapeFile = (file: string, content: string, generates: string) => {
       stats = statSync(generatedDir);
     } catch {}
 
-    let filepath = generates ?? "generated.ts";
-    if ((!stats && !filepath.endsWith(".ts")) || stats?.isDirectory()) {
+    if ((!stats && !generates.endsWith(".ts")) || stats?.isDirectory()) {
       if (!stats) {
         mkdirSync(generatedDir, { recursive: true });
       }
-      filepath = path.join(generatedDir, `${getFileName(file)}.ts`);
+      generates = path.join(generatedDir, `${getFileName(file)}.ts`);
       const formatted = prettier.format(content, {
         ...prettierConfig,
-        filepath,
+        filepath: generates,
       });
-      appendFile(filepath, formatted, "binary", (err) => {
+      appendFile(generates, formatted, "binary", (err) => {
         err ? reject(err) : resolve(formatted);
       });
     } else {
-      filepath = generates;
       const formatted = prettier.format(content, {
         ...prettierConfig,
-        filepath,
+        filepath: generates,
       });
-      appendFile(filepath, formatted, "binary", (err) => {
+      appendFile(generates, formatted, "binary", (err) => {
         console.debug(err);
         err ? reject(err) : resolve(formatted);
       });
