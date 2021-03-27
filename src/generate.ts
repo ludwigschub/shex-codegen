@@ -14,7 +14,7 @@ export const generate = (dir?: string, outDir?: string, suffix?: string) =>
 
     const generated: Promise<string>[] = [];
 
-    //This listens for files found
+    // The listeners for files found
     finder.on("file", async function (file: string) {
       if (file.endsWith(suffix ?? "shex")) {
         generated.push(readAndGenerateShex(file, outDir));
@@ -48,8 +48,11 @@ const writeShapeFile = (file: string, content: string, outDir?: string) => {
       mkdirSync(generatedDir);
     }
     const filepath = path.join(generatedDir, `${getFileName(file)}.ts`);
+
+    // prettier formatting
     const prettierConfig = await prettier.resolveConfig(filepath);
     const formatted = prettier.format(content, { ...prettierConfig, filepath });
+    
     writeFile(filepath, formatted, "binary", (err) =>
       err ? reject(err) : resolve(formatted)
     );
@@ -58,6 +61,7 @@ const writeShapeFile = (file: string, content: string, outDir?: string) => {
 
 const getFileName = (file: string) => path.parse(file).name;
 
+// if used from node cli
 if (require.main === module) {
   generate(process.argv[2], process.argv[3]);
 }
