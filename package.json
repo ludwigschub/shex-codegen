@@ -6,7 +6,7 @@
   "scripts": {
     "build": "tsc",
     "develop": "concurrently \"yarn build -w\" \"nodemon ./lib\"",
-    "test": "rimraf ./test/generated && jest test"
+    "test": "rimraf ./test/generated && mkdir ./test/generated && jest test"
   },
   "author": "Ludwig Schubert",
   "license": "GPL-3.0",
@@ -15,12 +15,14 @@
     "@shexjs/parser": "^1.0.0-alpha.10",
     "camelcase": "^6.2.0",
     "findit": "^2.0.0",
+    "js-yaml": "^4.0.0",
     "prettier": "^2.2.1"
   },
   "devDependencies": {
     "@babel/preset-env": "^7.13.12",
     "@babel/preset-typescript": "^7.13.0",
     "@types/jest": "^26.0.22",
+    "@types/js-yaml": "^4.0.0",
     "@types/node": "^14.14.35",
     "@types/prettier": "^2.2.3",
     "concurrently": "^6.0.0",

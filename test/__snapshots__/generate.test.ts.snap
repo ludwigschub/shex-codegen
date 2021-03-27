@@ -1,191 +1,7 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
-exports[`matches snapshots 1`] = `
+exports[`matches snapshots with config 1`] = `
 Array [
-  "export enum P31Type {
-  Q13479982 = \\"http://www.wikidata.org/entity/Q13479982\\",
-}
-
-export enum P2283Type {
-  Q17083510 = \\"http://www.wikidata.org/entity/Q17083510\\",
-  Q7249984 = \\"http://www.wikidata.org/entity/Q7249984\\",
-  Q48834328 = \\"http://www.wikidata.org/entity/Q48834328\\",
-}
-
-export type Cryptocurrency = {
-  p279?: {
-    p279?: string;
-  };
-  p178?: {
-    p178?: string;
-  };
-  p170?: {
-    p170?: string;
-  };
-  p2283:
-    | {
-        p2283?: (
-          | P2283Type.Q17083510
-          | P2283Type.Q7249984
-          | P2283Type.Q48834328
-        )[];
-      }
-    | {
-        p2283?: (
-          | P2283Type.Q17083510
-          | P2283Type.Q7249984
-          | P2283Type.Q48834328
-        )[];
-      }[];
-  p5777?: string | string[];
-  p6363?: string | string[];
-} & (
-  | ({
-      p31?:
-        | {
-            p31?: P31Type.Q13479982;
-          }
-        | {
-            p31?: P31Type.Q13479982;
-          }[];
-    } & {
-      p577?: {
-        p577?: string;
-      };
-      p571?: {
-        p571?: string;
-      };
-    })
-  | {
-      p571?: {
-        p571?: string;
-      };
-    }
-);
-",
-  "export enum ChatShapeType {
-  LongChat = \\"http://www.w3.org/ns/pim/meeting#LongChat\\",
-}
-
-export type ChatShape = {
-  author?: string; // The WebId of the entity that created this chat
-  created?: string; // The date and time the chat was created
-  title?: string; // The title of the chat
-  participation?: ChatParticipationShape | ChatParticipationShape[]; // A list of people participating in this chat
-  sharedPreferences?: string; // Chat preferences
-} & {
-  type?: ChatShapeType.LongChat; // Defines the type of the chat as a LongChat
-};
-
-export type ChatParticipationShape = {
-  dtstart?: string; // The date and time this individual began participating in the chat.
-  participant?: string; // The WebId of the participant
-  backgroundColor?: string; // The background color of the participant's chat bubbles
-};
-
-export type ChatMessageListShape = {
-  message?: ChatMessageShape | ChatMessageShape[]; // A list of messages in the chat
-};
-
-export type ChatMessageShape = {
-  created?: string; // The date and time this message was posted.
-  content?: string; // The text content of the message
-  maker?: string; // The WebId of the person who sent the message.
-};
-",
-  "export enum P279Type {
-  Q9135 = \\"http://www.wikidata.org/entity/Q9135\\",
-}
-
-export type OperatingSystem = {
-  p31?: {
-    p31?: {
-      p279:
-        | {
-            p279?: P279Type.Q9135;
-          }
-        | {
-            p279?: P279Type.Q9135;
-          }[];
-    };
-  };
-  p275?: {
-    p275: string | string[];
-  };
-  p178?: {
-    p178?: string;
-  };
-  p176?: {
-    p176?: string;
-  };
-  p910?: {
-    p910?: string;
-  };
-  p373?: {
-    p373?: string | string[];
-  };
-  p5795?: {
-    p5795?: string | string[];
-  };
-  p5868?: {
-    p5868?: string | string[];
-  };
-  p268?: {
-    p268?: string | string[];
-  };
-};
-",
-  "export enum P31Type {
-  Q188267 = \\"http://www.wikidata.org/entity/Q188267\\",
-}
-
-export type Programminglanguage = {
-  p178?: P178Developer | P178Developer[];
-  p3966?: P3966Paradigm | P3966Paradigm[];
-  p577?: P577PublicationDate | P577PublicationDate[];
-  p856?: P856Website | P856Website[];
-};
-
-export type P31InstanceOfProgramminglanguage = {
-  p31?: WdProgrammingLanguage;
-};
-
-export type P279SubclassOfProgramminglanguage =
-  | {
-      p279?: WdProgrammingLanguage;
-      p279?: string | string[];
-    }
-  | {
-      p279?: P279SubclassOfProgramminglanguage;
-      p279?: string | string[];
-    };
-
-export enum WdProgrammingLanguage {
-  Q9143 = \\"http://www.wikidata.org/entity/Q9143\\",
-}
-
-export type P178Developer = {
-  p178?: string;
-  p580?: string;
-  p582?: string;
-};
-
-export type P3966Paradigm = {
-  p3966?: { p31?: ProgrammingParadigm } | { p279?: ProgrammingParadigm };
-};
-
-export type ProgrammingParadigm = {
-  p31?: P31Type.Q188267;
-};
-
-export type P577PublicationDate = {
-  p577?: string;
-};
-
-export type P856Website = {
-  p856?: string;
-};
-",
   "export enum SolidProfileShapeType {
   SchemPerson = \\"http://schema.org/Person\\",
   FoafPerson = \\"http://xmlns.com/foaf/0.1/Person\\",
@@ -309,48 +125,132 @@ export type RsaPublicKeyShape = {
   exponent?: string; // RSA Exponent
 };
 ",
-  "export enum P31Type {
-  Q1307214 = \\"http://www.wikidata.org/entity/Q1307214\\",
-  Q5119 = \\"http://www.wikidata.org/entity/Q5119\\",
-  Q645466 = \\"http://www.wikidata.org/entity/Q645466\\",
-  Q186516 = \\"http://www.wikidata.org/entity/Q186516\\",
-  Q23691 = \\"http://www.wikidata.org/entity/Q23691\\",
-  Q17544377 = \\"http://www.wikidata.org/entity/Q17544377\\",
-  Q46865913 = \\"http://www.wikidata.org/entity/Q46865913\\",
-  Q4167836 = \\"http://www.wikidata.org/entity/Q4167836\\",
-  Q4663903 = \\"http://www.wikidata.org/entity/Q4663903\\",
-  Q26884324 = \\"http://www.wikidata.org/entity/Q26884324\\",
-  Q5107 = \\"http://www.wikidata.org/entity/Q5107\\",
-  Q3624078 = \\"http://www.wikidata.org/entity/Q3624078\\",
+]
+`;
+
+exports[`matches snapshots without config 1`] = `
+Array [
+  "export enum SolidProfileShapeType {
+  SchemPerson = \\"http://schema.org/Person\\",
+  FoafPerson = \\"http://xmlns.com/foaf/0.1/Person\\",
 }
 
-export type State = {
-  p1448: string | string[];
-  p1705: string | string[];
-  p487?: string;
-  p30?: { p31?: P31Type.Q5107 };
-  p3896?: string;
-  p935?: string;
-  p373?: string;
-  p3722?: string;
-  p910?: { p31?: P31Type.Q4167836 };
-  p5125?: { p31?: P31Type.Q26884324 };
-  p1151?: { p31?: P31Type.Q4663903 };
-  p1792?: { p31?: P31Type.Q4167836 };
-  p1464?: { p31?: P31Type.Q4167836 };
-  p1465?: { p31?: P31Type.Q4167836 };
-  p1791?: { p31?: P31Type.Q4167836 };
-  p1740?: { p31?: P31Type.Q4167836 };
-  p2633?: { p31?: P31Type.Q46865913 };
-  p2184?: { p31?: P31Type.Q17544377 };
-  p948?: string;
-  p85?: { p31?: P31Type.Q23691 };
-  p163?: { p31?: P31Type.Q186516 };
-  p237?: { p31?: P31Type.Q645466 };
-  p36?: { p31?: P31Type.Q5119 };
-  p122?: { p31?: P31Type.Q1307214 };
+export enum EmailShapeType {
+  Dom = \\"http://www.w3.org/2006/vcard/ns#Dom\\",
+  Home = \\"http://www.w3.org/2006/vcard/ns#Home\\",
+  Isdn = \\"http://www.w3.org/2006/vcard/ns#ISDN\\",
+  Internet = \\"http://www.w3.org/2006/vcard/ns#Internet\\",
+  Intl = \\"http://www.w3.org/2006/vcard/ns#Intl\\",
+  Label = \\"http://www.w3.org/2006/vcard/ns#Label\\",
+  Parcel = \\"http://www.w3.org/2006/vcard/ns#Parcel\\",
+  Postal = \\"http://www.w3.org/2006/vcard/ns#Postal\\",
+  Pref = \\"http://www.w3.org/2006/vcard/ns#Pref\\",
+  Work = \\"http://www.w3.org/2006/vcard/ns#Work\\",
+  X400 = \\"http://www.w3.org/2006/vcard/ns#X400\\",
+}
+
+export enum PhoneNumberShapeType {
+  Dom = \\"http://www.w3.org/2006/vcard/ns#Dom\\",
+  Home = \\"http://www.w3.org/2006/vcard/ns#Home\\",
+  Isdn = \\"http://www.w3.org/2006/vcard/ns#ISDN\\",
+  Internet = \\"http://www.w3.org/2006/vcard/ns#Internet\\",
+  Intl = \\"http://www.w3.org/2006/vcard/ns#Intl\\",
+  Label = \\"http://www.w3.org/2006/vcard/ns#Label\\",
+  Parcel = \\"http://www.w3.org/2006/vcard/ns#Parcel\\",
+  Postal = \\"http://www.w3.org/2006/vcard/ns#Postal\\",
+  Pref = \\"http://www.w3.org/2006/vcard/ns#Pref\\",
+  Work = \\"http://www.w3.org/2006/vcard/ns#Work\\",
+  X400 = \\"http://www.w3.org/2006/vcard/ns#X400\\",
+}
+
+export enum ModeType {
+  Append = \\"http://www.w3.org/ns/auth/acl#Append\\",
+  Control = \\"http://www.w3.org/ns/auth/acl#Control\\",
+  Read = \\"http://www.w3.org/ns/auth/acl#Read\\",
+  Write = \\"http://www.w3.org/ns/auth/acl#Write\\",
+}
+
+export type SolidProfileShape = {
+  fn?: string; // The formatted name of a person. Example: John Smith
+  name?: string; // An alternate way to define a person's name.
+  hasAddress?: AddressShape | AddressShape[]; // The person's street address.
+  hasEmail?: EmailShape | EmailShape[]; // The person's email.
+  hasPhoto?: string; // A link to the person's photo
+  img?: string; // Photo link but in string form
+  hasTelephone?: PhoneNumberShape | PhoneNumberShape[]; // Person's telephone number
+  phone?: string; // An alternative way to define a person's telephone number using a string
+  organizationName?: string; // The name of the organization with which the person is affiliated
+  role?: string; // The name of the person's role in their organization
+  trustedApp?: TrustedAppShape | TrustedAppShape[]; // A list of app origins that are trusted by this user
+  key?: RsaPublicKeyShape | RsaPublicKeyShape[]; // A list of RSA public keys that are associated with private keys the user holds.
+  inbox?: string; // The user's LDP inbox to which apps can post notifications
+  preferencesFile?: string; // The user's preferences
+  storage?: string | string[]; // The location of a Solid storage server related to this WebId
+  account?: string; // The user's account
+  privateTypeIndex?: string | string[]; // A registry of all types used on the user's Pod (for private access only)
+  publicTypeIndex?: string | string[]; // A registry of all types used on the user's Pod (for public access)
+  knows?: string | string[]; // A list of WebIds for all the people this user knows.
 } & {
-  p31?: P31Type.Q3624078;
+  type?: (
+    | SolidProfileShapeType.SchemPerson
+    | SolidProfileShapeType.FoafPerson
+  )[]; // Defines the node as a Person (from foaf)
+};
+
+export type AddressShape = {
+  countryName?: string; // The name of the user's country of residence
+  locality?: string; // The name of the user's locality (City, Town etc.) of residence
+  postalCode?: string; // The user's postal code
+  region?: string; // The name of the user's region (State, Province etc.) of residence
+  streetAddress?: string; // The user's street address
+};
+
+export type EmailShape = {
+  value?: string; // The value of an email as a mailto link (Example <mailto:jane@example.com>)
+} & {
+  type?: (
+    | EmailShapeType.Dom
+    | EmailShapeType.Home
+    | EmailShapeType.Isdn
+    | EmailShapeType.Internet
+    | EmailShapeType.Intl
+    | EmailShapeType.Label
+    | EmailShapeType.Parcel
+    | EmailShapeType.Postal
+    | EmailShapeType.Pref
+    | EmailShapeType.Work
+    | EmailShapeType.X400
+  )[]; // The type of email.
+};
+
+export type PhoneNumberShape = {
+  value?: string; // The value of a phone number as a tel link (Example <tel:555-555-5555>)
+} & {
+  type?: (
+    | PhoneNumberShapeType.Dom
+    | PhoneNumberShapeType.Home
+    | PhoneNumberShapeType.Isdn
+    | PhoneNumberShapeType.Internet
+    | PhoneNumberShapeType.Intl
+    | PhoneNumberShapeType.Label
+    | PhoneNumberShapeType.Parcel
+    | PhoneNumberShapeType.Postal
+    | PhoneNumberShapeType.Pref
+    | PhoneNumberShapeType.Work
+    | PhoneNumberShapeType.X400
+  )[]; // They type of Phone Number
+};
+
+export type TrustedAppShape = {
+  mode:
+    | (ModeType.Append | ModeType.Control | ModeType.Read | ModeType.Write)[]
+    | (ModeType.Append | ModeType.Control | ModeType.Read | ModeType.Write)[][]; // The level of access provided to this origin
+  origin?: string; // The app origin the user trusts
+};
+
+export type RsaPublicKeyShape = {
+  modulus?: string; // RSA Modulus
+  exponent?: string; // RSA Exponent
 };
 ",
 ]
