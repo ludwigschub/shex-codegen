@@ -6,7 +6,7 @@
   "scripts": {
     "build": "tsc",
     "develop": "concurrently \"yarn build -w\" \"nodemon ./lib\"",
-    "test": "rimraf ./test/generated && mkdir test/generated && jest test"
+    "test": "rimraf ./test/generated && jest test"
   },
   "author": "Ludwig Schubert",
   "license": "GPL-3.0",

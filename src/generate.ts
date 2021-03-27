@@ -8,7 +8,7 @@ import find from "findit";
 
 import TypescriptVisitor from "./visitors/typescript";
 
-export const generate = (dir = "./", outDir = "./generated", suffix?: string) =>
+export const generate = (dir?: string, outDir?: string, suffix?: string) =>
   new Promise((resolve) => {
     const finder = find(dir ?? process.cwd());
 
@@ -43,7 +43,7 @@ const readAndGenerateShex = async (file: string, outDir?: string) => {
 
 const writeShapeFile = (file: string, content: string, outDir?: string) => {
   return new Promise<string>(async (resolve, reject) => {
-    const generatedDir = path.join(process.cwd(), outDir ?? "/generated/");
+    const generatedDir = path.join(process.cwd(), outDir ?? "generated");
     if (!existsSync(generatedDir)) {
       mkdirSync(generatedDir);
     }
@@ -58,4 +58,6 @@ const writeShapeFile = (file: string, content: string, outDir?: string) => {
 
 const getFileName = (file: string) => path.parse(file).name;
 
-generate(process.argv[2], process.argv[3]);
+if (require.main === module) {
+  generate(process.argv[2], process.argv[3]);
+}
