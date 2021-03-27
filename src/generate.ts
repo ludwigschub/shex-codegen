@@ -128,7 +128,6 @@ const writeShapeFile = (file: string, content: string, generates: string) => {
         filepath: generates,
       });
       appendFile(generates, formatted, "binary", (err) => {
-        console.debug(err);
         err ? reject(err) : resolve(formatted);
       });
     }
