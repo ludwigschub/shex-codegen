@@ -51,8 +51,8 @@ export const generate = (
     const visitFile = (generates: string, schema: string) => {
       if (
         !path.parse(generates).ext ||
-        path.parse(generates).ext !== ".ts" ||
-        path.parse(generates).ext !== ".tsx"
+        (path.parse(generates).ext !== ".ts" &&
+          path.parse(generates).ext !== ".tsx")
       ) {
         throw Error(
           "Unsupported file extension: " +
