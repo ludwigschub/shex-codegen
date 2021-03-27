@@ -1,10 +1,10 @@
 #!/usr/bin/env node
 
 import ShExParser from "@shexjs/parser";
-import { readFileSync, appendFile, mkdirSync, statSync } from "fs";
-import path from "path";
+import { readFileSync, appendFile, statSync } from "fs";
 import prettier from "prettier";
 import find from "findit";
+import path from "path";
 
 import { readConfig } from "./config";
 
@@ -20,6 +20,7 @@ export const generate = (
   config?: CodegenConfig
 ) =>
   new Promise((resolve, reject) => {
+    // Prioritise function args over config file
     config = config ?? readConfig() ?? ({ schema, generates } as CodegenConfig);
     schema = schema ?? config.schema;
     generates = generates ?? config.generates;
@@ -48,6 +49,17 @@ export const generate = (
     );
 
     const visitFile = (generates: string, schema: string) => {
+      if (
+        !path.parse(generates).ext ||
+        path.parse(generates).ext !== ".ts" ||
+        path.parse(generates).ext !== ".tsx"
+      ) {
+        throw Error(
+          "Unsupported file extension: " +
+            path.parse(generates).ext +
+            ". Supported types are .ts & .tsx."
+        );
+      }
       visitors[generates].forEach((visitor: any) => {
         generated.push(readAndGenerateShex(visitor, schema, generates));
       });
@@ -93,50 +105,27 @@ const readAndGenerateShex = async (
   );
   const shapeSchema = parser.parse(shapeFile);
   const generated = visitor.visitSchema(shapeSchema);
-  const formatted = await writeShapeFile(file, generated, generates);
+  const formatted = await writeShapeFile(generates, generated);
 
   return formatted;
 };
 
-const writeShapeFile = (file: string, content: string, generates: string) => {
+const writeShapeFile = (generates: string, content: string) => {
   return new Promise<string>(async (resolve, reject) => {
     // prettier formatting
     const prettierConfig = await prettier.resolveConfig(process.cwd());
 
-    const generatedDir = path.join(process.cwd(), generates);
-    let stats;
-
-    try {
-      stats = statSync(generatedDir);
-    } catch {}
-
-    if ((!stats && !generates.endsWith(".ts")) || stats?.isDirectory()) {
-      if (!stats) {
-        mkdirSync(generatedDir, { recursive: true });
-      }
-      generates = path.join(generatedDir, `${getFileName(file)}.ts`);
-      const formatted = prettier.format(content, {
-        ...prettierConfig,
-        filepath: generates,
-      });
-      appendFile(generates, formatted, "binary", (err) => {
-        err ? reject(err) : resolve(formatted);
-      });
-    } else {
-      const formatted = prettier.format(content, {
-        ...prettierConfig,
-        filepath: generates,
-      });
-      appendFile(generates, formatted, "binary", (err) => {
-        err ? reject(err) : resolve(formatted);
-      });
-    }
+    const formatted = prettier.format(content, {
+      ...prettierConfig,
+      filepath: generates,
+    });
+    appendFile(generates, formatted, "binary", (err) => {
+      err ? reject(err) : resolve(formatted);
+    });
   });
 };
 
-const getFileName = (file: string) => path.parse(file).name;
-
 // if used from node cli
 if (require.main === module) {
-  generate();
+  generate(process.argv[2]);
 }

@@ -5,8 +5,9 @@
   "main": "lib/index.js",
   "scripts": {
     "build": "tsc",
-    "develop": "concurrently \"yarn build -w\" \"nodemon ./lib\"",
-    "test": "rimraf ./test/generated && mkdir ./test/generated && jest test"
+    "develop": "concurrently \"yarn build -w\" \"nodemon -w ./lib ./node_modules/.bin/jest test\"",
+    "test": "rimraf ./test/generated && mkdir ./test/generated && jest test",
+    "test:watch": "rimraf ./test/generated && mkdir ./test/generated && node ./lib/watch.js"
   },
   "author": "Ludwig Schubert",
   "license": "GPL-3.0",
@@ -16,7 +17,9 @@
     "camelcase": "^6.2.0",
     "findit": "^2.0.0",
     "js-yaml": "^4.0.0",
-    "prettier": "^2.2.1"
+    "nodemon": "^2.0.7",
+    "prettier": "^2.2.1",
+    "chalk": "^4.1.0"
   },
   "devDependencies": {
     "@babel/preset-env": "^7.13.12",
@@ -24,14 +27,17 @@
     "@types/jest": "^26.0.22",
     "@types/js-yaml": "^4.0.0",
     "@types/node": "^14.14.35",
+    "@types/nodemon": "^1.19.0",
     "@types/prettier": "^2.2.3",
     "concurrently": "^6.0.0",
     "jest": "^26.6.3",
-    "nodemon": "^2.0.7",
     "own-namespace": "^0.4.5",
     "rimraf": "^3.0.2",
     "ts-node": "^9.1.1",
     "typescript": "^4.2.3"
   },
-  "bin": "./lib/generate.js"
+  "bin": {
+    "generate": "./lib/generate.js",
+    "watch": "./lib/watch.js"
+  }
 }
