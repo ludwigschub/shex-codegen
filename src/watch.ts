@@ -9,13 +9,17 @@ import { readConfig } from "./config";
 const log = console.log;
 
 function spawnCodegenDemon(watch: string) {
-  const cp = spawn("nodemon", ["--ext", "*.shex", "--watch", watch], {
-    // the important part is the 4th option 'ipc'
-    // this way `process.send` will be available in the child process (nodemon)
-    // so it can communicate back with parent process (through `.on()`, `.send()`)
-    // https://nodejs.org/api/child_process.html#child_process_options_stdio
-    stdio: ["pipe", "pipe", "pipe", "ipc"],
-  });
+  const cp = spawn(
+    "nodemon",
+    ["--ext", "*.shex", "--watch", "shex-codegen.yml", "--watch", watch],
+    {
+      // the important part is the 4th option 'ipc'
+      // this way `process.send` will be available in the child process (nodemon)
+      // so it can communicate back with parent process (through `.on()`, `.send()`)
+      // https://nodejs.org/api/child_process.html#child_process_options_stdio
+      stdio: ["pipe", "pipe", "pipe", "ipc"],
+    }
+  );
   console.clear();
 
   return cp;
@@ -38,9 +42,9 @@ if (require.main === module) {
         });
         log("\n");
 
-        log(chalk.green("Generated") + " types for:\n");
+        generate();
+        log(chalk.green("Generated") + " types for everything specified by:\n");
         event.data.forEach((file: string) => {
-          generate(file);
           log(chalk.green(file) + "\n");
         });
       }
