@@ -1,5 +1,3 @@
-#!/usr/bin/env node
-
 import ShExParser from "@shexjs/parser";
 import { readFileSync, rmSync, statSync } from "fs";
 import { outputFile } from "fs-extra";
@@ -139,8 +137,3 @@ const writeShapesFile = (generates: string, content: string) => {
     });
   });
 };
-
-// if used from node cli
-if (require.main === module) {
-  generate(process.argv[2]);
-}

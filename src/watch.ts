@@ -1,5 +1,3 @@
-#!/usr/bin/env node
-
 import chalk from "chalk";
 import { spawn } from "child_process";
 
@@ -25,10 +23,10 @@ function spawnCodegenDemon(watch: string) {
   return cp;
 }
 
-// if used from node cli
-if (require.main === module) {
+export function watch(schema?: string) {
   const config = readConfig();
-  var app = spawnCodegenDemon(config?.schema ?? process.cwd());
+  schema = schema ?? config?.schema ?? process.cwd();
+  var app = spawnCodegenDemon(schema);
 
   app.on("message", function (event: { type: string; data: string[] }) {
     if (event.type === "start") {
@@ -42,7 +40,7 @@ if (require.main === module) {
         });
         log("\n");
 
-        generate();
+        generate(schema);
         log(chalk.green("Generated") + " types for everything specified by:\n");
         event.data.forEach((file: string) => {
           log(chalk.green(file) + "\n");
@@ -53,4 +51,6 @@ if (require.main === module) {
 
   // force a restart
   app.send("restart");
+  
+  return app;
 }
