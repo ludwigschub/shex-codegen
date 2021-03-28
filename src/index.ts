@@ -19,9 +19,10 @@ if (require.main === module) {
   switch (scriptOption) {
     case "generate":
       generate(process.argv[3]);
+      break;
     case "watch":
       watch(process.argv[3]);
-    break
+      break;
   }
 }
 
