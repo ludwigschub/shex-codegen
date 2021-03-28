@@ -2,7 +2,7 @@
 
 A library to generate typescript objects from Shape Expressions.
 
-[Usage](#usage) | [Visitors](#visitors) | [Contributing](#contributing)
+[Usage](#usage) | [Visitors](#visitors) | [Features](#features) | [Contributing](#contributing)
 
 ## Usage
 
@@ -65,6 +65,10 @@ export enum SolidProfileShapeType {
 
 ## Features
 
+Existing capabilities:
+* Configure codegen with config file
+* Generate Typescript types and enums from shex
+
 Some planned features include:
 * Typescript operations generator (in planning)
 * Typescript publisher/subscriber generator (in planning)
@@ -74,4 +78,4 @@ Some planned features include:
 
 Use `yarn develop` to start the build process in watch mode and run the tests on file changes.
 
-If you have a use case in which the generated code is incorrect/corrupt please include an example in your pr.
+If you have a use case in which the generated code is incorrect/corrupt please include an example in your pr/issue.
