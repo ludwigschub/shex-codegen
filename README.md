@@ -7,7 +7,7 @@ A library to generate typescript objects from Shape Expressions.
 ## Usage
 
 Install the package via your preferred node package manager:
-`yarn add -D shex-codegen` or `yarn add -D shex-codegen`
+`npm i --save-dev shex-codegen` or `yarn add -D shex-codegen`
 
 Add a config file to your project root directory called `shex-codegen.yml` with roughly the following structure:
 ```yaml
@@ -19,6 +19,20 @@ generates:
     # the visitors to visit the schema with
     - typescript
 
+```
+Then you can use the package in one of your scripts e.g.:
+```
+{
+  ...
+  "develop": "... && yarn shex-codegen watch",
+  ...
+```
+or 
+```
+{
+  ...
+  "build": "... && yarn shex-codegen generate",
+  ...
 ```
 
 ## Visitors
