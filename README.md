@@ -20,6 +20,20 @@ generates:
     - typescript
 
 ```
+Then you can use the package in one of your scripts e.g.:
+```json
+{
+  ...
+  "develop": "... && yarn shex-codegen watch",
+  ...
+```
+or 
+```json
+{
+  ...
+  "build": "... && yarn shex-codegen generate",
+  ...
+```
 
 ## Visitors
 
