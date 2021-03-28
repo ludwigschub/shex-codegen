@@ -45,6 +45,8 @@ PREFIX srs: <https://shaperepo.com/schemas/solidProfile#>
 PREFIX foaf: <http://xmlns.com/foaf/0.1/>
 PREFIX schem: <http://schema.org/>
 PREFIX vcard: <http://www.w3.org/2006/vcard/ns#>
+PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+PREFIX xsd: <http://www.w3.org/2001/XMLSchema#>
 
 srs:SolidProfileShape EXTRA a {
   a [ schem:Person ]
