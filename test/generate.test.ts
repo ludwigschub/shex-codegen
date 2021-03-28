@@ -9,7 +9,7 @@ it("matches snapshots with config file", async () => {
 
 it("matches snapshots without config file", async () => {
   const generated = await generate("test/shapes/solidProfile.shex", {
-    "test/generated/withoutConfig": ["typescript"],
+    "test/generated/withoutConfig.ts": ["typescript"],
   });
   expect(generated).toMatchSnapshot();
 });

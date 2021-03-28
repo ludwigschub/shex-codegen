@@ -1,7 +1,7 @@
 #!/usr/bin/env node
 
 import ShExParser from "@shexjs/parser";
-import { readFileSync, appendFile, statSync } from "fs";
+import { readFileSync, writeFile, rmSync, statSync } from "fs";
 import prettier from "prettier";
 import find from "findit";
 import path from "path";
@@ -19,7 +19,7 @@ export const generate = (
   generates?: Record<string, string[]>,
   config?: CodegenConfig
 ) =>
-  new Promise((resolve, reject) => {
+  new Promise(async (resolve, reject) => {
     // Prioritise function args over config file
     config = config ?? readConfig() ?? ({ schema, generates } as CodegenConfig);
     schema = schema ?? config.schema;
@@ -30,10 +30,17 @@ export const generate = (
       );
     }
 
-    const generated: Promise<string>[] = [];
     const generatesFiles = Object.keys(generates as Record<string, any>);
+    const generated: Record<string, Promise<string>[]> = {};
 
-    const workPath = config.schema ?? process.cwd();
+    // delete possibly previously generated files
+    generatesFiles.forEach((file: string) => {
+      try {
+        rmSync(file);
+      } catch {}
+    });
+
+    const workPath = schema ?? process.cwd();
     const stats = statSync(workPath);
 
     const visitors: Record<string, any> = Object.assign(
@@ -61,15 +68,25 @@ export const generate = (
         );
       }
       visitors[generates].forEach((visitor: any) => {
-        generated.push(readAndGenerateShex(visitor, schema, generates));
+        if ((generated[generates] as Promise<string>[] | undefined)?.push)
+          generated[generates]?.push(readShexAndGenerate(visitor, schema));
+        else generated[generates] = [readShexAndGenerate(visitor, schema)];
       });
+    };
+
+    const writeGenerated = async () => {
+      return Promise.all(generatesFiles.map((file: string) => {
+        return Promise.all(generated[file]).then((generated) => {
+          return writeShapesFile(file, generated?.join("\n") as string);
+        });
+      }));
     };
 
     if (!stats.isDirectory()) {
       generatesFiles.forEach((file: string) => {
         visitFile(file, workPath);
       });
-      resolve(Promise.all(generated));
+      resolve(await writeGenerated());
     } else {
       const finder = find(workPath);
 
@@ -78,22 +95,17 @@ export const generate = (
         if (file.endsWith(config?.matchSuffix ?? "shex")) {
           generatesFiles.forEach((generatesFile: string) => {
             visitFile(generatesFile, file);
-            resolve(Promise.all(generated));
           });
         }
       });
 
-      finder.on("end", function () {
-        resolve(Promise.all(generated));
+      finder.on("end", async function () {
+        resolve(await writeGenerated());
       });
     }
   });
 
-const readAndGenerateShex = async (
-  visitor: any,
-  file: string,
-  generates: string
-) => {
+const readShexAndGenerate = async (visitor: any, file: string) => {
   // Read shape file
   const shapeFile = readFileSync(file, { encoding: "utf8" });
 
@@ -105,12 +117,11 @@ const readAndGenerateShex = async (
   );
   const shapeSchema = parser.parse(shapeFile);
   const generated = visitor.visitSchema(shapeSchema);
-  const formatted = await writeShapeFile(generates, generated);
 
-  return formatted;
+  return generated;
 };
 
-const writeShapeFile = (generates: string, content: string) => {
+const writeShapesFile = (generates: string, content: string) => {
   return new Promise<string>(async (resolve, reject) => {
     // prettier formatting
     const prettierConfig = await prettier.resolveConfig(process.cwd());
@@ -119,7 +130,8 @@ const writeShapeFile = (generates: string, content: string) => {
       ...prettierConfig,
       filepath: generates,
     });
-    appendFile(generates, formatted, "binary", (err) => {
+
+    writeFile(generates, formatted, "utf-8", (err) => {
       err ? reject(err) : resolve(formatted);
     });
   });

@@ -1,4 +1,4 @@
-schema: "test/shapes/solidProfile.shex"
+schema: "test"
 generates:
   test/generated/withConfig.ts:
     - typescript
