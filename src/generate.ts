@@ -1,7 +1,8 @@
 #!/usr/bin/env node
 
 import ShExParser from "@shexjs/parser";
-import { readFileSync, writeFile, rmSync, statSync } from "fs";
+import { readFileSync, rmSync, statSync } from "fs";
+import { outputFile } from "fs-extra";
 import prettier from "prettier";
 import find from "findit";
 import path from "path";
@@ -75,11 +76,13 @@ export const generate = (
     };
 
     const writeGenerated = async () => {
-      return Promise.all(generatesFiles.map((file: string) => {
-        return Promise.all(generated[file]).then((generated) => {
-          return writeShapesFile(file, generated?.join("\n") as string);
-        });
-      }));
+      return Promise.all(
+        generatesFiles.map((file: string) => {
+          return Promise.all(generated[file]).then((generated) => {
+            return writeShapesFile(file, generated?.join("\n") as string);
+          });
+        })
+      );
     };
 
     if (!stats.isDirectory()) {
@@ -131,7 +134,7 @@ const writeShapesFile = (generates: string, content: string) => {
       filepath: generates,
     });
 
-    writeFile(generates, formatted, "utf-8", (err) => {
+    outputFile(generates, formatted, "utf-8", (err) => {
       err ? reject(err) : resolve(formatted);
     });
   });
