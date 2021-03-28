@@ -32,7 +32,7 @@ export function watch(schema?: string) {
     if (event.type === "start") {
     } else if (event.type === "restart") {
       console.clear();
-      log("shex-codegen is in watch mode...\n");
+      log(`shex-codegen is watching ${schema}...\n`);
       if (Array.isArray(event.data)) {
         log(chalk.yellow("Restarted") + " due to changes in:\n");
         event.data.forEach((file: string) => {
