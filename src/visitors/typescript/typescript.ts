@@ -6,7 +6,9 @@ import {
   generateTsType,
   generateEnumName,
   generateTripleConstraint,
+  generateEnum,
 } from "./generates";
+import { addUniqueInlineEnums, reduceExpressions } from "./utils";
 
 const ShExUtil = require("@shexjs/core").Util;
 
@@ -261,34 +263,8 @@ _visitor.visitNodeConstraint = function (shape: any, context: any) {
 _visitor.visitShape = function (shape: any, context: any) {
   ShExUtil._expect(shape, "type", "Shape");
 
-  shape.expression.expressions = shape.expression.expressions?.reduce(
-    (currentExpressions: any[], currentExpression: any) => {
-      const duplicate = currentExpressions?.find(
-        (expression) => expression.predicate === currentExpression.predicate
-      );
-      return duplicate && duplicate.valueExpr && currentExpression.valueExpr
-        ? [
-            ...currentExpressions.filter(
-              (expression) => expression.predicate !== duplicate.predicate
-            ),
-            {
-              ...currentExpression,
-              valueExpr:
-                duplicate.valueExpr?.values &&
-                currentExpression.valueExpr?.values
-                  ? {
-                      ...duplicate.valueExpr,
-                      values: [
-                        ...duplicate.valueExpr.values,
-                        ...currentExpression.valueExpr.values,
-                      ],
-                    }
-                  : currentExpression.valueExpr,
-            },
-          ]
-        : [...currentExpressions, currentExpression];
-    },
-    []
+  shape.expression.expressions = reduceExpressions(
+    shape.expression.expressions
   );
 
   const visited = maybeGenerate(
@@ -306,59 +282,40 @@ _visitor.visitShape = function (shape: any, context: any) {
     context
   );
 
-  visited.extras =
-    visited.expression.extras ??
-    (visited.expression.extra && `{ ${visited.expression.extra} }`);
-  const { generated } = visited.expression;
-  visited.generatedShape = visited.extras
-    ? generated
-      ? `${generated} & (${visited.extras})`
-      : `${visited.extras}`
-    : generated;
+  const { generated, extras, extra, inlineEnums, type } = visited.expression;
+  const generatedExtras = extras ?? (extra && `{ ${extra} }`);
 
-  visited.inlineEnums = visited.expression.inlineEnums;
-
-  if (visited.expression?.type === "TripleConstraint") {
-    visited.generatedShape = `{\n${visited.expression.generated}\n}`;
+  let generatedShape = "";
+  if (generatedExtras) {
+    if (generated) {
+      generatedShape = `${generated} & (${generatedExtras})`;
+    } else {
+      generatedShape = generatedExtras;
+    }
   }
 
-  return visited;
+  visited.inlineEnums = inlineEnums;
+
+  if (type === "TripleConstraint") {
+    generatedShape = `{\n${generated}\n}`;
+  }
+
+  return { ...visited, generatedShape };
 };
 
 _visitor.visitShapes = function (shapes: any[], prefixes: any) {
   if (shapes === undefined) return undefined;
-  const inlineEnums: Record<string, any[]> = {};
+  let inlineEnums: Record<string, any[]> = {};
 
   const visited = shapes.map((shape: any) => {
     if (shape.values) {
-      return `export enum ${generateEnumName(shape.id)} ${generateEnumValues(
-        shape.values,
-        prefixes
-      )};\n`;
+      return generateEnum(shape.id, shape.values, prefixes);
     }
 
     const visitedShape = this.visitShapeDecl({ ...shape, prefixes: prefixes });
 
     if (visitedShape.inlineEnums) {
-      visitedShape.inlineEnums.forEach((inlineEnum: any) => {
-        Object.keys(inlineEnum).forEach((enumKey: string) => {
-          if (!inlineEnums[enumKey]) {
-            inlineEnums[enumKey] = inlineEnum[enumKey];
-          } else {
-            inlineEnums[enumKey] = Object.values(
-              Object.assign(
-                {},
-                ...inlineEnum[enumKey].map((value: string) => ({
-                  [value]: value,
-                })),
-                ...inlineEnums[enumKey].map((value) => ({
-                  [value]: value,
-                }))
-              )
-            );
-          }
-        });
-      });
+      inlineEnums = addUniqueInlineEnums(inlineEnums, visitedShape.inlineEnums);
     }
 
     return { id: shape.id, ...visitedShape };

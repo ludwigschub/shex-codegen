@@ -2,6 +2,13 @@ import { normalizeUrl } from "../common";
 
 const ns = require("own-namespace")();
 
+export function generateEnum(id: string, values: string[], prefixes) {
+  return `export enum ${generateEnumName(id)} ${generateEnumValues(
+    values,
+    prefixes
+  )};\n`;
+}
+
 export function generateEnumName(url?: string, predicate?: string) {
   if (url && !predicate) {
     return normalizeUrl(url as string, true);
