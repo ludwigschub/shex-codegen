@@ -2,7 +2,11 @@ import { normalizeUrl } from "../common";
 
 const ns = require("own-namespace")();
 
-export function generateEnum(
+export function generateShapeExport(name: string, shape: string) {
+  return `export type ${name} = ${shape};\n`;
+}
+
+export function generateEnumExport(
   id: string,
   values: string[],
   prefixes: Record<string, string>

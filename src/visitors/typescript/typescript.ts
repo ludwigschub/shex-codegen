@@ -1,18 +1,22 @@
 import { normalizeUrl } from "../common";
 import {
-  generateValueExpression,
-  generateCommentFromAnnotations,
-  generateEnumValues,
-  generateTsType,
+  generateShapeExport,
   generateEnumName,
-  generateTripleConstraint,
-  generateEnum,
+  generateEnumExport,
   generateExpressions,
+  generateTripleConstraint,
+  generateValueExpression,
+  generateTsType,
+  generateCommentFromAnnotations,
   generateExtras,
 } from "./generates";
 import { addUniqueInlineEnums, reduceInlineEnums } from "./inlineEnumHelpers";
 import { mapEachOfExpression, mapOneOfExpressions } from "./mapExpressions";
-import { NodeConstraintMembers, ShapeMembers, TripleConstraintMembers } from "./members";
+import {
+  NodeConstraintMembers,
+  ShapeMembers,
+  TripleConstraintMembers,
+} from "./members";
 
 const ShExUtil = require("@shexjs/core").Util;
 
@@ -133,12 +137,7 @@ _visitor.visitNodeConstraint = function (shape: any, context: any) {
 _visitor.visitShape = function (shape: any, context: any) {
   ShExUtil._expect(shape, "type", "Shape");
 
-  const visited = maybeGenerate(
-    this,
-    shape,
-    ShapeMembers,
-    context
-  );
+  const visited = maybeGenerate(this, shape, ShapeMembers, context);
   const { generated, extras, extra, inlineEnums, type } = visited.expression;
 
   // generate shape from visited expression
@@ -167,7 +166,7 @@ _visitor.visitShapes = function (shapes: any[], prefixes: any) {
 
   const visited = shapes.map((shape: any) => {
     if (shape.values) {
-      return generateEnum(shape.id, shape.values, prefixes);
+      return generateEnumExport(shape.id, shape.values, prefixes);
     }
 
     const visitedShape = this.visitShapeDecl({ ...shape, prefixes: prefixes });
@@ -183,23 +182,16 @@ _visitor.visitShapes = function (shapes: any[], prefixes: any) {
     if (typeof shape === "string") {
       return shape;
     } else {
-      // if (
-      //   shape?.id ===
-      //   "https://shaperepo.com/schemas/solidProfile##cryptocurrency"
-      // )
-      //   console.debug(shape);
-      return `export type ${normalizeUrl(shape.id, true)} = ${
+      return generateShapeExport(
+        normalizeUrl(shape.id, true),
         shape.generatedShape
-      };\n`;
+      );
     }
   });
 
-  const generatedInlineEnums = Object.keys(inlineEnums).map((key) => {
-    return `export enum ${key} ${generateEnumValues(
-      inlineEnums[key],
-      prefixes
-    )};\n`;
-  });
+  const generatedInlineEnums = Object.keys(inlineEnums).map((key) =>
+    generateEnumExport(key, inlineEnums[key], prefixes)
+  );
 
   return [...generatedInlineEnums, ...generatedShapes];
 };
