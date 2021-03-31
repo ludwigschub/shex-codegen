@@ -185,7 +185,6 @@ _visitor.visitTripleConstraint = function (expr: any, context?: any) {
       predicate: expr.predicate,
     }),
   };
-
   const { valueExpr } = visited.expression;
 
   if (valueExpr.inlineEnum) {
@@ -195,26 +194,17 @@ _visitor.visitTripleConstraint = function (expr: any, context?: any) {
   }
 
   visited.typeValue = generateValueExpression(valueExpr, context);
-
   const comment = generateCommentFromAnnotations(visited.annotations);
-
-  const required = visited.min > 0;
-
-  const multiple = visited.max === -1;
-
   visited.generated = generateTripleConstraint(
     valueExpr,
     visited.typeValue,
     visited.predicate,
     comment,
-    required,
-    multiple
+    visited.min > 0,
+    visited.max === -1
   );
 
-  if (
-    context?.extra?.includes(visited.predicate) &&
-    !valueExpr.values
-  ) {
+  if (context?.extra?.includes(visited.predicate) && !valueExpr.values) {
     visited.extra = visited.generated;
     visited.generated = "";
   }
