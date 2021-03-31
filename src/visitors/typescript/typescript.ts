@@ -1,7 +1,5 @@
-import camelcase from "camelcase";
-import path from "path";
-
-const ns = require("own-namespace")();
+import { normalizeUrl } from "../common";
+import { generateCommentFromAnnotations, generateEnumValues, generateTsType } from "./generates";
 
 const ShExUtil = require("@shexjs/core").Util;
 
@@ -18,26 +16,6 @@ _visitor.visitSchema = function (schema: any) {
     schema._prefixes
   );
   return shapeDeclarations.join("\n");
-};
-
-_visitor.visitShapeExpr = function (expr: any, context: any) {
-  if (isShapeRef(expr)) return this.visitShapeRef(expr);
-  var visited =
-    expr.type === "Shape"
-      ? this.visitShape(expr, context)
-      : expr.type === "NodeConstraint"
-      ? this.visitNodeConstraint(expr, context)
-      : expr.type === "ShapeAnd"
-      ? this.visitShapeAnd(expr, context)
-      : expr.type === "ShapeOr"
-      ? this.visitShapeOr(expr, context)
-      : expr.type === "ShapeNot"
-      ? this.visitShapeNot(expr, context)
-      : expr.type === "ShapeExternal"
-      ? this.visitShapeExternal(expr)
-      : null; // if (expr.type === "ShapeRef") r = 0; // console.warn("visitShapeExpr:", r);
-  if (visited === null) throw Error("unexpected shapeExpr type: " + expr.type);
-  else return visited;
 };
 
 _visitor.visitExpression = function (expr: any, context?: any) {
@@ -247,10 +225,7 @@ _visitor.visitTripleConstraint = function (expr: any, context?: any) {
     visited.typeValue = "string";
   }
 
-  const comment = visited.annotations?.find(
-    (annotation: any) => annotation.predicate === ns.rdfs("comment")
-  );
-  const commentValue = comment ? "// " + comment.object.value : "";
+  const comment = generateCommentFromAnnotations(visited.annotations)
 
   const required = visited.min > 0;
 
@@ -266,7 +241,7 @@ _visitor.visitTripleConstraint = function (expr: any, context?: any) {
 
   visited.generated = `${normalizeUrl(visited.predicate)}${
     !required ? "?" : ""
-  }: ${visited.typeValue}; ${commentValue}`.trim();
+  }: ${visited.typeValue}; ${comment}`.trim();
 
   if (
     context?.extra?.includes(visited.predicate) &&
@@ -456,28 +431,6 @@ _visitor.visitShapes = function (shapes: any[], prefixes: any) {
   return [...generatedInlineEnums, ...generatedShapes];
 };
 
-function generateEnumValues(values: any, prefixes: any) {
-  return `{
-${values
-  .map((value: any, _index: number, values: any[]) => {
-    let normalizedValue = normalizeUrl(value, true);
-    if (
-      values.find(
-        (otherValue) =>
-          normalizeUrl(otherValue, true) === normalizedValue &&
-          otherValue !== value
-      )
-    ) {
-      normalizedValue = normalizeUrl(value, true, normalizedValue, prefixes);
-      return { name: normalizedValue, value: value };
-    }
-    return { name: normalizedValue, value: value };
-  })
-  .map((value: any) => `  ${value.name} = "${value.value}"`)
-  .join(",\n")}
-}`;
-}
-
 function generateEnumName(url?: string, predicate?: string) {
   if (url && !predicate) {
     return normalizeUrl(url as string, true);
@@ -487,29 +440,6 @@ function generateEnumName(url?: string, predicate?: string) {
     return normalizeUrl(predicate, true) + "Type";
   } else
     throw Error("Can't generate enum name without a subject or a predicate");
-}
-
-function generateTsType(valueExpr: any) {
-  if (
-    valueExpr?.nodeKind === "literal" ||
-    valueExpr?.datatype === ns.xsd("string")
-  ) {
-    return "string";
-  } else if (valueExpr?.nodeKind === "iri") {
-    return "string | URL";
-  } else if (valueExpr?.datatype === ns.xsd("integer")) {
-    return "number";
-  } else if (valueExpr?.datatype === ns.xsd("dateTime")) {
-    return "Date";
-  } else if (valueExpr?.datatype) {
-    return valueExpr?.datatype;
-  } else if (typeof valueExpr === "string") {
-    try {
-      return normalizeUrl(valueExpr, true);
-    } catch {
-      return valueExpr;
-    }
-  }
 }
 
 function maybeGenerate(
@@ -541,44 +471,6 @@ function maybeGenerate(
     }
   });
   return generated;
-}
-
-function normalizeUrl(
-  url: string,
-  capitalize?: boolean,
-  not?: string,
-  prefixes?: any
-) {
-  const urlObject = new URL(url);
-  let normalized = camelcase(
-    urlObject.hash === ""
-      ? path.parse(urlObject.pathname).name
-      : urlObject.hash.replace(/#+/, "")
-  );
-
-  if (not && normalized.toLowerCase() === not.toLowerCase()) {
-    const namespaceUrl = url.replace(
-      urlObject.hash === ""
-        ? path.parse(urlObject.pathname).name
-        : urlObject.hash,
-      ""
-    );
-    const namespacePrefix = Object.keys(prefixes).find(
-      (key) => prefixes[key] === namespaceUrl
-    );
-    normalized =
-      namespacePrefix + normalized.replace(/^\w/, (c) => c.toUpperCase());
-  }
-
-  if (capitalize) {
-    return normalized.replace(/^\w/, (c) => c.toUpperCase());
-  }
-
-  return normalized;
-}
-
-function isShapeRef(expr: any) {
-  return typeof expr === "string"; // test for JSON-LD @ID
 }
 
 export const TypescriptVisitor = _visitor;

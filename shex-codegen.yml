@@ -1,4 +1,4 @@
 schema: "test"
 generates:
-  node_modules/@generated/shex.ts:
+  test/generated/withConfig.ts:
     - typescript
