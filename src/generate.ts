@@ -47,7 +47,7 @@ export const generate = (
       ...generatesFiles.map((key) => ({
         [key]: (generates as Record<string, string[]>)[key].map(
           (visitor: string) => {
-            const visitorPath = "./visitors/" + visitor + ".js";
+            const visitorPath = `./visitors/${visitor}/${visitor}.js`;
             return require(visitorPath).default;
           }
         ),

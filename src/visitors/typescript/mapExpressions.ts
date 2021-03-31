@@ -1,3 +1,5 @@
+import { putInBraces } from "./generates";
+
 export function mapOneOfExpressions(
   visitor: any,
   expression: any,
@@ -9,10 +11,10 @@ export function mapOneOfExpressions(
       context
     );
     visitedExpression.generated = visitedExpression.generated
-      ? `{ ${visitedExpression.generated} }`
+      ? putInBraces(visitedExpression.generated)
       : "";
     visitedExpression.extra = visitedExpression.extra
-      ? `{ ${visitedExpression.extra} }`
+      ? putInBraces(visitedExpression.extra)
       : "";
     return visitedExpression;
   }
@@ -35,14 +37,15 @@ export function mapEachOfExpression(
       context
     );
     visitedExpression.extra = visitedExpression.extra
-      ? `{ ${visitedExpression.extra} }`
+      ? putInBraces(visitedExpression.extra)
       : "";
 
     return visitedExpression;
   }
 
   if (expression.type === "EachOf") {
-    return visitor.visitEachOf(expression, context);
+    const visited = visitor.visitEachOf(expression, context);
+    return visited;
   } else if (expression.type === "OneOf") {
     const visited = visitor.visitOneOf(expression, context);
     visited.extras = visited.generated;

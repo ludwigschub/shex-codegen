@@ -1,4 +1,4 @@
-import { normalizeUrl } from "../common";
+import { normalizeDuplicateProperties, normalizeUrl } from "../common";
 import {
   generateShapeExport,
   generateEnumName,
@@ -9,6 +9,7 @@ import {
   generateTsType,
   generateCommentFromAnnotations,
   generateExtras,
+  putInBraces,
 } from "./generates";
 import { addUniqueInlineEnums, reduceInlineEnums } from "./inlineEnumHelpers";
 import { mapEachOfExpression, mapOneOfExpressions } from "./mapExpressions";
@@ -20,22 +21,24 @@ import {
 
 const ShExUtil = require("@shexjs/core").Util;
 
-const _visitor = ShExUtil.Visitor();
+const TypescriptVisitor = ShExUtil.Visitor();
 
-_visitor._visitValue = function (v: any[]) {
+TypescriptVisitor._visitValue = function (v: any[]) {
   return Array.isArray(v) ? (v.length > 1 ? v.join("\n") : v.join("")) : v;
 };
 
-_visitor.visitSchema = function (schema: any) {
+TypescriptVisitor.visitSchema = function (schema: any) {
   ShExUtil._expect(schema, "type", "Schema");
   const shapeDeclarations = this.visitShapes(
     schema["shapes"],
     schema._prefixes
   );
-  return shapeDeclarations.join("\n");
+  return `
+${shapeDeclarations.join("\n")}
+`;
 };
 
-_visitor.visitExpression = function (expr: any, context?: any) {
+TypescriptVisitor.visitExpression = function (expr: any, context?: any) {
   if (typeof expr === "string") return this.visitInclusion(expr);
   const visited =
     expr.type === "TripleConstraint"
@@ -49,7 +52,7 @@ _visitor.visitExpression = function (expr: any, context?: any) {
   else return visited;
 };
 
-_visitor.visitOneOf = function (expr: any, context?: any) {
+TypescriptVisitor.visitOneOf = function (expr: any, context?: any) {
   const visited: Record<string, any> = {
     expressions: expr.expressions.map((expression: any) =>
       mapOneOfExpressions(this, expression, context)
@@ -63,21 +66,22 @@ _visitor.visitOneOf = function (expr: any, context?: any) {
   return visited;
 };
 
-_visitor.visitEachOf = function (expr: any, context?: any) {
+TypescriptVisitor.visitEachOf = function (expr: any, context?: any) {
   const visited: Record<string, any> = {
     expressions: expr.expressions.map((expression: any) =>
       mapEachOfExpression(this, expression, context)
     ),
   };
 
-  visited.generated = generateExpressions(visited.expressions);
+  const generatedExpressions = generateExpressions(visited.expressions);
+  visited.generated = generatedExpressions && putInBraces(generatedExpressions);
   visited.extras = generateExtras(visited.expressions);
   visited.inlineEnums = reduceInlineEnums(visited.expressions);
 
   return visited;
 };
 
-_visitor.visitTripleConstraint = function (expr: any, context?: any) {
+TypescriptVisitor.visitTripleConstraint = function (expr: any, context?: any) {
   const visited = {
     ...expr,
     expression: maybeGenerate(this, expr, TripleConstraintMembers, {
@@ -86,7 +90,7 @@ _visitor.visitTripleConstraint = function (expr: any, context?: any) {
     }),
   };
   const { valueExpr } = visited.expression;
-  const { inlineEnum, inlineEnums } = valueExpr;
+  const { inlineEnum, inlineEnums } = valueExpr ?? {};
 
   visited.inlineEnums = inlineEnum ? [inlineEnum] : inlineEnums;
   visited.typeValue = generateValueExpression(valueExpr, context);
@@ -109,7 +113,7 @@ _visitor.visitTripleConstraint = function (expr: any, context?: any) {
   return visited;
 };
 
-_visitor.visitNodeConstraint = function (shape: any, context: any) {
+TypescriptVisitor.visitNodeConstraint = function (shape: any, context: any) {
   ShExUtil._expect(shape, "type", "NodeConstraint");
 
   const visited: Record<string, any> = {
@@ -134,15 +138,19 @@ _visitor.visitNodeConstraint = function (shape: any, context: any) {
   return visited;
 };
 
-_visitor.visitShape = function (shape: any, context: any) {
+TypescriptVisitor.visitShape = function (shape: any, context: any) {
   ShExUtil._expect(shape, "type", "Shape");
+  shape.expression.expressions = normalizeDuplicateProperties(
+    shape.expression.expressions
+  );
 
   const visited = maybeGenerate(this, shape, ShapeMembers, context);
   const { generated, extras, extra, inlineEnums, type } = visited.expression;
 
+  const generatedExtras = extras ?? (extra && putInBraces(extra));
+
   // generate shape from visited expression
-  let generatedShape = "";
-  const generatedExtras = extras ?? (extra && `{ ${extra} }`);
+  let generatedShape = generated;
   if (generatedExtras) {
     if (generated) {
       generatedShape = `${generated} & (${generatedExtras})`;
@@ -151,7 +159,7 @@ _visitor.visitShape = function (shape: any, context: any) {
     }
   }
   if (type === "TripleConstraint") {
-    generatedShape = `{\n${generated}\n}`;
+    generatedShape = !!generated ? putInBraces(generated) : generatedExtras;
   }
 
   // use inline enums from visited expression
@@ -160,13 +168,13 @@ _visitor.visitShape = function (shape: any, context: any) {
   return { ...visited, generatedShape };
 };
 
-_visitor.visitShapes = function (shapes: any[], prefixes: any) {
+TypescriptVisitor.visitShapes = function (shapes: any[], prefixes: any) {
   if (shapes === undefined) return undefined;
   let inlineEnums: Record<string, any[]> = {};
 
   const visited = shapes.map((shape: any) => {
     if (shape.values) {
-      return generateEnumExport(shape.id, shape.values, prefixes);
+      return generateEnumExport("", shape.values, prefixes, shape.id);
     }
 
     const visitedShape = this.visitShapeDecl({ ...shape, prefixes: prefixes });
@@ -227,6 +235,4 @@ function maybeGenerate(
   return generated;
 }
 
-export const TypescriptVisitor = _visitor;
-
-export default _visitor;
+export default TypescriptVisitor;

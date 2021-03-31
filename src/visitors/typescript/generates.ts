@@ -2,16 +2,21 @@ import { normalizeUrl } from "../common";
 
 const ns = require("own-namespace")();
 
+export function putInBraces(expr: string) {
+  return `{\n${expr}\n}`;
+}
+
 export function generateShapeExport(name: string, shape: string) {
   return `export type ${name} = ${shape};\n`;
 }
 
 export function generateEnumExport(
-  id: string,
+  name: string,
   values: string[],
-  prefixes: Record<string, string>
+  prefixes: Record<string, string>,
+  id?: string
 ) {
-  return `export enum ${generateEnumName(id)} ${generateEnumValues(
+  return `export enum ${id ? generateEnumName(id) : name} ${generateEnumValues(
     values,
     prefixes
   )};\n`;
@@ -69,7 +74,7 @@ export function generateEnumValues(
       }
       return { name: normalizedValue, value: value };
     })
-    .map((value: any) => `  ${value.name} = "${value.value}"`)
+    .map((value: any) => `${value.name} = "${value.value}"`)
     .join(",\n")}
   }`;
 }
@@ -138,17 +143,17 @@ export function generateValueExpression(valueExpr: any, context: any) {
   if (typeof valueExpr === "string") {
     return generateTsType(valueExpr);
   } else if (valueExpr?.typeValue) {
-    if (valueExpr.values) {
-      return generateValues(valueExpr.values, valueExpr.typeValue, context);
+    if (valueExpr.expression.values) {
+      return generateValues(
+        valueExpr.expression.values,
+        valueExpr.typeValue,
+        context
+      );
     } else {
       return valueExpr.typeValue;
     }
   } else if (valueExpr?.generatedShape) {
-    if (valueExpr.expression.generated) {
-      return valueExpr.extras
-        ? valueExpr.generatedShape ?? "" + valueExpr.extras
-        : valueExpr.generatedShape;
-    }
+    return valueExpr?.generatedShape;
   } else {
     return "string";
   }
