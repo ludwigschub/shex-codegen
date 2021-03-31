@@ -4,6 +4,8 @@ import {
   generateCommentFromAnnotations,
   generateEnumValues,
   generateTsType,
+  generateEnumName,
+  generateTripleConstraint,
 } from "./generates";
 
 const ShExUtil = require("@shexjs/core").Util;
@@ -199,22 +201,19 @@ _visitor.visitTripleConstraint = function (expr: any, context?: any) {
   const required = visited.min > 0;
 
   const multiple = visited.max === -1;
-  if (multiple) {
-    visited.typeValue += ` | ${
-      visited.expression.valueExpr?.nodeKind === "iri" ||
-      !visited.expression.valueExpr?.values
-        ? `(${visited.typeValue})`
-        : visited.typeValue
-    }[]`;
-  }
 
-  visited.generated = `${normalizeUrl(visited.predicate)}${
-    !required ? "?" : ""
-  }: ${visited.typeValue}; ${comment}`.trim();
+  visited.generated = generateTripleConstraint(
+    valueExpr,
+    visited.typeValue,
+    visited.predicate,
+    comment,
+    required,
+    multiple
+  );
 
   if (
     context?.extra?.includes(visited.predicate) &&
-    !visited.expression.valueExpr.values
+    !valueExpr.values
   ) {
     visited.extra = visited.generated;
     visited.generated = "";
@@ -399,17 +398,6 @@ _visitor.visitShapes = function (shapes: any[], prefixes: any) {
 
   return [...generatedInlineEnums, ...generatedShapes];
 };
-
-function generateEnumName(url?: string, predicate?: string) {
-  if (url && !predicate) {
-    return normalizeUrl(url as string, true);
-  } else if (url && predicate && normalizeUrl(predicate) === "type") {
-    return normalizeUrl(url as string, true) + normalizeUrl(predicate, true);
-  } else if (predicate) {
-    return normalizeUrl(predicate, true) + "Type";
-  } else
-    throw Error("Can't generate enum name without a subject or a predicate");
-}
 
 function maybeGenerate(
   Visitor: any,

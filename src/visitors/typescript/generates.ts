@@ -2,6 +2,17 @@ import { normalizeUrl } from "../common";
 
 const ns = require("own-namespace")();
 
+export function generateEnumName(url?: string, predicate?: string) {
+  if (url && !predicate) {
+    return normalizeUrl(url as string, true);
+  } else if (url && predicate && normalizeUrl(predicate) === "type") {
+    return normalizeUrl(url as string, true) + normalizeUrl(predicate, true);
+  } else if (predicate) {
+    return normalizeUrl(predicate, true) + "Type";
+  } else
+    throw Error("Can't generate enum name without a subject or a predicate");
+}
+
 export function generateEnumValues(values: any, prefixes: any) {
   return `{
   ${values
@@ -30,6 +41,27 @@ export function generateCommentFromAnnotations(annotations: any[]) {
   );
   const commentValue = comment ? "// " + comment.object.value : "";
   return commentValue;
+}
+
+export function generateTripleConstraint(
+  valueExpr: any,
+  typeValue: string,
+  predicate: string,
+  comment: string,
+  required: boolean,
+  multiple: boolean
+) {
+  if (multiple) {
+    typeValue += ` | ${
+      valueExpr?.nodeKind === "iri" || !valueExpr?.values
+        ? `(${typeValue})`
+        : typeValue
+    }[]`;
+  }
+
+  return `${normalizeUrl(predicate)}${
+    !required ? "?" : ""
+  }: ${typeValue}; ${comment}`.trim();
 }
 
 export function generateValues(
