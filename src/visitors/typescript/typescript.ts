@@ -12,6 +12,7 @@ import {
 } from "./generates";
 import { addUniqueInlineEnums, reduceInlineEnums } from "./inlineEnumHelpers";
 import { mapEachOfExpression, mapOneOfExpressions } from "./mapExpressions";
+import { NodeConstraintMembers, ShapeMembers, TripleConstraintMembers } from "./members";
 
 const ShExUtil = require("@shexjs/core").Util;
 
@@ -73,20 +74,9 @@ _visitor.visitEachOf = function (expr: any, context?: any) {
 };
 
 _visitor.visitTripleConstraint = function (expr: any, context?: any) {
-  const members = [
-    "id",
-    "inverse",
-    "predicate",
-    "valueExpr",
-    "min",
-    "max",
-    "onShapeExpression",
-    "annotations",
-    "semActs",
-  ];
   const visited = {
     ...expr,
-    expression: maybeGenerate(this, expr, members, {
+    expression: maybeGenerate(this, expr, TripleConstraintMembers, {
       ...context,
       predicate: expr.predicate,
     }),
@@ -118,29 +108,8 @@ _visitor.visitTripleConstraint = function (expr: any, context?: any) {
 _visitor.visitNodeConstraint = function (shape: any, context: any) {
   ShExUtil._expect(shape, "type", "NodeConstraint");
 
-  const members = [
-    "id",
-    "nodeKind",
-    "datatype",
-    "pattern",
-    "flags",
-    "length",
-    "reference",
-    "minlength",
-    "maxlength",
-    "mininclusive",
-    "minexclusive",
-    "maxinclusive",
-    "maxexclusive",
-    "totaldigits",
-    "fractiondigits",
-    "values",
-    "annotations",
-    "semActs",
-  ];
-
   const visited: Record<string, any> = {
-    expression: maybeGenerate(this, shape, members, context),
+    expression: maybeGenerate(this, shape, NodeConstraintMembers, context),
   };
 
   if (visited.expression.values) {
@@ -167,15 +136,7 @@ _visitor.visitShape = function (shape: any, context: any) {
   const visited = maybeGenerate(
     this,
     shape,
-    [
-      "id",
-      "abstract",
-      "extends",
-      "closed",
-      "expression",
-      "semActs",
-      "annotations",
-    ],
+    ShapeMembers,
     context
   );
   const { generated, extras, extra, inlineEnums, type } = visited.expression;
