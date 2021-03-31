@@ -6,6 +6,7 @@ import find from "findit";
 import path from "path";
 
 import { readConfig } from "./config";
+import { BasicShapeInterface } from "./visitors";
 
 interface CodegenConfig {
   schema: string;
@@ -77,7 +78,10 @@ export const generate = (
       return Promise.all(
         generatesFiles.map((file: string) => {
           return Promise.all(generated[file]).then((generated) => {
-            return writeShapesFile(file, generated?.join("\n") as string);
+            return writeShapesFile(
+              file,
+              [BasicShapeInterface, ...generated].join("\n") as string
+            );
           });
         })
       );

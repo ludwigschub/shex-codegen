@@ -7,7 +7,7 @@ export function putInBraces(expr: string) {
 }
 
 export function generateShapeExport(name: string, shape: string) {
-  return `export type ${name} = ${shape};\n`;
+  return `export type ${name} = ${shape} & BasicShape;\n`;
 }
 
 export function generateShape(type: string, shape: string, extras: string) {

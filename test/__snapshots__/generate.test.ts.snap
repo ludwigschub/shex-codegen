@@ -2,7 +2,12 @@
 
 exports[`matches snapshots with config file 1`] = `
 Array [
-  "export enum P31Type {
+  "export interface BasicShape {
+  id: string;
+  context: Record<string, string>;
+}
+
+export enum P31Type {
   Q13479982 = \\"http://www.wikidata.org/entity/Q13479982\\",
 }
 
@@ -61,7 +66,8 @@ export type Cryptocurrency = {
         p571?: string;
       };
     }
-);
+) &
+  BasicShape;
 
 export enum ChatShapeType {
   LongChat = \\"http://www.w3.org/ns/pim/meeting#LongChat\\",
@@ -75,23 +81,23 @@ export type ChatShape = {
   sharedPreferences?: string; // Chat preferences
 } & {
   type?: ChatShapeType.LongChat; // Defines the type of the chat as a LongChat
-};
+} & BasicShape;
 
 export type ChatParticipationShape = {
   dtstart?: string; // The date and time this individual began participating in the chat.
   participant?: string; // The WebId of the participant
   backgroundColor?: string; // The background color of the participant's chat bubbles
-};
+} & BasicShape;
 
 export type ChatMessageListShape = {
   message?: ChatMessageShape | ChatMessageShape[]; // A list of messages in the chat
-};
+} & BasicShape;
 
 export type ChatMessageShape = {
   created?: string; // The date and time this message was posted.
   content?: string; // The text content of the message
   maker?: string; // The WebId of the person who sent the message.
-};
+} & BasicShape;
 
 export enum P279Type {
   Q9135 = \\"http://www.wikidata.org/entity/Q9135\\",
@@ -133,7 +139,7 @@ export type OperatingSystem = {
   p268?: {
     p268?: string | string[];
   };
-};
+} & BasicShape;
 
 export enum P31Type {
   Q188267 = \\"http://www.wikidata.org/entity/Q188267\\",
@@ -144,21 +150,21 @@ export type Programminglanguage = {
   p3966?: P3966Paradigm | P3966Paradigm[];
   p577?: P577PublicationDate | P577PublicationDate[];
   p856?: P856Website | P856Website[];
-};
+} & BasicShape;
 
 export type P31InstanceOfProgramminglanguage = {
   p31?: WdProgrammingLanguage;
-};
+} & BasicShape;
 
 export type P279SubclassOfProgramminglanguage =
   | {
       p279?: WdProgrammingLanguage;
       p279?: string | string[];
     }
-  | {
+  | ({
       p279?: P279SubclassOfProgramminglanguage;
       p279?: string | string[];
-    };
+    } & BasicShape);
 
 export enum WdProgrammingLanguage {
   Q9143 = \\"http://www.wikidata.org/entity/Q9143\\",
@@ -168,7 +174,7 @@ export type P178Developer = {
   p178?: string;
   p580?: string;
   p582?: string;
-};
+} & BasicShape;
 
 export type P3966Paradigm = {
   p3966?:
@@ -178,19 +184,19 @@ export type P3966Paradigm = {
     | {
         p279?: ProgrammingParadigm;
       };
-};
+} & BasicShape;
 
 export type ProgrammingParadigm = {
   p31?: P31Type.Q188267;
-};
+} & BasicShape;
 
 export type P577PublicationDate = {
   p577?: string;
-};
+} & BasicShape;
 
 export type P856Website = {
   p856?: string;
-};
+} & BasicShape;
 
 export enum SolidProfileShapeType {
   SchemPerson = \\"http://schema.org/Person\\",
@@ -257,7 +263,7 @@ export type SolidProfileShape = {
     | SolidProfileShapeType.SchemPerson
     | SolidProfileShapeType.FoafPerson
   )[]; // Defines the node as a Person (from foaf)
-};
+} & BasicShape;
 
 export type AddressShape = {
   countryName?: string; // The name of the user's country of residence
@@ -265,7 +271,7 @@ export type AddressShape = {
   postalCode?: string; // The user's postal code
   region?: string; // The name of the user's region (State, Province etc.) of residence
   streetAddress?: string; // The user's street address
-};
+} & BasicShape;
 
 export type EmailShape = {
   value?: string; // The value of an email as a mailto link (Example <mailto:jane@example.com>)
@@ -283,7 +289,7 @@ export type EmailShape = {
     | EmailShapeType.Work
     | EmailShapeType.X400
   )[]; // The type of email.
-};
+} & BasicShape;
 
 export type PhoneNumberShape = {
   value?: string; // The value of a phone number as a tel link (Example <tel:555-555-5555>)
@@ -301,19 +307,19 @@ export type PhoneNumberShape = {
     | PhoneNumberShapeType.Work
     | PhoneNumberShapeType.X400
   )[]; // They type of Phone Number
-};
+} & BasicShape;
 
 export type TrustedAppShape = {
   mode:
     | (ModeType.Append | ModeType.Control | ModeType.Read | ModeType.Write)[]
     | (ModeType.Append | ModeType.Control | ModeType.Read | ModeType.Write)[][]; // The level of access provided to this origin
   origin?: string; // The app origin the user trusts
-};
+} & BasicShape;
 
 export type RsaPublicKeyShape = {
   modulus?: string; // RSA Modulus
   exponent?: string; // RSA Exponent
-};
+} & BasicShape;
 
 export enum P31Type {
   Q1307214 = \\"http://www.wikidata.org/entity/Q1307214\\",
@@ -389,14 +395,19 @@ export type State = {
   };
 } & {
   p31?: P31Type.Q3624078;
-};
+} & BasicShape;
 ",
 ]
 `;
 
 exports[`matches snapshots without config file 1`] = `
 Array [
-  "export enum SolidProfileShapeType {
+  "export interface BasicShape {
+  id: string;
+  context: Record<string, string>;
+}
+
+export enum SolidProfileShapeType {
   SchemPerson = \\"http://schema.org/Person\\",
   FoafPerson = \\"http://xmlns.com/foaf/0.1/Person\\",
 }
@@ -461,7 +472,7 @@ export type SolidProfileShape = {
     | SolidProfileShapeType.SchemPerson
     | SolidProfileShapeType.FoafPerson
   )[]; // Defines the node as a Person (from foaf)
-};
+} & BasicShape;
 
 export type AddressShape = {
   countryName?: string; // The name of the user's country of residence
@@ -469,7 +480,7 @@ export type AddressShape = {
   postalCode?: string; // The user's postal code
   region?: string; // The name of the user's region (State, Province etc.) of residence
   streetAddress?: string; // The user's street address
-};
+} & BasicShape;
 
 export type EmailShape = {
   value?: string; // The value of an email as a mailto link (Example <mailto:jane@example.com>)
@@ -487,7 +498,7 @@ export type EmailShape = {
     | EmailShapeType.Work
     | EmailShapeType.X400
   )[]; // The type of email.
-};
+} & BasicShape;
 
 export type PhoneNumberShape = {
   value?: string; // The value of a phone number as a tel link (Example <tel:555-555-5555>)
@@ -505,19 +516,19 @@ export type PhoneNumberShape = {
     | PhoneNumberShapeType.Work
     | PhoneNumberShapeType.X400
   )[]; // They type of Phone Number
-};
+} & BasicShape;
 
 export type TrustedAppShape = {
   mode:
     | (ModeType.Append | ModeType.Control | ModeType.Read | ModeType.Write)[]
     | (ModeType.Append | ModeType.Control | ModeType.Read | ModeType.Write)[][]; // The level of access provided to this origin
   origin?: string; // The app origin the user trusts
-};
+} & BasicShape;
 
 export type RsaPublicKeyShape = {
   modulus?: string; // RSA Modulus
   exponent?: string; // RSA Exponent
-};
+} & BasicShape;
 ",
 ]
 `;

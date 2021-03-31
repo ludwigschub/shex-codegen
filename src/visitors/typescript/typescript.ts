@@ -34,9 +34,7 @@ TypescriptVisitor.visitSchema = function (schema: any) {
     schema["shapes"],
     schema._prefixes
   );
-  return `
-${shapeDeclarations.join("\n")}
-`;
+  return shapeDeclarations.join("\n");
 };
 
 TypescriptVisitor.visitExpression = function (expr: any, context?: any) {
