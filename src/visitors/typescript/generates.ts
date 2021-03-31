@@ -32,6 +32,57 @@ export function generateCommentFromAnnotations(annotations: any[]) {
   return commentValue;
 }
 
+export function generateValues(
+  values: string[],
+  typeValue: string,
+  context: any
+) {
+  if (values.length > 1) {
+    return `(${values
+      .map((value: string, index: number) => {
+        const otherValue = values.find(
+          (otherValue: string, otherIndex: number) =>
+            index !== otherIndex &&
+            normalizeUrl(otherValue, true) === normalizeUrl(value, true)
+        );
+        return `${typeValue}.${normalizeUrl(
+          value,
+          true,
+          otherValue ? normalizeUrl(otherValue, true) : "",
+          context?.prefixes
+        )}`;
+      })
+      .join(" | ")})[]`;
+  } else {
+    return `${typeValue}.${normalizeUrl(
+      values[0],
+      true,
+      undefined,
+      context?.prefixes
+    )}`;
+  }
+}
+
+export function generateValueExpression(valueExpr: any, context: any) {
+  if (typeof valueExpr === "string") {
+    return generateTsType(valueExpr);
+  } else if (valueExpr?.typeValue) {
+    if (valueExpr.values) {
+      return generateValues(valueExpr.values, valueExpr.typeValue, context);
+    } else {
+      return valueExpr.typeValue;
+    }
+  } else if (valueExpr?.generatedShape) {
+    if (valueExpr.expression.generated) {
+      return valueExpr.extras
+        ? valueExpr.generatedShape ?? "" + valueExpr.extras
+        : valueExpr.generatedShape;
+    }
+  } else {
+    return "string";
+  }
+}
+
 export function generateTsType(valueExpr: any) {
   if (
     valueExpr?.nodeKind === "literal" ||

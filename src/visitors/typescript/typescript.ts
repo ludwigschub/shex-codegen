@@ -1,5 +1,10 @@
 import { normalizeUrl } from "../common";
-import { generateCommentFromAnnotations, generateEnumValues, generateTsType } from "./generates";
+import {
+  generateValueExpression,
+  generateCommentFromAnnotations,
+  generateEnumValues,
+  generateTsType,
+} from "./generates";
 
 const ShExUtil = require("@shexjs/core").Util;
 
@@ -179,53 +184,17 @@ _visitor.visitTripleConstraint = function (expr: any, context?: any) {
     }),
   };
 
-  if (typeof visited.expression.valueExpr === "string") {
-    visited.typeValue = generateTsType(visited.expression.valueExpr);
-  } else if (visited.expression.valueExpr?.typeValue) {
-    visited.typeValue = visited.expression.valueExpr.typeValue;
-    if (visited.expression.valueExpr.inlineEnum) {
-      visited.inlineEnums = [visited.expression.valueExpr.inlineEnum];
-    } else if (visited.expression.valueExpr?.inlineEnums) {
-      visited.inlineEnums = visited.expression.valueExpr.inlineEnums;
-    }
-    visited.typeValue = visited.valueExpr.values
-      ? visited.valueExpr.values.length > 1
-        ? `(${visited.valueExpr.values
-            .map((value: string, index: number) => {
-              const otherValue = visited.valueExpr.values.find(
-                (otherValue: string, otherIndex: number) =>
-                  index !== otherIndex &&
-                  normalizeUrl(otherValue, true) === normalizeUrl(value, true)
-              );
-              return `${visited.typeValue}.${normalizeUrl(
-                value,
-                true,
-                otherValue ? normalizeUrl(otherValue, true) : "",
-                context?.prefixes
-              )}`;
-            })
-            .join(" | ")})[]`
-        : `${visited.typeValue}.${normalizeUrl(
-            visited.valueExpr.values[0],
-            true,
-            undefined,
-            context?.prefixes
-          )}`
-      : visited.typeValue;
-  } else if (visited.expression.valueExpr?.generatedShape) {
-    visited.inlineEnums = visited.expression.valueExpr.inlineEnums;
-    if (visited.expression.valueExpr.expression.generated) {
-      visited.typeValue = visited.expression.valueExpr.generatedShape;
-    }
-    if (visited.expression.valueExpr.extras) {
-      visited.typeValue =
-        visited.typeValue ?? "" + visited.expression.valueExpr.extras;
-    }
-  } else {
-    visited.typeValue = "string";
+  const { valueExpr } = visited.expression;
+
+  if (valueExpr.inlineEnum) {
+    visited.inlineEnums = [valueExpr.inlineEnum];
+  } else if (valueExpr?.inlineEnums) {
+    visited.inlineEnums = valueExpr.inlineEnums;
   }
 
-  const comment = generateCommentFromAnnotations(visited.annotations)
+  visited.typeValue = generateValueExpression(valueExpr, context);
+
+  const comment = generateCommentFromAnnotations(visited.annotations);
 
   const required = visited.min > 0;
 
