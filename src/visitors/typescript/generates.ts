@@ -2,7 +2,7 @@ import { normalizeUrl } from "../common";
 
 const ns = require("own-namespace")();
 
-export function generateEnum(id: string, values: string[], prefixes) {
+export function generateEnum(id: string, values: string[], prefixes: Record<string, string>) {
   return `export enum ${generateEnumName(id)} ${generateEnumValues(
     values,
     prefixes
@@ -20,7 +20,7 @@ export function generateEnumName(url?: string, predicate?: string) {
     throw Error("Can't generate enum name without a subject or a predicate");
 }
 
-export function generateEnumValues(values: any, prefixes: any) {
+export function generateEnumValues(values: any, prefixes: Record<string, string>) {
   return `{
   ${values
     .map((value: any, _index: number, values: any[]) => {

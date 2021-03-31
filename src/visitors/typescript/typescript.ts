@@ -8,7 +8,7 @@ import {
   generateTripleConstraint,
   generateEnum,
 } from "./generates";
-import { addUniqueInlineEnums, reduceExpressions } from "./utils";
+import { addUniqueInlineEnums } from "./utils";
 
 const ShExUtil = require("@shexjs/core").Util;
 
@@ -263,10 +263,6 @@ _visitor.visitNodeConstraint = function (shape: any, context: any) {
 _visitor.visitShape = function (shape: any, context: any) {
   ShExUtil._expect(shape, "type", "Shape");
 
-  shape.expression.expressions = reduceExpressions(
-    shape.expression.expressions
-  );
-
   const visited = maybeGenerate(
     this,
     shape,
@@ -281,11 +277,11 @@ _visitor.visitShape = function (shape: any, context: any) {
     ],
     context
   );
-
   const { generated, extras, extra, inlineEnums, type } = visited.expression;
-  const generatedExtras = extras ?? (extra && `{ ${extra} }`);
-
+  
+  // generate shape from visited expression
   let generatedShape = "";
+  const generatedExtras = extras ?? (extra && `{ ${extra} }`);
   if (generatedExtras) {
     if (generated) {
       generatedShape = `${generated} & (${generatedExtras})`;
@@ -293,12 +289,12 @@ _visitor.visitShape = function (shape: any, context: any) {
       generatedShape = generatedExtras;
     }
   }
-
-  visited.inlineEnums = inlineEnums;
-
   if (type === "TripleConstraint") {
     generatedShape = `{\n${generated}\n}`;
   }
+  
+  // use inline enums from visited expression
+  visited.inlineEnums = inlineEnums;
 
   return { ...visited, generatedShape };
 };
