@@ -21,3 +21,21 @@ export function addUniqueInlineEnums(allInlineEnums: any, newInlineEnums: any) {
 
   return allInlineEnums;
 }
+
+export function reduceInlineEnums(expressions: any[]) {
+  const inlineEnums = expressions
+    .filter((expression: any) => {
+      return !!expression.inlineEnums;
+    })
+    .reduce(
+      (inlineEnums: any, expression: any) =>
+        expression.inlineEnums
+          ? [...inlineEnums, ...expression.inlineEnums]
+          : inlineEnums,
+      []
+    );
+
+  if (Object.keys(inlineEnums).length > 0) {
+    return inlineEnums;
+  }
+}

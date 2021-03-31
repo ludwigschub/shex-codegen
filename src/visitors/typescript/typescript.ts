@@ -7,8 +7,11 @@ import {
   generateEnumName,
   generateTripleConstraint,
   generateEnum,
+  generateExpressions,
+  generateExtras,
 } from "./generates";
-import { addUniqueInlineEnums } from "./utils";
+import { addUniqueInlineEnums, reduceInlineEnums } from "./inlineEnumHelpers";
+import { mapEachOfExpression, mapOneOfExpressions } from "./mapExpressions";
 
 const ShExUtil = require("@shexjs/core").Util;
 
@@ -43,127 +46,28 @@ _visitor.visitExpression = function (expr: any, context?: any) {
 
 _visitor.visitOneOf = function (expr: any, context?: any) {
   const visited: Record<string, any> = {
-    expressions: expr.expressions.map((expression: any) => {
-      if (expression.type === "TripleConstraint") {
-        const visitedExpression = this.visitTripleConstraint(
-          expression,
-          context
-        );
-        visitedExpression.generated = visitedExpression.generated
-          ? `{ ${visitedExpression.generated} }`
-          : "";
-        visitedExpression.extra = visitedExpression.extra
-          ? `{ ${visitedExpression.extra} }`
-          : "";
-        return visitedExpression;
-      }
-
-      if (expression.type === "EachOf") {
-        return this.visitEachOf(expression, context);
-      } else if (expression.type === "OneOf") {
-        return this.visitOneOf(expression, context);
-      }
-    }),
+    expressions: expr.expressions.map((expression: any) =>
+      mapOneOfExpressions(this, expression, context)
+    ),
   };
 
-  visited.generated = `${visited.expressions
-    .filter((expression: any) => !!expression.generated)
-    .map((expression: any) => expression.generated)
-    .join(" | ")}`;
-
-  visited.extras = visited.expressions
-    .reduce(
-      (extras: any[], expression: any) =>
-        expression.extra
-          ? [...extras, expression.extra]
-          : expression.extras
-          ? [...extras, expression.extras]
-          : extras,
-      []
-    )
-    .join(" & ");
-
-  const inlineEnums = visited.expressions
-    .filter((expression: any) => {
-      return !!expression?.inlineEnums;
-    })
-    .reduce(
-      (inlineEnums: any, expression: any) =>
-        expression.inlineEnums
-          ? [...inlineEnums, ...expression.inlineEnums]
-          : inlineEnums,
-      []
-    );
-
-  if (Object.keys(inlineEnums).length > 0) {
-    visited.inlineEnums = inlineEnums;
-  }
+  visited.generated = generateExpressions(visited.expressions, " | ");
+  visited.extras = generateExtras(visited.expressions);
+  visited.inlineEnums = reduceInlineEnums(visited.expressions);
 
   return visited;
 };
 
 _visitor.visitEachOf = function (expr: any, context?: any) {
   const visited: Record<string, any> = {
-    expressions: expr.expressions.map((expression: any) => {
-      if (expression.type === "TripleConstraint") {
-        const visitedExpression = this.visitTripleConstraint(
-          expression,
-          context
-        );
-        visitedExpression.extra = visitedExpression.extra
-          ? `{ 
-  ${visitedExpression.extra} 
-}`
-          : "";
-
-        return visitedExpression;
-      }
-
-      if (expression.type === "EachOf") {
-        return this.visitEachOf(expression, context);
-      } else if (expression.type === "OneOf") {
-        const result = this.visitOneOf(expression, context);
-        result.extras = result.generated;
-        result.generated = "";
-        return result;
-      }
-    }),
+    expressions: expr.expressions.map((expression: any) =>
+      mapEachOfExpression(this, expression, context)
+    ),
   };
 
-  visited.generated = `{
-  ${visited.expressions
-    .filter((expression: any) => !!expression.generated)
-    .map((expression: any) => expression.generated)
-    .join("\n  ")}
-}`;
-
-  visited.extras = visited.expressions
-    .reduce(
-      (extras: any[], expression: any) =>
-        expression.extra
-          ? [...extras, expression.extra]
-          : expression.extras
-          ? [...extras, expression.extras]
-          : extras,
-      []
-    )
-    .join(" & ");
-
-  const inlineEnums = visited.expressions
-    .filter((expression: any) => {
-      return !!expression.inlineEnums;
-    })
-    .reduce(
-      (inlineEnums: any, expression: any) =>
-        expression.inlineEnums
-          ? [...inlineEnums, ...expression.inlineEnums]
-          : inlineEnums,
-      []
-    );
-
-  if (Object.keys(inlineEnums).length > 0) {
-    visited.inlineEnums = inlineEnums;
-  }
+  visited.generated = generateExpressions(visited.expressions);
+  visited.extras = generateExtras(visited.expressions);
+  visited.inlineEnums = reduceInlineEnums(visited.expressions);
 
   return visited;
 };
@@ -188,14 +92,11 @@ _visitor.visitTripleConstraint = function (expr: any, context?: any) {
     }),
   };
   const { valueExpr } = visited.expression;
+  const { inlineEnum, inlineEnums } = valueExpr;
 
-  if (valueExpr.inlineEnum) {
-    visited.inlineEnums = [valueExpr.inlineEnum];
-  } else if (valueExpr?.inlineEnums) {
-    visited.inlineEnums = valueExpr.inlineEnums;
-  }
-
+  visited.inlineEnums = inlineEnum ? [inlineEnum] : inlineEnums;
   visited.typeValue = generateValueExpression(valueExpr, context);
+
   const comment = generateCommentFromAnnotations(visited.annotations);
   visited.generated = generateTripleConstraint(
     valueExpr,
@@ -278,7 +179,7 @@ _visitor.visitShape = function (shape: any, context: any) {
     context
   );
   const { generated, extras, extra, inlineEnums, type } = visited.expression;
-  
+
   // generate shape from visited expression
   let generatedShape = "";
   const generatedExtras = extras ?? (extra && `{ ${extra} }`);
@@ -292,7 +193,7 @@ _visitor.visitShape = function (shape: any, context: any) {
   if (type === "TripleConstraint") {
     generatedShape = `{\n${generated}\n}`;
   }
-  
+
   // use inline enums from visited expression
   visited.inlineEnums = inlineEnums;
 
