@@ -10,6 +10,21 @@ export function generateShapeExport(name: string, shape: string) {
   return `export type ${name} = ${shape};\n`;
 }
 
+export function generateShape(type: string, shape: string, extras: string) {
+  if (type === "TripleConstraint") {
+    return !!shape ? putInBraces(shape) : extras;
+  }
+  if (extras) {
+    if (shape) {
+      return `${shape} & (${extras})`;
+    } else {
+      return extras;
+    }
+  }
+
+  return shape;
+}
+
 export function generateEnumExport(
   name: string,
   values: string[],

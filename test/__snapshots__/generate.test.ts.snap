@@ -171,7 +171,13 @@ export type P178Developer = {
 };
 
 export type P3966Paradigm = {
-  p3966?: { p31?: ProgrammingParadigm } | { p279?: ProgrammingParadigm };
+  p3966?:
+    | {
+        p31?: ProgrammingParadigm;
+      }
+    | {
+        p279?: ProgrammingParadigm;
+      };
 };
 
 export type ProgrammingParadigm = {
@@ -328,27 +334,59 @@ export type State = {
   p1448: string | string[];
   p1705: string | string[];
   p487?: string;
-  p30?: { p31?: P31Type.Q5107 };
+  p30?: {
+    p31?: P31Type.Q5107;
+  };
   p3896?: string;
   p935?: string;
   p373?: string;
   p3722?: string;
-  p910?: { p31?: P31Type.Q4167836 };
-  p5125?: { p31?: P31Type.Q26884324 };
-  p1151?: { p31?: P31Type.Q4663903 };
-  p1792?: { p31?: P31Type.Q4167836 };
-  p1464?: { p31?: P31Type.Q4167836 };
-  p1465?: { p31?: P31Type.Q4167836 };
-  p1791?: { p31?: P31Type.Q4167836 };
-  p1740?: { p31?: P31Type.Q4167836 };
-  p2633?: { p31?: P31Type.Q46865913 };
-  p2184?: { p31?: P31Type.Q17544377 };
+  p910?: {
+    p31?: P31Type.Q4167836;
+  };
+  p5125?: {
+    p31?: P31Type.Q26884324;
+  };
+  p1151?: {
+    p31?: P31Type.Q4663903;
+  };
+  p1792?: {
+    p31?: P31Type.Q4167836;
+  };
+  p1464?: {
+    p31?: P31Type.Q4167836;
+  };
+  p1465?: {
+    p31?: P31Type.Q4167836;
+  };
+  p1791?: {
+    p31?: P31Type.Q4167836;
+  };
+  p1740?: {
+    p31?: P31Type.Q4167836;
+  };
+  p2633?: {
+    p31?: P31Type.Q46865913;
+  };
+  p2184?: {
+    p31?: P31Type.Q17544377;
+  };
   p948?: string;
-  p85?: { p31?: P31Type.Q23691 };
-  p163?: { p31?: P31Type.Q186516 };
-  p237?: { p31?: P31Type.Q645466 };
-  p36?: { p31?: P31Type.Q5119 };
-  p122?: { p31?: P31Type.Q1307214 };
+  p85?: {
+    p31?: P31Type.Q23691;
+  };
+  p163?: {
+    p31?: P31Type.Q186516;
+  };
+  p237?: {
+    p31?: P31Type.Q645466;
+  };
+  p36?: {
+    p31?: P31Type.Q5119;
+  };
+  p122?: {
+    p31?: P31Type.Q1307214;
+  };
 } & {
   p31?: P31Type.Q3624078;
 };

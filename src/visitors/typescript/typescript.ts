@@ -10,6 +10,7 @@ import {
   generateCommentFromAnnotations,
   generateExtras,
   putInBraces,
+  generateShape,
 } from "./generates";
 import { addUniqueInlineEnums, reduceInlineEnums } from "./inlineEnumHelpers";
 import { mapEachOfExpression, mapOneOfExpressions } from "./mapExpressions";
@@ -147,20 +148,11 @@ TypescriptVisitor.visitShape = function (shape: any, context: any) {
   const visited = maybeGenerate(this, shape, ShapeMembers, context);
   const { generated, extras, extra, inlineEnums, type } = visited.expression;
 
+  // look for extras
   const generatedExtras = extras ?? (extra && putInBraces(extra));
 
   // generate shape from visited expression
-  let generatedShape = generated;
-  if (generatedExtras) {
-    if (generated) {
-      generatedShape = `${generated} & (${generatedExtras})`;
-    } else {
-      generatedShape = generatedExtras;
-    }
-  }
-  if (type === "TripleConstraint") {
-    generatedShape = !!generated ? putInBraces(generated) : generatedExtras;
-  }
+  let generatedShape = generateShape(type, generated, generatedExtras);
 
   // use inline enums from visited expression
   visited.inlineEnums = inlineEnums;
