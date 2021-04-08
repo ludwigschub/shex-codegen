@@ -63,9 +63,9 @@ srs:SolidProfileShape EXTRA a {
 becomes
 ```typescript
 export type SolidProfileShape = {
+  id: string;
   hasPhoto?: string; // A link to the person's photo
   name?: string; // An alternate way to define a person's name
-  context: Record<string, string>; // An object that maps the property names to their corresponding iri's
 } & {
   type?: (
     | SolidProfileShapeType.SchemPerson
