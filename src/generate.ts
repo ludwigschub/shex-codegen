@@ -6,7 +6,7 @@ import find from "findit";
 import path from "path";
 
 import { readConfig } from "./config";
-import { BasicShapeInterface } from "./visitors";
+import { BasicShapeInterface, generateShexExport } from "./visitors";
 
 interface CodegenConfig {
   schema: string;
@@ -122,8 +122,9 @@ const readShexAndGenerate = async (visitor: any, file: string) => {
   );
   const shapeSchema = parser.parse(shapeFile);
   const generated = visitor.visitSchema(shapeSchema);
+  const fileName = path.parse(file).name
 
-  return generated;
+  return [...generated, generateShexExport(fileName, shapeFile)].join("\n");
 };
 
 const writeShapesFile = (generates: string, content: string) => {

@@ -7,16 +7,6 @@ Array [
   context: Record<string, string>;
 }
 
-export enum P31Type {
-  Q13479982 = \\"http://www.wikidata.org/entity/Q13479982\\",
-}
-
-export enum P2283Type {
-  Q17083510 = \\"http://www.wikidata.org/entity/Q17083510\\",
-  Q7249984 = \\"http://www.wikidata.org/entity/Q7249984\\",
-  Q48834328 = \\"http://www.wikidata.org/entity/Q48834328\\",
-}
-
 export type Cryptocurrency = {
   p279?: {
     p279?: string;
@@ -69,10 +59,68 @@ export type Cryptocurrency = {
 ) &
   BasicShape;
 
-export enum ChatShapeType {
-  LongChat = \\"http://www.w3.org/ns/pim/meeting#LongChat\\",
+export enum P31Type {
+  Q13479982 = \\"http://www.wikidata.org/entity/Q13479982\\",
 }
 
+export enum P2283Type {
+  Q17083510 = \\"http://www.wikidata.org/entity/Q17083510\\",
+  Q7249984 = \\"http://www.wikidata.org/entity/Q7249984\\",
+  Q48834328 = \\"http://www.wikidata.org/entity/Q48834328\\",
+}
+
+export enum CryptocurrencyContext {
+  p31 = \\"p:p31\\",
+  p279 = \\"p:p279\\",
+  undefined = \\"undefined\\",
+  p178 = \\"p:p178\\",
+  p170 = \\"p:p170\\",
+  p2283 = \\"p:p2283\\",
+  p5777 = \\"p:p5777\\",
+  p6363 = \\"p:p6363\\",
+}
+
+export const cryptocurrencyShex = \`
+PREFIX p: <http://www.wikidata.org/prop/>
+PREFIX ps: <http://www.wikidata.org/prop/statement/>
+PREFIX pq: <http://www.wikidata.org/prop/qualifier/>
+PREFIX wd: <http://www.wikidata.org/entity/>
+PREFIX wdt: <http://www.wikidata.org/prop/direct/>
+PREFIX xsd: <http://www.w3.org/2001/XMLSchema#>
+
+# QUERY MAP: SELECT ?item WHERE {?item wdt:P31 wd:Q13479982}  LIMIT 10
+
+start=@<#cryptocurrency>
+
+<#cryptocurrency> EXTRA p:P31 {
+	# instance of
+	p:P31 { ps:P31  [wd:Q13479982] }* ;
+
+	# subclass of
+        p:P279 { ps:P279 IRI }? ;
+
+	# publication date or inception date 
+	(  p:P577 { ps:P577 xsd:dateTime } ; p:P571 { ps:P571 xsd:dateTime } ?
+	 | p:P571 { ps:P571 xsd:dateTime } ) ;
+
+	# developer
+	p:P178 { ps:P178 IRI }? ;
+
+	# creator 
+	p:P170 {ps:P170 IRI} ? ;
+
+	# uses
+	p:P2283 {ps:P2283 [wd:Q17083510 wd:Q7249984 wd:Q48834328]}+ ;
+
+	## Identifiers
+
+	# CoinMarketCap cryptocurrency ID 
+	p:P5777  . * ;
+
+	# WordLift ID
+	wdt:P6363  . * ;
+}
+\`;
 export type ChatShape = {
   author?: string; // The WebId of the entity that created this chat
   created?: string; // The date and time the chat was created
@@ -99,10 +147,87 @@ export type ChatMessageShape = {
   maker?: string; // The WebId of the person who sent the message.
 } & BasicShape;
 
-export enum P279Type {
-  Q9135 = \\"http://www.wikidata.org/entity/Q9135\\",
+export enum ChatShapeType {
+  LongChat = \\"http://www.w3.org/ns/pim/meeting#LongChat\\",
 }
 
+export enum ChatShapeContext {
+  type = \\"rdf:type\\",
+  author = \\"purl:author\\",
+  created = \\"purl:created\\",
+  title = \\"purl:title\\",
+  participation = \\"flow:participation\\",
+  sharedPreferences = \\"ui:sharedPreferences\\",
+}
+
+export enum ChatParticipationShapeContext {
+  dtstart = \\"ic:dtstart\\",
+  participant = \\"flow:participant\\",
+  backgroundColor = \\"ui:backgroundColor\\",
+}
+
+export enum ChatMessageListShapeContext {
+  name = \\"message\\",
+  value = \\"flow:message\\",
+}
+
+export enum ChatMessageShapeContext {
+  created = \\"terms:created\\",
+  content = \\"ns:content\\",
+  maker = \\"foaf:maker\\",
+}
+
+export const longChatShex = \`
+PREFIX srs: <https://shaperepo.com/schemas/longChat#>
+PREFIX xsd: <http://www.w3.org/2001/XMLSchema#>
+PREFIX mee: <http://www.w3.org/ns/pim/meeting#>
+PREFIX purl: <http://purl.org/dc/elements/1.1/>
+PREFIX flow: <http://www.w3.org/2005/01/wf/flow#>
+PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+PREFIX ns: <http://rdfs.org/sioc/ns#>
+PREFIX terms: <http://purl.org/dc/terms/>
+PREFIX foaf: <http://xmlns.com/foaf/0.1/>
+PREFIX ic: <http://www.w3.org/2002/12/cal/ical#>
+PREFIX ui: <http://www.w3.org/ns/ui#>
+
+srs:ChatShape EXTRA a {
+  a [ mee:LongChat ]
+    // rdfs:comment  \\"Defines the type of the chat as a LongChat\\" ;
+  purl:author IRI
+    // rdfs:comment  \\"The WebId of the entity that created this chat\\" ;
+  purl:created xsd:dateTime
+    // rdfs:comment  \\"The date and time the chat was created\\" ;
+  purl:title xsd:string
+    // rdfs:comment  \\"The title of the chat\\" ;
+  flow:participation @srs:ChatParticipationShape *
+    // rdfs:comment  \\"A list of people participating in this chat\\" ;
+  ui:sharedPreferences IRI ?
+    // rdfs:comment  \\"Chat preferences\\" 
+}
+
+srs:ChatParticipationShape {
+  ic:dtstart xsd:dateTime
+    // rdfs:comment  \\"The date and time this individual began participating in the chat.\\" ;
+  flow:participant IRI
+    // rdfs:comment  \\"The WebId of the participant\\" ;
+  ui:backgroundColor xsd:string ?
+    // rdfs:comment  \\"The background color of the participant's chat bubbles\\"
+}
+
+srs:ChatMessageListShape {
+  flow:message @srs:ChatMessageShape *
+    // rdfs:comment  \\"A list of messages in the chat\\" ;
+}
+
+srs:ChatMessageShape {
+  terms:created xsd:dateTime
+    // rdfs:comment  \\"The date and time this message was posted.\\" ;
+  ns:content xsd:string
+    // rdfs:comment  \\"The text content of the message\\" ;
+  foaf:maker IRI
+    // rdfs:comment  \\"The WebId of the person who sent the message.\\"
+}
+\`;
 export type OperatingSystem = {
   p31?: {
     p31?: {
@@ -141,10 +266,53 @@ export type OperatingSystem = {
   };
 } & BasicShape;
 
-export enum P31Type {
-  Q188267 = \\"http://www.wikidata.org/entity/Q188267\\",
+export enum P279Type {
+  Q9135 = \\"http://www.wikidata.org/entity/Q9135\\",
 }
 
+export enum OperatingSystemContext {
+  p31 = \\"p:p31\\",
+  p275 = \\"p:p275\\",
+  p178 = \\"p:p178\\",
+  p176 = \\"p:p176\\",
+  p910 = \\"p:p910\\",
+  p373 = \\"p:p373\\",
+  p5795 = \\"p:p5795\\",
+  p5868 = \\"p:p5868\\",
+  p268 = \\"p:p268\\",
+}
+
+export const operatingSystemShex = \`
+PREFIX p: <http://www.wikidata.org/prop/>
+PREFIX ps: <http://www.wikidata.org/prop/statement/>
+PREFIX pq: <http://www.wikidata.org/prop/qualifier/>
+PREFIX wd: <http://www.wikidata.org/entity/>
+PREFIX wdt: <http://www.wikidata.org/prop/direct/>
+PREFIX xsd: <http://www.w3.org/2001/XMLSchema#>
+
+start=@<#operating_system>
+
+<#operating_system> {
+# instance of; 
+    p:P31 { ps:P31 { p:P279 {ps:P279 [wd:Q9135]}+} } ;
+# license; 
+    p:P275 { ps:P275 IRI + } ;
+# developer; 
+    p:P178 { ps:P178 IRI } ? ;
+# manufacturer; 
+    p:P176 { ps:P176 IRI } ? ;
+# topic's main category; 
+    p:P910 { ps:P910 IRI } ? ;
+# Commons category;
+    p:P373 { ps:P373 xsd:string * } ? ;
+# IGDB platform ID; 
+    p:P5795 { ps:P5795 xsd:string * } ? ;
+# MobyGames platform ID; 
+    p:P5868 { ps:P5868 xsd:string * } ? ;
+# BnF ID; 
+    p:P268 {ps:P268 xsd:string * } ? ;
+}
+\`;
 export type Programminglanguage = {
   p178?: P178Developer | P178Developer[];
   p3966?: P3966Paradigm | P3966Paradigm[];
@@ -198,46 +366,117 @@ export type P856Website = {
   p856?: string;
 } & BasicShape;
 
-export enum SolidProfileShapeType {
-  SchemPerson = \\"http://schema.org/Person\\",
-  FoafPerson = \\"http://xmlns.com/foaf/0.1/Person\\",
+export enum P31Type {
+  Q188267 = \\"http://www.wikidata.org/entity/Q188267\\",
 }
 
-export enum EmailShapeType {
-  Dom = \\"http://www.w3.org/2006/vcard/ns#Dom\\",
-  Home = \\"http://www.w3.org/2006/vcard/ns#Home\\",
-  Isdn = \\"http://www.w3.org/2006/vcard/ns#ISDN\\",
-  Internet = \\"http://www.w3.org/2006/vcard/ns#Internet\\",
-  Intl = \\"http://www.w3.org/2006/vcard/ns#Intl\\",
-  Label = \\"http://www.w3.org/2006/vcard/ns#Label\\",
-  Parcel = \\"http://www.w3.org/2006/vcard/ns#Parcel\\",
-  Postal = \\"http://www.w3.org/2006/vcard/ns#Postal\\",
-  Pref = \\"http://www.w3.org/2006/vcard/ns#Pref\\",
-  Work = \\"http://www.w3.org/2006/vcard/ns#Work\\",
-  X400 = \\"http://www.w3.org/2006/vcard/ns#X400\\",
+export enum ProgramminglanguageContext {
+  undefined = \\"undefined\\",
+  p178 = \\"p:p178\\",
+  p3966 = \\"p:p3966\\",
+  p577 = \\"p:p577\\",
+  p856 = \\"p:p856\\",
 }
 
-export enum PhoneNumberShapeType {
-  Dom = \\"http://www.w3.org/2006/vcard/ns#Dom\\",
-  Home = \\"http://www.w3.org/2006/vcard/ns#Home\\",
-  Isdn = \\"http://www.w3.org/2006/vcard/ns#ISDN\\",
-  Internet = \\"http://www.w3.org/2006/vcard/ns#Internet\\",
-  Intl = \\"http://www.w3.org/2006/vcard/ns#Intl\\",
-  Label = \\"http://www.w3.org/2006/vcard/ns#Label\\",
-  Parcel = \\"http://www.w3.org/2006/vcard/ns#Parcel\\",
-  Postal = \\"http://www.w3.org/2006/vcard/ns#Postal\\",
-  Pref = \\"http://www.w3.org/2006/vcard/ns#Pref\\",
-  Work = \\"http://www.w3.org/2006/vcard/ns#Work\\",
-  X400 = \\"http://www.w3.org/2006/vcard/ns#X400\\",
+export enum P31InstanceOfProgramminglanguageContext {
+  name = \\"p31\\",
+  value = \\"p:p31\\",
 }
 
-export enum ModeType {
-  Append = \\"http://www.w3.org/ns/auth/acl#Append\\",
-  Control = \\"http://www.w3.org/ns/auth/acl#Control\\",
-  Read = \\"http://www.w3.org/ns/auth/acl#Read\\",
-  Write = \\"http://www.w3.org/ns/auth/acl#Write\\",
+export enum P279SubclassOfProgramminglanguageContext {
+  undefined = \\"undefined\\",
 }
 
+export enum P178DeveloperContext {
+  p178 = \\"p:p178\\",
+  p580 = \\"p:p580\\",
+  p582 = \\"p:p582\\",
+}
+
+export enum P3966ParadigmContext {
+  name = \\"p3966\\",
+  value = \\"p:p3966\\",
+}
+
+export enum ProgrammingParadigmContext {
+  name = \\"p31\\",
+  value = \\"p:p31\\",
+}
+
+export enum P577PublicationDateContext {
+  name = \\"p577\\",
+  value = \\"p:p577\\",
+}
+
+export enum P856WebsiteContext {
+  name = \\"p856\\",
+  value = \\"p:p856\\",
+}
+
+export const programmingLanguageShex = \`
+PREFIX xsd: <http://www.w3.org/2001/XMLSchema#>
+PREFIX prov: <http://www.w3.org/ns/prov#>
+PREFIX p: <http://www.wikidata.org/prop/>
+PREFIX pr: <http://www.wikidata.org/prop/reference/>
+PREFIX ps: <http://www.wikidata.org/prop/statement/>
+PREFIX xsd: <http://www.w3.org/2001/XMLSchema#>
+PREFIX prov: <http://www.w3.org/ns/prov#>
+PREFIX wd: <http://www.wikidata.org/entity/>
+PREFIX wdt: <http://www.wikidata.org/prop/direct/>
+PREFIX p: <http://www.wikidata.org/prop/>
+PREFIX pq: <http://www.wikidata.org/prop/qualifier/>
+
+#test data:  SELECT * WHERE { ?item wdt:P31 wd:Q9143 . } LIMIT 10
+
+start = @<programminglanguage>
+
+<programminglanguage> EXTRA p:P31 {
+  (p:P31 @<#P31_instance_of_programminglanguage>|p:P31 @<#P279_subclass_of_programminglanguage>)+;
+  p:P178 @<#P178_developer>*;
+  p:P3966 @<#P3966_paradigm>*;
+  p:P577 @<#P577_publication_date>*;
+  p:P856 @<#P856_website>*;
+}
+
+<#P31_instance_of_programminglanguage> {
+    ps:P31 @<#wd_programming_language> ;
+}
+
+<#P279_subclass_of_programminglanguage> {
+    (ps:P279 @<#wd_programming_language> ; ps:P279 IRI *) |
+    (ps:P279 @<#P279_subclass_of_programminglanguage>; ps:P279 IRI *)
+}
+
+<#wd_programming_language> [
+  wd:Q9143  # Q9143 = programming language
+]
+
+<#P178_developer> {
+  ps:P178 IRI;
+  pq:P580 xsd:dateTime? ;
+  pq:P582 xsd:dateTime? ;
+}
+
+<#P3966_paradigm> {
+    ps:P3966 EXTRA p:P31 EXTRA p:P279  {
+              (p:P31 @<#Programming_paradigm> | p:P279 @<#Programming_paradigm> );
+
+           } ;
+}
+
+<#Programming_paradigm> {
+    ps:P31 [wd:Q188267] # programming paradigm ;
+}
+  
+
+<#P577_publication_date> {
+  ps:P577 LITERAL;
+}
+
+<#P856_website> {
+  ps:P856 IRI;
+}
+\`;
 export type SolidProfileShape = {
   fn?: string; // The formatted name of a person. Example: John Smith
   name?: string; // An alternate way to define a person's name.
@@ -321,21 +560,220 @@ export type RsaPublicKeyShape = {
   exponent?: string; // RSA Exponent
 } & BasicShape;
 
-export enum P31Type {
-  Q1307214 = \\"http://www.wikidata.org/entity/Q1307214\\",
-  Q5119 = \\"http://www.wikidata.org/entity/Q5119\\",
-  Q645466 = \\"http://www.wikidata.org/entity/Q645466\\",
-  Q186516 = \\"http://www.wikidata.org/entity/Q186516\\",
-  Q23691 = \\"http://www.wikidata.org/entity/Q23691\\",
-  Q17544377 = \\"http://www.wikidata.org/entity/Q17544377\\",
-  Q46865913 = \\"http://www.wikidata.org/entity/Q46865913\\",
-  Q4167836 = \\"http://www.wikidata.org/entity/Q4167836\\",
-  Q4663903 = \\"http://www.wikidata.org/entity/Q4663903\\",
-  Q26884324 = \\"http://www.wikidata.org/entity/Q26884324\\",
-  Q5107 = \\"http://www.wikidata.org/entity/Q5107\\",
-  Q3624078 = \\"http://www.wikidata.org/entity/Q3624078\\",
+export enum SolidProfileShapeType {
+  SchemPerson = \\"http://schema.org/Person\\",
+  FoafPerson = \\"http://xmlns.com/foaf/0.1/Person\\",
 }
 
+export enum EmailShapeType {
+  Dom = \\"http://www.w3.org/2006/vcard/ns#Dom\\",
+  Home = \\"http://www.w3.org/2006/vcard/ns#Home\\",
+  Isdn = \\"http://www.w3.org/2006/vcard/ns#ISDN\\",
+  Internet = \\"http://www.w3.org/2006/vcard/ns#Internet\\",
+  Intl = \\"http://www.w3.org/2006/vcard/ns#Intl\\",
+  Label = \\"http://www.w3.org/2006/vcard/ns#Label\\",
+  Parcel = \\"http://www.w3.org/2006/vcard/ns#Parcel\\",
+  Postal = \\"http://www.w3.org/2006/vcard/ns#Postal\\",
+  Pref = \\"http://www.w3.org/2006/vcard/ns#Pref\\",
+  Work = \\"http://www.w3.org/2006/vcard/ns#Work\\",
+  X400 = \\"http://www.w3.org/2006/vcard/ns#X400\\",
+}
+
+export enum PhoneNumberShapeType {
+  Dom = \\"http://www.w3.org/2006/vcard/ns#Dom\\",
+  Home = \\"http://www.w3.org/2006/vcard/ns#Home\\",
+  Isdn = \\"http://www.w3.org/2006/vcard/ns#ISDN\\",
+  Internet = \\"http://www.w3.org/2006/vcard/ns#Internet\\",
+  Intl = \\"http://www.w3.org/2006/vcard/ns#Intl\\",
+  Label = \\"http://www.w3.org/2006/vcard/ns#Label\\",
+  Parcel = \\"http://www.w3.org/2006/vcard/ns#Parcel\\",
+  Postal = \\"http://www.w3.org/2006/vcard/ns#Postal\\",
+  Pref = \\"http://www.w3.org/2006/vcard/ns#Pref\\",
+  Work = \\"http://www.w3.org/2006/vcard/ns#Work\\",
+  X400 = \\"http://www.w3.org/2006/vcard/ns#X400\\",
+}
+
+export enum ModeType {
+  Append = \\"http://www.w3.org/ns/auth/acl#Append\\",
+  Control = \\"http://www.w3.org/ns/auth/acl#Control\\",
+  Read = \\"http://www.w3.org/ns/auth/acl#Read\\",
+  Write = \\"http://www.w3.org/ns/auth/acl#Write\\",
+}
+
+export enum SolidProfileShapeContext {
+  type = \\"rdf:type\\",
+  fn = \\"vcard:fn\\",
+  name = \\"foaf:name\\",
+  hasAddress = \\"vcard:hasAddress\\",
+  hasEmail = \\"vcard:hasEmail\\",
+  hasPhoto = \\"vcard:hasPhoto\\",
+  img = \\"foaf:img\\",
+  hasTelephone = \\"vcard:hasTelephone\\",
+  phone = \\"vcard:phone\\",
+  organizationName = \\"vcard:organizationName\\",
+  role = \\"vcard:role\\",
+  trustedApp = \\"acl:trustedApp\\",
+  key = \\"cert:key\\",
+  inbox = \\"ldp:inbox\\",
+  preferencesFile = \\"sp:preferencesFile\\",
+  storage = \\"sp:storage\\",
+  account = \\"solid:account\\",
+  privateTypeIndex = \\"solid:privateTypeIndex\\",
+  publicTypeIndex = \\"solid:publicTypeIndex\\",
+  knows = \\"foaf:knows\\",
+}
+
+export enum AddressShapeContext {
+  countryName = \\"vcard:countryName\\",
+  locality = \\"vcard:locality\\",
+  postalCode = \\"vcard:postalCode\\",
+  region = \\"vcard:region\\",
+  streetAddress = \\"vcard:streetAddress\\",
+}
+
+export enum EmailShapeContext {
+  type = \\"rdf:type\\",
+  value = \\"vcard:value\\",
+}
+
+export enum PhoneNumberShapeContext {
+  type = \\"rdf:type\\",
+  value = \\"vcard:value\\",
+}
+
+export enum TrustedAppShapeContext {
+  mode = \\"acl:mode\\",
+  origin = \\"acl:origin\\",
+}
+
+export enum RsaPublicKeyShapeContext {
+  modulus = \\"cert:modulus\\",
+  exponent = \\"cert:exponent\\",
+}
+
+export const solidProfileShex = \`
+PREFIX srs: <https://shaperepo.com/schemas/solidProfile#>
+PREFIX foaf: <http://xmlns.com/foaf/0.1/>
+PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+PREFIX schem: <http://schema.org/>
+PREFIX vcard: <http://www.w3.org/2006/vcard/ns#>
+PREFIX xsd: <http://www.w3.org/2001/XMLSchema#>
+PREFIX acl: <http://www.w3.org/ns/auth/acl#>
+PREFIX cert:  <http://www.w3.org/ns/auth/cert#>
+PREFIX ldp: <http://www.w3.org/ns/ldp#>
+PREFIX sp: <http://www.w3.org/ns/pim/space#>
+PREFIX solid: <http://www.w3.org/ns/solid/terms#>
+
+srs:SolidProfileShape EXTRA a {
+  a [ schem:Person ]
+    // rdfs:comment  \\"Defines the node as a Person (from Schema.org)\\" ;
+  a [ foaf:Person ]
+    // rdfs:comment  \\"Defines the node as a Person (from foaf)\\" ;
+  vcard:fn xsd:string ?
+    // rdfs:comment  \\"The formatted name of a person. Example: John Smith\\" ;
+  foaf:name xsd:string ?
+    // rdfs:comment  \\"An alternate way to define a person's name.\\" ;
+  vcard:hasAddress @srs:AddressShape *
+    // rdfs:comment  \\"The person's street address.\\" ;
+  vcard:hasEmail @srs:EmailShape *
+    // rdfs:comment  \\"The person's email.\\" ;
+  vcard:hasPhoto IRI ?
+    // rdfs:comment  \\"A link to the person's photo\\" ;
+  foaf:img xsd:string ?
+    // rdfs:comment  \\"Photo link but in string form\\" ;
+  vcard:hasTelephone @srs:PhoneNumberShape *
+    // rdfs:comment  \\"Person's telephone number\\" ;
+  vcard:phone xsd:string ?
+    // rdfs:comment  \\"An alternative way to define a person's telephone number using a string\\" ;
+  vcard:organization-name xsd:string ?
+    // rdfs:comment  \\"The name of the organization with which the person is affiliated\\" ;
+  vcard:role xsd:string ?
+    // rdfs:comment  \\"The name of the person's role in their organization\\" ;
+  acl:trustedApp @srs:TrustedAppShape *
+    // rdfs:comment  \\"A list of app origins that are trusted by this user\\" ;
+  cert:key @srs:RSAPublicKeyShape *
+    // rdfs:comment  \\"A list of RSA public keys that are associated with private keys the user holds.\\" ;
+  ldp:inbox IRI
+    // rdfs:comment  \\"The user's LDP inbox to which apps can post notifications\\" ;
+  sp:preferencesFile IRI ?
+    // rdfs:comment  \\"The user's preferences\\" ;
+  sp:storage IRI *
+    // rdfs:comment  \\"The location of a Solid storage server related to this WebId\\" ;
+  solid:account IRI ?
+    // rdfs:comment  \\"The user's account\\" ;
+  solid:privateTypeIndex IRI *
+    // rdfs:comment  \\"A registry of all types used on the user's Pod (for private access only)\\" ;
+  solid:publicTypeIndex IRI *
+    // rdfs:comment  \\"A registry of all types used on the user's Pod (for public access)\\" ;
+  foaf:knows IRI *
+    // rdfs:comment  \\"A list of WebIds for all the people this user knows.\\" ;
+}
+
+srs:AddressShape {
+  vcard:country-name xsd:string ?
+    // rdfs:comment  \\"The name of the user's country of residence\\" ;
+  vcard:locality xsd:string ?
+    // rdfs:comment  \\"The name of the user's locality (City, Town etc.) of residence\\" ;
+  vcard:postal-code xsd:string ?
+    // rdfs:comment  \\"The user's postal code\\" ;
+  vcard:region xsd:string ?
+    // rdfs:comment  \\"The name of the user's region (State, Province etc.) of residence\\" ;
+  vcard:street-address xsd:string ?
+    // rdfs:comment  \\"The user's street address\\" ;
+}
+
+srs:EmailShape EXTRA a {
+  a [
+    vcard:Dom
+    vcard:Home
+    vcard:ISDN
+    vcard:Internet
+    vcard:Intl
+    vcard:Label
+    vcard:Parcel
+    vcard:Postal
+    vcard:Pref
+    vcard:Work
+    vcard:X400
+  ] ?
+    // rdfs:comment  \\"The type of email.\\" ;
+  vcard:value IRI
+    // rdfs:comment  \\"The value of an email as a mailto link (Example <mailto:jane@example.com>)\\" ;
+}
+
+srs:PhoneNumberShape EXTRA a {
+  a [
+    vcard:Dom
+    vcard:Home
+    vcard:ISDN
+    vcard:Internet
+    vcard:Intl
+    vcard:Label
+    vcard:Parcel
+    vcard:Postal
+    vcard:Pref
+    vcard:Work
+    vcard:X400
+  ] ?
+    // rdfs:comment  \\"They type of Phone Number\\" ;
+  vcard:value IRI
+    // rdfs:comment  \\"The value of a phone number as a tel link (Example <tel:555-555-5555>)\\" ;
+}
+
+srs:TrustedAppShape {
+  acl:mode [acl:Append acl:Control acl:Read acl:Write] +
+    // rdfs:comment  \\"The level of access provided to this origin\\" ;
+  acl:origin IRI
+    // rdfs:comment \\"The app origin the user trusts\\"
+}
+
+srs:RSAPublicKeyShape {
+  cert:modulus xsd:string
+    // rdfs:comment  \\"RSA Modulus\\" ;
+  cert:exponent xsd:integer
+    // rdfs:comment  \\"RSA Exponent\\" ;
+}
+\`;
 export type State = {
   p1448: string | string[];
   p1705: string | string[];
@@ -396,6 +834,89 @@ export type State = {
 } & {
   p31?: P31Type.Q3624078;
 } & BasicShape;
+
+export enum P31Type {
+  Q1307214 = \\"http://www.wikidata.org/entity/Q1307214\\",
+  Q5119 = \\"http://www.wikidata.org/entity/Q5119\\",
+  Q645466 = \\"http://www.wikidata.org/entity/Q645466\\",
+  Q186516 = \\"http://www.wikidata.org/entity/Q186516\\",
+  Q23691 = \\"http://www.wikidata.org/entity/Q23691\\",
+  Q17544377 = \\"http://www.wikidata.org/entity/Q17544377\\",
+  Q46865913 = \\"http://www.wikidata.org/entity/Q46865913\\",
+  Q4167836 = \\"http://www.wikidata.org/entity/Q4167836\\",
+  Q4663903 = \\"http://www.wikidata.org/entity/Q4663903\\",
+  Q26884324 = \\"http://www.wikidata.org/entity/Q26884324\\",
+  Q5107 = \\"http://www.wikidata.org/entity/Q5107\\",
+  Q3624078 = \\"http://www.wikidata.org/entity/Q3624078\\",
+}
+
+export enum StateContext {
+  p31 = \\"wdt:p31\\",
+  p1448 = \\"wdt:p1448\\",
+  p1705 = \\"wdt:p1705\\",
+  p487 = \\"wdt:p487\\",
+  p30 = \\"wdt:p30\\",
+  p3896 = \\"wdt:p3896\\",
+  p935 = \\"wdt:p935\\",
+  p373 = \\"wdt:p373\\",
+  p3722 = \\"wdt:p3722\\",
+  p910 = \\"wdt:p910\\",
+  p5125 = \\"wdt:p5125\\",
+  p1151 = \\"wdt:p1151\\",
+  p1792 = \\"wdt:p1792\\",
+  p1464 = \\"wdt:p1464\\",
+  p1465 = \\"wdt:p1465\\",
+  p1791 = \\"wdt:p1791\\",
+  p1740 = \\"wdt:p1740\\",
+  p2633 = \\"wdt:p2633\\",
+  p2184 = \\"wdt:p2184\\",
+  p948 = \\"wdt:p948\\",
+  p85 = \\"wdt:p85\\",
+  p163 = \\"wdt:p163\\",
+  p237 = \\"wdt:p237\\",
+  p36 = \\"wdt:p36\\",
+  p122 = \\"wdt:p122\\",
+}
+
+export const sovereignStateShex = \`
+PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
+PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+PREFIX wd: <http://www.wikidata.org/entity/>
+PREFIX wdt: <http://www.wikidata.org/prop/direct/>
+
+#all non-historical sovereign states
+#SELECT ?item WHERE { ?item wdt:P31 wd:Q3624078 . OPTIONAL { ?item wdt:P576 ?end_time. } FILTER (!BOUND(?end_time)) }
+
+start = @<state>
+
+<state> EXTRA wdt:P31 {
+  wdt:P31 [wd:Q3624078]; #instance of \\"sovereign state\\" and possibly other classes;
+  wdt:P1448 LITERAL+; #has one or more official names in various languages
+  wdt:P1705 LITERAL+; #has one or more native labels
+  wdt:P487 LITERAL; #has Unicode character
+  wdt:P30 EXTRA wdt:P31 {wdt:P31 [wd:Q5107]}; #exists on a continent
+  wdt:P3896 IRI; #has geoshape
+  wdt:P935 LITERAL; #has Commons gallery
+  wdt:P373 LITERAL; #has Commons category
+  wdt:P3722 LITERAL; #has Commons maps category
+  wdt:P910 {wdt:P31 [wd:Q4167836]}; #has Wikipedia main category
+  wdt:P5125 EXTRA wdt:P31 {wdt:P31 [wd:Q26884324]}; #has Wikipedia outline article
+  wdt:P1151 {wdt:P31 [wd:Q4663903]}; #has Wikipedia portal
+  wdt:P1792 {wdt:P31 [wd:Q4167836]}; #has category of associated people
+  wdt:P1464 {wdt:P31 [wd:Q4167836]}; #has category of people born there
+  wdt:P1465 {wdt:P31 [wd:Q4167836]}; #has category of people who died there
+  wdt:P1791 {wdt:P31 [wd:Q4167836]}; #has category of people who are buried there
+  wdt:P1740 {wdt:P31 [wd:Q4167836]}; #has category of films shot there
+  wdt:P2633 {wdt:P31 [wd:Q46865913]}; #has geography article
+  wdt:P2184 {wdt:P31 [wd:Q17544377]}; #has history article
+  wdt:P948 IRI; #has page banner
+  wdt:P85 EXTRA wdt:P31 {wdt:P31 [wd:Q23691]}; #has national anthem
+  wdt:P163 EXTRA wdt:P31 {wdt:P31 [wd:Q186516]}; #has national flag
+  wdt:P237 EXTRA wdt:P31 {wdt:P31 [wd:Q645466]}; #has national coat of arms
+  wdt:P36 EXTRA wdt:P31 {wdt:P31 [wd:Q5119]}; #has capital city
+  wdt:P122 EXTRA wdt:P31 {wdt:P31 [wd:Q1307214]}; #has form of government
+}
+\`;
 ",
 ]
 `;
@@ -405,46 +926,6 @@ Array [
   "export interface BasicShape {
   id: string;
   context: Record<string, string>;
-}
-
-export enum SolidProfileShapeType {
-  SchemPerson = \\"http://schema.org/Person\\",
-  FoafPerson = \\"http://xmlns.com/foaf/0.1/Person\\",
-}
-
-export enum EmailShapeType {
-  Dom = \\"http://www.w3.org/2006/vcard/ns#Dom\\",
-  Home = \\"http://www.w3.org/2006/vcard/ns#Home\\",
-  Isdn = \\"http://www.w3.org/2006/vcard/ns#ISDN\\",
-  Internet = \\"http://www.w3.org/2006/vcard/ns#Internet\\",
-  Intl = \\"http://www.w3.org/2006/vcard/ns#Intl\\",
-  Label = \\"http://www.w3.org/2006/vcard/ns#Label\\",
-  Parcel = \\"http://www.w3.org/2006/vcard/ns#Parcel\\",
-  Postal = \\"http://www.w3.org/2006/vcard/ns#Postal\\",
-  Pref = \\"http://www.w3.org/2006/vcard/ns#Pref\\",
-  Work = \\"http://www.w3.org/2006/vcard/ns#Work\\",
-  X400 = \\"http://www.w3.org/2006/vcard/ns#X400\\",
-}
-
-export enum PhoneNumberShapeType {
-  Dom = \\"http://www.w3.org/2006/vcard/ns#Dom\\",
-  Home = \\"http://www.w3.org/2006/vcard/ns#Home\\",
-  Isdn = \\"http://www.w3.org/2006/vcard/ns#ISDN\\",
-  Internet = \\"http://www.w3.org/2006/vcard/ns#Internet\\",
-  Intl = \\"http://www.w3.org/2006/vcard/ns#Intl\\",
-  Label = \\"http://www.w3.org/2006/vcard/ns#Label\\",
-  Parcel = \\"http://www.w3.org/2006/vcard/ns#Parcel\\",
-  Postal = \\"http://www.w3.org/2006/vcard/ns#Postal\\",
-  Pref = \\"http://www.w3.org/2006/vcard/ns#Pref\\",
-  Work = \\"http://www.w3.org/2006/vcard/ns#Work\\",
-  X400 = \\"http://www.w3.org/2006/vcard/ns#X400\\",
-}
-
-export enum ModeType {
-  Append = \\"http://www.w3.org/ns/auth/acl#Append\\",
-  Control = \\"http://www.w3.org/ns/auth/acl#Control\\",
-  Read = \\"http://www.w3.org/ns/auth/acl#Read\\",
-  Write = \\"http://www.w3.org/ns/auth/acl#Write\\",
 }
 
 export type SolidProfileShape = {
@@ -529,6 +1010,221 @@ export type RsaPublicKeyShape = {
   modulus?: string; // RSA Modulus
   exponent?: string; // RSA Exponent
 } & BasicShape;
+
+export enum SolidProfileShapeType {
+  SchemPerson = \\"http://schema.org/Person\\",
+  FoafPerson = \\"http://xmlns.com/foaf/0.1/Person\\",
+}
+
+export enum EmailShapeType {
+  Dom = \\"http://www.w3.org/2006/vcard/ns#Dom\\",
+  Home = \\"http://www.w3.org/2006/vcard/ns#Home\\",
+  Isdn = \\"http://www.w3.org/2006/vcard/ns#ISDN\\",
+  Internet = \\"http://www.w3.org/2006/vcard/ns#Internet\\",
+  Intl = \\"http://www.w3.org/2006/vcard/ns#Intl\\",
+  Label = \\"http://www.w3.org/2006/vcard/ns#Label\\",
+  Parcel = \\"http://www.w3.org/2006/vcard/ns#Parcel\\",
+  Postal = \\"http://www.w3.org/2006/vcard/ns#Postal\\",
+  Pref = \\"http://www.w3.org/2006/vcard/ns#Pref\\",
+  Work = \\"http://www.w3.org/2006/vcard/ns#Work\\",
+  X400 = \\"http://www.w3.org/2006/vcard/ns#X400\\",
+}
+
+export enum PhoneNumberShapeType {
+  Dom = \\"http://www.w3.org/2006/vcard/ns#Dom\\",
+  Home = \\"http://www.w3.org/2006/vcard/ns#Home\\",
+  Isdn = \\"http://www.w3.org/2006/vcard/ns#ISDN\\",
+  Internet = \\"http://www.w3.org/2006/vcard/ns#Internet\\",
+  Intl = \\"http://www.w3.org/2006/vcard/ns#Intl\\",
+  Label = \\"http://www.w3.org/2006/vcard/ns#Label\\",
+  Parcel = \\"http://www.w3.org/2006/vcard/ns#Parcel\\",
+  Postal = \\"http://www.w3.org/2006/vcard/ns#Postal\\",
+  Pref = \\"http://www.w3.org/2006/vcard/ns#Pref\\",
+  Work = \\"http://www.w3.org/2006/vcard/ns#Work\\",
+  X400 = \\"http://www.w3.org/2006/vcard/ns#X400\\",
+}
+
+export enum ModeType {
+  Append = \\"http://www.w3.org/ns/auth/acl#Append\\",
+  Control = \\"http://www.w3.org/ns/auth/acl#Control\\",
+  Read = \\"http://www.w3.org/ns/auth/acl#Read\\",
+  Write = \\"http://www.w3.org/ns/auth/acl#Write\\",
+}
+
+export enum SolidProfileShapeContext {
+  type = \\"rdf:type\\",
+  fn = \\"vcard:fn\\",
+  name = \\"foaf:name\\",
+  hasAddress = \\"vcard:hasAddress\\",
+  hasEmail = \\"vcard:hasEmail\\",
+  hasPhoto = \\"vcard:hasPhoto\\",
+  img = \\"foaf:img\\",
+  hasTelephone = \\"vcard:hasTelephone\\",
+  phone = \\"vcard:phone\\",
+  organizationName = \\"vcard:organizationName\\",
+  role = \\"vcard:role\\",
+  trustedApp = \\"acl:trustedApp\\",
+  key = \\"cert:key\\",
+  inbox = \\"ldp:inbox\\",
+  preferencesFile = \\"sp:preferencesFile\\",
+  storage = \\"sp:storage\\",
+  account = \\"solid:account\\",
+  privateTypeIndex = \\"solid:privateTypeIndex\\",
+  publicTypeIndex = \\"solid:publicTypeIndex\\",
+  knows = \\"foaf:knows\\",
+}
+
+export enum AddressShapeContext {
+  countryName = \\"vcard:countryName\\",
+  locality = \\"vcard:locality\\",
+  postalCode = \\"vcard:postalCode\\",
+  region = \\"vcard:region\\",
+  streetAddress = \\"vcard:streetAddress\\",
+}
+
+export enum EmailShapeContext {
+  type = \\"rdf:type\\",
+  value = \\"vcard:value\\",
+}
+
+export enum PhoneNumberShapeContext {
+  type = \\"rdf:type\\",
+  value = \\"vcard:value\\",
+}
+
+export enum TrustedAppShapeContext {
+  mode = \\"acl:mode\\",
+  origin = \\"acl:origin\\",
+}
+
+export enum RsaPublicKeyShapeContext {
+  modulus = \\"cert:modulus\\",
+  exponent = \\"cert:exponent\\",
+}
+
+export const solidProfileShex = \`
+PREFIX srs: <https://shaperepo.com/schemas/solidProfile#>
+PREFIX foaf: <http://xmlns.com/foaf/0.1/>
+PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+PREFIX schem: <http://schema.org/>
+PREFIX vcard: <http://www.w3.org/2006/vcard/ns#>
+PREFIX xsd: <http://www.w3.org/2001/XMLSchema#>
+PREFIX acl: <http://www.w3.org/ns/auth/acl#>
+PREFIX cert:  <http://www.w3.org/ns/auth/cert#>
+PREFIX ldp: <http://www.w3.org/ns/ldp#>
+PREFIX sp: <http://www.w3.org/ns/pim/space#>
+PREFIX solid: <http://www.w3.org/ns/solid/terms#>
+
+srs:SolidProfileShape EXTRA a {
+  a [ schem:Person ]
+    // rdfs:comment  \\"Defines the node as a Person (from Schema.org)\\" ;
+  a [ foaf:Person ]
+    // rdfs:comment  \\"Defines the node as a Person (from foaf)\\" ;
+  vcard:fn xsd:string ?
+    // rdfs:comment  \\"The formatted name of a person. Example: John Smith\\" ;
+  foaf:name xsd:string ?
+    // rdfs:comment  \\"An alternate way to define a person's name.\\" ;
+  vcard:hasAddress @srs:AddressShape *
+    // rdfs:comment  \\"The person's street address.\\" ;
+  vcard:hasEmail @srs:EmailShape *
+    // rdfs:comment  \\"The person's email.\\" ;
+  vcard:hasPhoto IRI ?
+    // rdfs:comment  \\"A link to the person's photo\\" ;
+  foaf:img xsd:string ?
+    // rdfs:comment  \\"Photo link but in string form\\" ;
+  vcard:hasTelephone @srs:PhoneNumberShape *
+    // rdfs:comment  \\"Person's telephone number\\" ;
+  vcard:phone xsd:string ?
+    // rdfs:comment  \\"An alternative way to define a person's telephone number using a string\\" ;
+  vcard:organization-name xsd:string ?
+    // rdfs:comment  \\"The name of the organization with which the person is affiliated\\" ;
+  vcard:role xsd:string ?
+    // rdfs:comment  \\"The name of the person's role in their organization\\" ;
+  acl:trustedApp @srs:TrustedAppShape *
+    // rdfs:comment  \\"A list of app origins that are trusted by this user\\" ;
+  cert:key @srs:RSAPublicKeyShape *
+    // rdfs:comment  \\"A list of RSA public keys that are associated with private keys the user holds.\\" ;
+  ldp:inbox IRI
+    // rdfs:comment  \\"The user's LDP inbox to which apps can post notifications\\" ;
+  sp:preferencesFile IRI ?
+    // rdfs:comment  \\"The user's preferences\\" ;
+  sp:storage IRI *
+    // rdfs:comment  \\"The location of a Solid storage server related to this WebId\\" ;
+  solid:account IRI ?
+    // rdfs:comment  \\"The user's account\\" ;
+  solid:privateTypeIndex IRI *
+    // rdfs:comment  \\"A registry of all types used on the user's Pod (for private access only)\\" ;
+  solid:publicTypeIndex IRI *
+    // rdfs:comment  \\"A registry of all types used on the user's Pod (for public access)\\" ;
+  foaf:knows IRI *
+    // rdfs:comment  \\"A list of WebIds for all the people this user knows.\\" ;
+}
+
+srs:AddressShape {
+  vcard:country-name xsd:string ?
+    // rdfs:comment  \\"The name of the user's country of residence\\" ;
+  vcard:locality xsd:string ?
+    // rdfs:comment  \\"The name of the user's locality (City, Town etc.) of residence\\" ;
+  vcard:postal-code xsd:string ?
+    // rdfs:comment  \\"The user's postal code\\" ;
+  vcard:region xsd:string ?
+    // rdfs:comment  \\"The name of the user's region (State, Province etc.) of residence\\" ;
+  vcard:street-address xsd:string ?
+    // rdfs:comment  \\"The user's street address\\" ;
+}
+
+srs:EmailShape EXTRA a {
+  a [
+    vcard:Dom
+    vcard:Home
+    vcard:ISDN
+    vcard:Internet
+    vcard:Intl
+    vcard:Label
+    vcard:Parcel
+    vcard:Postal
+    vcard:Pref
+    vcard:Work
+    vcard:X400
+  ] ?
+    // rdfs:comment  \\"The type of email.\\" ;
+  vcard:value IRI
+    // rdfs:comment  \\"The value of an email as a mailto link (Example <mailto:jane@example.com>)\\" ;
+}
+
+srs:PhoneNumberShape EXTRA a {
+  a [
+    vcard:Dom
+    vcard:Home
+    vcard:ISDN
+    vcard:Internet
+    vcard:Intl
+    vcard:Label
+    vcard:Parcel
+    vcard:Postal
+    vcard:Pref
+    vcard:Work
+    vcard:X400
+  ] ?
+    // rdfs:comment  \\"They type of Phone Number\\" ;
+  vcard:value IRI
+    // rdfs:comment  \\"The value of a phone number as a tel link (Example <tel:555-555-5555>)\\" ;
+}
+
+srs:TrustedAppShape {
+  acl:mode [acl:Append acl:Control acl:Read acl:Write] +
+    // rdfs:comment  \\"The level of access provided to this origin\\" ;
+  acl:origin IRI
+    // rdfs:comment \\"The app origin the user trusts\\"
+}
+
+srs:RSAPublicKeyShape {
+  cert:modulus xsd:string
+    // rdfs:comment  \\"RSA Modulus\\" ;
+  cert:exponent xsd:integer
+    // rdfs:comment  \\"RSA Exponent\\" ;
+}
+\`;
 ",
 ]
 `;

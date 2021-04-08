@@ -6,6 +6,16 @@ export function putInBraces(expr: string) {
   return `{\n${expr}\n}`;
 }
 
+export function generateShexExport(name: string, shex: string) {
+  return `export const ${generateShexName(name)} = \`
+${shex}
+\``
+}
+
+export function generateShexName(name: string) {
+  return name + "Shex";
+}
+
 export function generateShapeExport(name: string, shape: string) {
   return `export type ${name} = ${shape} & BasicShape;\n`;
 }
