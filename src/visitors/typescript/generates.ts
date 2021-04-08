@@ -9,7 +9,7 @@ export function putInBraces(expr: string) {
 export function generateShexExport(name: string, shex: string) {
   return `export const ${generateShexName(name)} = \`
 ${shex}
-\``
+\`\n`
 }
 
 export function generateShexName(name: string) {
