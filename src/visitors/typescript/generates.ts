@@ -6,10 +6,10 @@ export function putInBraces(expr: string) {
   return `{\n${expr}\n}`;
 }
 
-export function generateShexExport(name: string, shex: string) {
+export function generateShexExport(name: string, shex: string) {
   return `export const ${generateShexName(name)} = \`
 ${shex}
-\`\n`
+\`\n`;
 }
 
 export function generateShexName(name: string) {
@@ -49,11 +49,12 @@ export function generateEnumExport(
 
 export function generateNameContextExport(
   id: string,
-  nameContext: Record<string, string>
+  nameContext: Record<string, string>,
+  name?: string
 ) {
-  return `export enum ${generateNameContextName(
-    id
-  )} ${generateNameContextValues(nameContext)}\n`;
+  return `export enum ${
+    id ? generateNameContextName(id) : name
+  } ${generateNameContextValues(nameContext)}\n`;
 }
 
 export function generateExpressions(expressions: any[], join?: string) {
@@ -117,11 +118,11 @@ export function generateNameContextName(id: string) {
   return normalizeUrl(id, true) + "Context";
 }
 
-export function generateNameContextValues(
-  nameContext: Record<string, string>
-) {
+export function generateNameContextValues(nameContext: Record<string, string>) {
   return `{
-  ${Object.keys(nameContext).map((key: string) => `${key} = "${nameContext[key]}"`).join(",\n")}
+  ${Object.keys(nameContext)
+    .map((key: string) => `${key} = "${nameContext[key]}"`)
+    .join(",\n")}
   }`;
 }
 

@@ -121,8 +121,8 @@ const readShexAndGenerate = async (visitor: any, file: string) => {
     { index: true }
   );
   const shapeSchema = parser.parse(shapeFile);
-  const generated = visitor.visitSchema(shapeSchema);
   const fileName = path.parse(file).name
+  const generated = visitor.visitSchema(shapeSchema, fileName);
 
   return [...generated, generateShexExport(fileName, shapeFile)].join("\n");
 };

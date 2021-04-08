@@ -33,3 +33,22 @@ export const reduceNameContexts = (expressions: any[]) => {
     {}
   );
 };
+
+export function mergeAllChildContexts(
+  expressions: any[]
+): Record<string, string> {
+  return expressions.reduce(
+    (allChildrenContexts: Record<string, string>, expression: any) => {
+      console.debug(expression.valueExpr, "LALA");
+      if (expression.valueExpr?.generatedShape) {
+        return {
+          ...allChildrenContexts,
+          ...mergeAllChildContexts(expression.valueExpr.expression.expressions),
+        };
+      } else {
+        return allChildrenContexts;
+      }
+    },
+    {}
+  );
+}

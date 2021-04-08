@@ -1,3 +1,4 @@
+import camelcase from "camelcase";
 import { normalizeDuplicateProperties, normalizeUrl } from "../common";
 import {
   generateShapeExport,
@@ -21,6 +22,7 @@ import {
   TripleConstraintMembers,
 } from "./members";
 import {
+  mergeAllChildContexts,
   predicateToNameContext,
   reduceNameContexts,
 } from "./nameContextHelpers";
@@ -33,11 +35,12 @@ TypescriptVisitor._visitValue = function (v: any[]) {
   return Array.isArray(v) ? (v.length > 1 ? v.join("\n") : v.join("")) : v;
 };
 
-TypescriptVisitor.visitSchema = function (schema: any) {
+TypescriptVisitor.visitSchema = function (schema: any, fileName: string) {
   ShExUtil._expect(schema, "type", "Schema");
   const shapeDeclarations = this.visitShapes(
     schema["shapes"],
-    schema._prefixes
+    schema._prefixes,
+    fileName
   );
   return shapeDeclarations;
 };
@@ -111,7 +114,14 @@ TypescriptVisitor.visitTripleConstraint = function (expr: any, context?: any) {
     visited.max === -1
   );
 
-  visited.nameContext = predicateToNameContext(expr, context?.prefixes);
+  if (valueExpr?.generatedShape) {
+    visited.nameContext = {
+      ...valueExpr.nameContext,
+      ...predicateToNameContext(expr, context?.prefixes),
+    };
+  } else {
+    visited.nameContext = predicateToNameContext(expr, context?.prefixes);
+  }
 
   if (context?.extra?.includes(visited.predicate) && !valueExpr.values) {
     visited.extra = visited.generated;
@@ -171,9 +181,14 @@ TypescriptVisitor.visitShape = function (shape: any, context: any) {
   return { ...visited, generatedShape, inlineEnums, nameContext };
 };
 
-TypescriptVisitor.visitShapes = function (shapes: any[], prefixes: any) {
+TypescriptVisitor.visitShapes = function (
+  shapes: any[],
+  prefixes: any,
+  fileName: string
+) {
   if (shapes === undefined) return undefined;
   let inlineEnums: Record<string, any[]> = {};
+  let nameContexts: Record<string, string> = {};
 
   const visited = shapes.map((shape: any) => {
     if (shape.values) {
@@ -185,6 +200,8 @@ TypescriptVisitor.visitShapes = function (shapes: any[], prefixes: any) {
     if (visitedShape.inlineEnums) {
       inlineEnums = addUniqueInlineEnums(inlineEnums, visitedShape.inlineEnums);
     }
+
+    nameContexts = { ...nameContexts, ...visitedShape.nameContext };
 
     return { id: shape.id, ...visitedShape };
   });
@@ -200,25 +217,17 @@ TypescriptVisitor.visitShapes = function (shapes: any[], prefixes: any) {
     }
   });
 
-  const generateContexts = visited.reduce(
-    (allContextExports: string[], shape: any | string) => {
-      if (typeof shape === "string") {
-        return allContextExports;
-      } else {
-        return [
-          ...allContextExports,
-          generateNameContextExport(shape.id, shape.nameContext),
-        ];
-      }
-    },
-    []
+  const generatedNameContext = generateNameContextExport(
+    "",
+    nameContexts,
+    `${camelcase(fileName)}Context`.replace(/^\w/, (c) => c.toUpperCase())
   );
 
   const generatedInlineEnums = Object.keys(inlineEnums).map((key) =>
     generateEnumExport(key, inlineEnums[key], prefixes)
   );
 
-  return [...generatedShapes, ...generatedInlineEnums, ...generateContexts];
+  return [...generatedShapes, ...generatedInlineEnums, generatedNameContext];
 };
 
 function maybeGenerate(
