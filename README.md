@@ -77,6 +77,12 @@ export enum SolidProfileShapeType {
   SchemPerson = "http://schema.org/Person",
   FoafPerson = "http://xmlns.com/foaf/0.1/Person",
 }
+
+export enum SolidProfileContext {
+  "type" = "rdf:type",
+  "name" = "foaf:name",
+  "hasPhoto" = "vcard:hasPhoto",
+}
 ```
 
 ## Features
