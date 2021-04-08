@@ -1,6 +1,6 @@
 # shex-codegen
 
-A library to generate typescript objects from Shape Expressions.
+A library to generate typescript from Shape Expressions.
 
 [Usage](#usage) | [Visitors](#visitors) | [Features](#features) | [Contributing](#contributing)
 
