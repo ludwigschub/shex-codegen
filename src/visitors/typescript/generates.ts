@@ -37,6 +37,15 @@ export function generateEnumExport(
   )};\n`;
 }
 
+export function generateNameContextExport(
+  id: string,
+  nameContext: Record<string, string>
+) {
+  return `export enum ${generateNameContextName(
+    id
+  )} ${generateNameContextValues(nameContext)}\n`;
+}
+
 export function generateExpressions(expressions: any[], join?: string) {
   return expressions
     .filter((expression: any) => !!expression.generated)
@@ -91,6 +100,18 @@ export function generateEnumValues(
     })
     .map((value: any) => `${value.name} = "${value.value}"`)
     .join(",\n")}
+  }`;
+}
+
+export function generateNameContextName(id: string) {
+  return normalizeUrl(id, true) + "Context";
+}
+
+export function generateNameContextValues(
+  nameContext: Record<string, string>
+) {
+  return `{
+  ${Object.keys(nameContext).map((key: string) => `${key} = "${nameContext[key]}"`).join(",\n")}
   }`;
 }
 

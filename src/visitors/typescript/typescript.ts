@@ -11,6 +11,7 @@ import {
   generateExtras,
   putInBraces,
   generateShape,
+  generateNameContextExport,
 } from "./generates";
 import { addUniqueInlineEnums, reduceInlineEnums } from "./inlineEnumHelpers";
 import { mapEachOfExpression, mapOneOfExpressions } from "./mapExpressions";
@@ -19,6 +20,10 @@ import {
   ShapeMembers,
   TripleConstraintMembers,
 } from "./members";
+import {
+  predicateToNameContext,
+  reduceNameContexts,
+} from "./nameContextHelpers";
 
 const ShExUtil = require("@shexjs/core").Util;
 
@@ -61,6 +66,7 @@ TypescriptVisitor.visitOneOf = function (expr: any, context?: any) {
   visited.generated = generateExpressions(visited.expressions, " | ");
   visited.extras = generateExtras(visited.expressions);
   visited.inlineEnums = reduceInlineEnums(visited.expressions);
+  visited.nameContext = reduceNameContexts(visited.expressions);
 
   return visited;
 };
@@ -76,6 +82,7 @@ TypescriptVisitor.visitEachOf = function (expr: any, context?: any) {
   visited.generated = generatedExpressions && putInBraces(generatedExpressions);
   visited.extras = generateExtras(visited.expressions);
   visited.inlineEnums = reduceInlineEnums(visited.expressions);
+  visited.nameContext = reduceNameContexts(visited.expressions);
 
   return visited;
 };
@@ -103,6 +110,8 @@ TypescriptVisitor.visitTripleConstraint = function (expr: any, context?: any) {
     visited.min > 0,
     visited.max === -1
   );
+
+  visited.nameContext = predicateToNameContext(expr, context?.prefixes);
 
   if (context?.extra?.includes(visited.predicate) && !valueExpr.values) {
     visited.extra = visited.generated;
@@ -144,7 +153,14 @@ TypescriptVisitor.visitShape = function (shape: any, context: any) {
   );
 
   const visited = maybeGenerate(this, shape, ShapeMembers, context);
-  const { generated, extras, extra, inlineEnums, type } = visited.expression;
+  const {
+    generated,
+    extras,
+    extra,
+    inlineEnums,
+    type,
+    nameContext,
+  } = visited.expression;
 
   // look for extras
   const generatedExtras = extras ?? (extra && putInBraces(extra));
@@ -152,10 +168,7 @@ TypescriptVisitor.visitShape = function (shape: any, context: any) {
   // generate shape from visited expression
   let generatedShape = generateShape(type, generated, generatedExtras);
 
-  // use inline enums from visited expression
-  visited.inlineEnums = inlineEnums;
-
-  return { ...visited, generatedShape };
+  return { ...visited, generatedShape, inlineEnums, nameContext };
 };
 
 TypescriptVisitor.visitShapes = function (shapes: any[], prefixes: any) {
@@ -187,11 +200,25 @@ TypescriptVisitor.visitShapes = function (shapes: any[], prefixes: any) {
     }
   });
 
+  const generateContexts = visited.reduce(
+    (allContextExports: string[], shape: any | string) => {
+      if (typeof shape === "string") {
+        return allContextExports;
+      } else {
+        return [
+          ...allContextExports,
+          generateNameContextExport(shape.id, shape.nameContext),
+        ];
+      }
+    },
+    []
+  );
+
   const generatedInlineEnums = Object.keys(inlineEnums).map((key) =>
     generateEnumExport(key, inlineEnums[key], prefixes)
   );
 
-  return [...generatedInlineEnums, ...generatedShapes];
+  return [...generatedShapes, ...generatedInlineEnums, ...generateContexts];
 };
 
 function maybeGenerate(
