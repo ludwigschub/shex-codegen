@@ -50,9 +50,9 @@ PREFIX xsd: <http://www.w3.org/2001/XMLSchema#>
 
 srs:SolidProfileShape EXTRA a {
   a [ schem:Person ]
-    // rdfs:comment  "Defines the node as a Person" ;
+    // rdfs:comment  "Declares the node to be a schema.org Person" ;
   a [ foaf:Person ]
-    // rdfs:comment  "Defines the node as a Person" ;
+    // rdfs:comment  "Declares the node to be a FOAF Person" ;
   vcard:hasPhoto IRI ?
     // rdfs:comment  "A link to the person's photo" ;
   foaf:name xsd:string ?
