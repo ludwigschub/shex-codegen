@@ -22,7 +22,6 @@ import {
   TripleConstraintMembers,
 } from "./members";
 import {
-  mergeAllChildContexts,
   predicateToNameContext,
   reduceNameContexts,
 } from "./nameContextHelpers";
@@ -110,7 +109,7 @@ TypescriptVisitor.visitTripleConstraint = function (expr: any, context?: any) {
     visited.typeValue,
     visited.predicate,
     comment,
-    visited.min > 0,
+    visited.min > 0 || (!visited.min && !visited.max),
     visited.max === -1
   );
 
