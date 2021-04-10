@@ -213,7 +213,7 @@ export function generateValueExpression(valueExpr: any, context: any) {
 export function generateTsType(valueExpr: any) {
   if (valueExpr?.nodeKind === "iri") {
     return "string | NamedNode";
-  } else if (valueExpr?.datatype === ns.xsd("integer")) {
+  } else if (numberTypes.includes(valueExpr?.datatype)) {
     return "number | Literal";
   } else if (valueExpr?.datatype === ns.xsd("dateTime")) {
     return "Date | Literal";
@@ -229,3 +229,20 @@ export function generateTsType(valueExpr: any) {
     }
   }
 }
+
+const numberTypes = [
+  ns.xsd("integer"),
+  ns.xsd("decimal"),
+  ns.xsd("nonPositiveInteger"),
+  ns.xsd("negativeInteger"),
+  ns.xsd("long"),
+  ns.xsd("int"),
+  ns.xsd("short"),
+  ns.xsd("byte"),
+  ns.xsd("nonNegativeInteger"),
+  ns.xsd("unsignedLong"),
+  ns.xsd("unsignedInt"),
+  ns.xsd("unsignedShort"),
+  ns.xsd("unsignedByte"),
+  ns.xsd("positiveInteger"),
+];
