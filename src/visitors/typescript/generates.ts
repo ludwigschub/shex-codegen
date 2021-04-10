@@ -6,6 +6,10 @@ export function putInBraces(expr: string) {
   return `{\n${expr}\n}`;
 }
 
+export function generateRdfImport() {
+  return `import { NamedNode, Literal } from "rdflib"; \n`;
+}
+
 export function generateShexExport(name: string, shex: string) {
   return `export const ${generateShexName(name)} = \`
 ${shex}
@@ -207,17 +211,14 @@ export function generateValueExpression(valueExpr: any, context: any) {
 }
 
 export function generateTsType(valueExpr: any) {
-  if (
-    valueExpr?.nodeKind === "literal" ||
-    valueExpr?.datatype === ns.xsd("string")
-  ) {
-    return "string";
-  } else if (valueExpr?.nodeKind === "iri") {
-    return "string | URL";
+  if (valueExpr?.nodeKind === "iri") {
+    return "string | NamedNode";
   } else if (valueExpr?.datatype === ns.xsd("integer")) {
-    return "number";
+    return "number | Literal";
   } else if (valueExpr?.datatype === ns.xsd("dateTime")) {
-    return "Date";
+    return "Date | Literal";
+  } else if (valueExpr?.datatype === ns.xsd("string")) {
+    return "string | Literal";
   } else if (valueExpr?.datatype) {
     return valueExpr?.datatype;
   } else if (typeof valueExpr === "string") {

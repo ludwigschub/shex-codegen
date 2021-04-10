@@ -6,7 +6,7 @@ import find from "findit";
 import path from "path";
 
 import { readConfig } from "./config";
-import { BasicShapeInterface, generateShexExport } from "./visitors";
+import { BasicShapeInterface, generateRdfImport, generateShexExport } from "./visitors";
 
 interface CodegenConfig {
   schema: string;
@@ -80,7 +80,7 @@ export const generate = (
           return Promise.all(generated[file]).then((generated) => {
             return writeShapesFile(
               file,
-              [BasicShapeInterface, ...generated].join("\n") as string
+              [generateRdfImport(), BasicShapeInterface, ...generated].join("\n") as string
             );
           });
         })

@@ -2,31 +2,32 @@
 
 exports[`matches snapshots with config file 1`] = `
 Array [
-  "export interface BasicShape {
+  "import { NamedNode, Literal } from \\"rdflib\\";
+
+export interface BasicShape {
   id: string;
-  context: Record<string, string>;
 }
 
 export type Cryptocurrency = {
   p279?: {
-    p279?: string;
+    p279: string | NamedNode;
   };
   p178?: {
-    p178?: string;
+    p178: string | NamedNode;
   };
   p170?: {
-    p170?: string;
+    p170: string | NamedNode;
   };
   p2283:
     | {
-        p2283?: (
+        p2283: (
           | P2283Type.Q17083510
           | P2283Type.Q7249984
           | P2283Type.Q48834328
         )[];
       }
     | {
-        p2283?: (
+        p2283: (
           | P2283Type.Q17083510
           | P2283Type.Q7249984
           | P2283Type.Q48834328
@@ -38,22 +39,22 @@ export type Cryptocurrency = {
   | ({
       p31?:
         | {
-            p31?: P31Type.Q13479982;
+            p31: P31Type.Q13479982;
           }
         | {
-            p31?: P31Type.Q13479982;
+            p31: P31Type.Q13479982;
           }[];
     } & {
-      p577?: {
-        p577?: string;
+      p577: {
+        p577: Date | Literal;
       };
       p571?: {
-        p571?: string;
+        p571: Date | Literal;
       };
     })
   | {
-      p571?: {
-        p571?: string;
+      p571: {
+        p571: Date | Literal;
       };
     }
 ) &
@@ -123,19 +124,19 @@ start=@<#cryptocurrency>
 \`;
 
 export type ChatShape = {
-  author?: string; // The WebId of the entity that created this chat
-  created?: string; // The date and time the chat was created
-  title?: string; // The title of the chat
+  author: string | NamedNode; // The WebId of the entity that created this chat
+  created: Date | Literal; // The date and time the chat was created
+  title: string | Literal; // The title of the chat
   participation?: ChatParticipationShape | ChatParticipationShape[]; // A list of people participating in this chat
-  sharedPreferences?: string; // Chat preferences
+  sharedPreferences?: string | NamedNode; // Chat preferences
 } & {
-  type?: ChatShapeType.LongChat; // Defines the type of the chat as a LongChat
+  type: ChatShapeType.LongChat; // Defines the type of the chat as a LongChat
 } & BasicShape;
 
 export type ChatParticipationShape = {
-  dtstart?: string; // The date and time this individual began participating in the chat.
-  participant?: string; // The WebId of the participant
-  backgroundColor?: string; // The background color of the participant's chat bubbles
+  dtstart: Date | Literal; // The date and time this individual began participating in the chat.
+  participant: string | NamedNode; // The WebId of the participant
+  backgroundColor?: string | Literal; // The background color of the participant's chat bubbles
 } & BasicShape;
 
 export type ChatMessageListShape = {
@@ -143,9 +144,9 @@ export type ChatMessageListShape = {
 } & BasicShape;
 
 export type ChatMessageShape = {
-  created?: string; // The date and time this message was posted.
-  content?: string; // The text content of the message
-  maker?: string; // The WebId of the person who sent the message.
+  created: Date | Literal; // The date and time this message was posted.
+  content: string | Literal; // The text content of the message
+  maker: string | NamedNode; // The WebId of the person who sent the message.
 } & BasicShape;
 
 export enum ChatShapeType {
@@ -221,40 +222,40 @@ srs:ChatMessageShape {
 \`;
 
 export type OperatingSystem = {
-  p31?: {
-    p31?: {
+  p31: {
+    p31: {
       p279:
         | {
-            p279?: P279Type.Q9135;
+            p279: P279Type.Q9135;
           }
         | {
-            p279?: P279Type.Q9135;
+            p279: P279Type.Q9135;
           }[];
     };
   };
-  p275?: {
-    p275: string | string[];
+  p275: {
+    p275: string | NamedNode | (string | NamedNode)[];
   };
   p178?: {
-    p178?: string;
+    p178: string | NamedNode;
   };
   p176?: {
-    p176?: string;
+    p176: string | NamedNode;
   };
   p910?: {
-    p910?: string;
+    p910: string | NamedNode;
   };
   p373?: {
-    p373?: string | string[];
+    p373?: string | Literal | (string | Literal)[];
   };
   p5795?: {
-    p5795?: string | string[];
+    p5795?: string | Literal | (string | Literal)[];
   };
   p5868?: {
-    p5868?: string | string[];
+    p5868?: string | Literal | (string | Literal)[];
   };
   p268?: {
-    p268?: string | string[];
+    p268?: string | Literal | (string | Literal)[];
   };
 } & BasicShape;
 
@@ -314,17 +315,17 @@ export type Programminglanguage = {
 } & BasicShape;
 
 export type P31InstanceOfProgramminglanguage = {
-  p31?: WdProgrammingLanguage;
+  p31: WdProgrammingLanguage;
 } & BasicShape;
 
 export type P279SubclassOfProgramminglanguage =
   | {
-      p279?: WdProgrammingLanguage;
-      p279?: string | string[];
+      p279: WdProgrammingLanguage;
+      p279?: string | NamedNode | (string | NamedNode)[];
     }
   | ({
-      p279?: P279SubclassOfProgramminglanguage;
-      p279?: string | string[];
+      p279: P279SubclassOfProgramminglanguage;
+      p279?: string | NamedNode | (string | NamedNode)[];
     } & BasicShape);
 
 export enum WdProgrammingLanguage {
@@ -332,31 +333,31 @@ export enum WdProgrammingLanguage {
 }
 
 export type P178Developer = {
-  p178?: string;
-  p580?: string;
-  p582?: string;
+  p178: string | NamedNode;
+  p580?: Date | Literal;
+  p582?: Date | Literal;
 } & BasicShape;
 
 export type P3966Paradigm = {
-  p3966?:
+  p3966:
     | {
-        p31?: ProgrammingParadigm;
+        p31: ProgrammingParadigm;
       }
     | {
-        p279?: ProgrammingParadigm;
+        p279: ProgrammingParadigm;
       };
 } & BasicShape;
 
 export type ProgrammingParadigm = {
-  p31?: P31Type.Q188267;
+  p31: P31Type.Q188267;
 } & BasicShape;
 
 export type P577PublicationDate = {
-  p577?: string;
+  p577: string;
 } & BasicShape;
 
 export type P856Website = {
-  p856?: string;
+  p856: string | NamedNode;
 } & BasicShape;
 
 export enum P31Type {
@@ -443,42 +444,42 @@ start = @<programminglanguage>
 \`;
 
 export type SolidProfileShape = {
-  fn?: string; // The formatted name of a person. Example: John Smith
-  name?: string; // An alternate way to define a person's name.
+  fn?: string | Literal; // The formatted name of a person. Example: John Smith
+  name?: string | Literal; // An alternate way to define a person's name.
   hasAddress?: AddressShape | AddressShape[]; // The person's street address.
   hasEmail?: EmailShape | EmailShape[]; // The person's email.
-  hasPhoto?: string; // A link to the person's photo
-  img?: string; // Photo link but in string form
+  hasPhoto?: string | NamedNode; // A link to the person's photo
+  img?: string | Literal; // Photo link but in string form
   hasTelephone?: PhoneNumberShape | PhoneNumberShape[]; // Person's telephone number
-  phone?: string; // An alternative way to define a person's telephone number using a string
-  organizationName?: string; // The name of the organization with which the person is affiliated
-  role?: string; // The name of the person's role in their organization
+  phone?: string | Literal; // An alternative way to define a person's telephone number using a string
+  organizationName?: string | Literal; // The name of the organization with which the person is affiliated
+  role?: string | Literal; // The name of the person's role in their organization
   trustedApp?: TrustedAppShape | TrustedAppShape[]; // A list of app origins that are trusted by this user
   key?: RsaPublicKeyShape | RsaPublicKeyShape[]; // A list of RSA public keys that are associated with private keys the user holds.
-  inbox?: string; // The user's LDP inbox to which apps can post notifications
-  preferencesFile?: string; // The user's preferences
-  storage?: string | string[]; // The location of a Solid storage server related to this WebId
-  account?: string; // The user's account
-  privateTypeIndex?: string | string[]; // A registry of all types used on the user's Pod (for private access only)
-  publicTypeIndex?: string | string[]; // A registry of all types used on the user's Pod (for public access)
-  knows?: string | string[]; // A list of WebIds for all the people this user knows.
+  inbox: string | NamedNode; // The user's LDP inbox to which apps can post notifications
+  preferencesFile?: string | NamedNode; // The user's preferences
+  storage?: string | NamedNode | (string | NamedNode)[]; // The location of a Solid storage server related to this WebId
+  account?: string | NamedNode; // The user's account
+  privateTypeIndex?: string | NamedNode | (string | NamedNode)[]; // A registry of all types used on the user's Pod (for private access only)
+  publicTypeIndex?: string | NamedNode | (string | NamedNode)[]; // A registry of all types used on the user's Pod (for public access)
+  knows?: string | NamedNode | (string | NamedNode)[]; // A list of WebIds for all the people this user knows.
 } & {
-  type?: (
+  type: (
     | SolidProfileShapeType.SchemPerson
     | SolidProfileShapeType.FoafPerson
   )[]; // Defines the node as a Person (from foaf)
 } & BasicShape;
 
 export type AddressShape = {
-  countryName?: string; // The name of the user's country of residence
-  locality?: string; // The name of the user's locality (City, Town etc.) of residence
-  postalCode?: string; // The user's postal code
-  region?: string; // The name of the user's region (State, Province etc.) of residence
-  streetAddress?: string; // The user's street address
+  countryName?: string | Literal; // The name of the user's country of residence
+  locality?: string | Literal; // The name of the user's locality (City, Town etc.) of residence
+  postalCode?: string | Literal; // The user's postal code
+  region?: string | Literal; // The name of the user's region (State, Province etc.) of residence
+  streetAddress?: string | Literal; // The user's street address
 } & BasicShape;
 
 export type EmailShape = {
-  value?: string; // The value of an email as a mailto link (Example <mailto:jane@example.com>)
+  value: string | NamedNode; // The value of an email as a mailto link (Example <mailto:jane@example.com>)
 } & {
   type?: (
     | EmailShapeType.Dom
@@ -496,7 +497,7 @@ export type EmailShape = {
 } & BasicShape;
 
 export type PhoneNumberShape = {
-  value?: string; // The value of a phone number as a tel link (Example <tel:555-555-5555>)
+  value: string | NamedNode; // The value of a phone number as a tel link (Example <tel:555-555-5555>)
 } & {
   type?: (
     | PhoneNumberShapeType.Dom
@@ -517,12 +518,12 @@ export type TrustedAppShape = {
   mode:
     | (ModeType.Append | ModeType.Control | ModeType.Read | ModeType.Write)[]
     | (ModeType.Append | ModeType.Control | ModeType.Read | ModeType.Write)[][]; // The level of access provided to this origin
-  origin?: string; // The app origin the user trusts
+  origin: string | NamedNode; // The app origin the user trusts
 } & BasicShape;
 
 export type RsaPublicKeyShape = {
-  modulus?: string; // RSA Modulus
-  exponent?: string; // RSA Exponent
+  modulus: string | Literal; // RSA Modulus
+  exponent: number | Literal; // RSA Exponent
 } & BasicShape;
 
 export enum SolidProfileShapeType {
@@ -725,62 +726,62 @@ srs:RSAPublicKeyShape {
 export type State = {
   p1448: string | string[];
   p1705: string | string[];
-  p487?: string;
-  p30?: {
-    p31?: P31Type.Q5107;
+  p487: string;
+  p30: {
+    p31: P31Type.Q5107;
   };
-  p3896?: string;
-  p935?: string;
-  p373?: string;
-  p3722?: string;
-  p910?: {
-    p31?: P31Type.Q4167836;
+  p3896: string | NamedNode;
+  p935: string;
+  p373: string;
+  p3722: string;
+  p910: {
+    p31: P31Type.Q4167836;
   };
-  p5125?: {
-    p31?: P31Type.Q26884324;
+  p5125: {
+    p31: P31Type.Q26884324;
   };
-  p1151?: {
-    p31?: P31Type.Q4663903;
+  p1151: {
+    p31: P31Type.Q4663903;
   };
-  p1792?: {
-    p31?: P31Type.Q4167836;
+  p1792: {
+    p31: P31Type.Q4167836;
   };
-  p1464?: {
-    p31?: P31Type.Q4167836;
+  p1464: {
+    p31: P31Type.Q4167836;
   };
-  p1465?: {
-    p31?: P31Type.Q4167836;
+  p1465: {
+    p31: P31Type.Q4167836;
   };
-  p1791?: {
-    p31?: P31Type.Q4167836;
+  p1791: {
+    p31: P31Type.Q4167836;
   };
-  p1740?: {
-    p31?: P31Type.Q4167836;
+  p1740: {
+    p31: P31Type.Q4167836;
   };
-  p2633?: {
-    p31?: P31Type.Q46865913;
+  p2633: {
+    p31: P31Type.Q46865913;
   };
-  p2184?: {
-    p31?: P31Type.Q17544377;
+  p2184: {
+    p31: P31Type.Q17544377;
   };
-  p948?: string;
-  p85?: {
-    p31?: P31Type.Q23691;
+  p948: string | NamedNode;
+  p85: {
+    p31: P31Type.Q23691;
   };
-  p163?: {
-    p31?: P31Type.Q186516;
+  p163: {
+    p31: P31Type.Q186516;
   };
-  p237?: {
-    p31?: P31Type.Q645466;
+  p237: {
+    p31: P31Type.Q645466;
   };
-  p36?: {
-    p31?: P31Type.Q5119;
+  p36: {
+    p31: P31Type.Q5119;
   };
-  p122?: {
-    p31?: P31Type.Q1307214;
+  p122: {
+    p31: P31Type.Q1307214;
   };
 } & {
-  p31?: P31Type.Q3624078;
+  p31: P31Type.Q3624078;
 } & BasicShape;
 
 export enum P31Type {
@@ -871,48 +872,49 @@ start = @<state>
 
 exports[`matches snapshots without config file 1`] = `
 Array [
-  "export interface BasicShape {
+  "import { NamedNode, Literal } from \\"rdflib\\";
+
+export interface BasicShape {
   id: string;
-  context: Record<string, string>;
 }
 
 export type SolidProfileShape = {
-  fn?: string; // The formatted name of a person. Example: John Smith
-  name?: string; // An alternate way to define a person's name.
+  fn?: string | Literal; // The formatted name of a person. Example: John Smith
+  name?: string | Literal; // An alternate way to define a person's name.
   hasAddress?: AddressShape | AddressShape[]; // The person's street address.
   hasEmail?: EmailShape | EmailShape[]; // The person's email.
-  hasPhoto?: string; // A link to the person's photo
-  img?: string; // Photo link but in string form
+  hasPhoto?: string | NamedNode; // A link to the person's photo
+  img?: string | Literal; // Photo link but in string form
   hasTelephone?: PhoneNumberShape | PhoneNumberShape[]; // Person's telephone number
-  phone?: string; // An alternative way to define a person's telephone number using a string
-  organizationName?: string; // The name of the organization with which the person is affiliated
-  role?: string; // The name of the person's role in their organization
+  phone?: string | Literal; // An alternative way to define a person's telephone number using a string
+  organizationName?: string | Literal; // The name of the organization with which the person is affiliated
+  role?: string | Literal; // The name of the person's role in their organization
   trustedApp?: TrustedAppShape | TrustedAppShape[]; // A list of app origins that are trusted by this user
   key?: RsaPublicKeyShape | RsaPublicKeyShape[]; // A list of RSA public keys that are associated with private keys the user holds.
-  inbox?: string; // The user's LDP inbox to which apps can post notifications
-  preferencesFile?: string; // The user's preferences
-  storage?: string | string[]; // The location of a Solid storage server related to this WebId
-  account?: string; // The user's account
-  privateTypeIndex?: string | string[]; // A registry of all types used on the user's Pod (for private access only)
-  publicTypeIndex?: string | string[]; // A registry of all types used on the user's Pod (for public access)
-  knows?: string | string[]; // A list of WebIds for all the people this user knows.
+  inbox: string | NamedNode; // The user's LDP inbox to which apps can post notifications
+  preferencesFile?: string | NamedNode; // The user's preferences
+  storage?: string | NamedNode | (string | NamedNode)[]; // The location of a Solid storage server related to this WebId
+  account?: string | NamedNode; // The user's account
+  privateTypeIndex?: string | NamedNode | (string | NamedNode)[]; // A registry of all types used on the user's Pod (for private access only)
+  publicTypeIndex?: string | NamedNode | (string | NamedNode)[]; // A registry of all types used on the user's Pod (for public access)
+  knows?: string | NamedNode | (string | NamedNode)[]; // A list of WebIds for all the people this user knows.
 } & {
-  type?: (
+  type: (
     | SolidProfileShapeType.SchemPerson
     | SolidProfileShapeType.FoafPerson
   )[]; // Defines the node as a Person (from foaf)
 } & BasicShape;
 
 export type AddressShape = {
-  countryName?: string; // The name of the user's country of residence
-  locality?: string; // The name of the user's locality (City, Town etc.) of residence
-  postalCode?: string; // The user's postal code
-  region?: string; // The name of the user's region (State, Province etc.) of residence
-  streetAddress?: string; // The user's street address
+  countryName?: string | Literal; // The name of the user's country of residence
+  locality?: string | Literal; // The name of the user's locality (City, Town etc.) of residence
+  postalCode?: string | Literal; // The user's postal code
+  region?: string | Literal; // The name of the user's region (State, Province etc.) of residence
+  streetAddress?: string | Literal; // The user's street address
 } & BasicShape;
 
 export type EmailShape = {
-  value?: string; // The value of an email as a mailto link (Example <mailto:jane@example.com>)
+  value: string | NamedNode; // The value of an email as a mailto link (Example <mailto:jane@example.com>)
 } & {
   type?: (
     | EmailShapeType.Dom
@@ -930,7 +932,7 @@ export type EmailShape = {
 } & BasicShape;
 
 export type PhoneNumberShape = {
-  value?: string; // The value of a phone number as a tel link (Example <tel:555-555-5555>)
+  value: string | NamedNode; // The value of a phone number as a tel link (Example <tel:555-555-5555>)
 } & {
   type?: (
     | PhoneNumberShapeType.Dom
@@ -951,12 +953,12 @@ export type TrustedAppShape = {
   mode:
     | (ModeType.Append | ModeType.Control | ModeType.Read | ModeType.Write)[]
     | (ModeType.Append | ModeType.Control | ModeType.Read | ModeType.Write)[][]; // The level of access provided to this origin
-  origin?: string; // The app origin the user trusts
+  origin: string | NamedNode; // The app origin the user trusts
 } & BasicShape;
 
 export type RsaPublicKeyShape = {
-  modulus?: string; // RSA Modulus
-  exponent?: string; // RSA Exponent
+  modulus: string | Literal; // RSA Modulus
+  exponent: number | Literal; // RSA Exponent
 } & BasicShape;
 
 export enum SolidProfileShapeType {

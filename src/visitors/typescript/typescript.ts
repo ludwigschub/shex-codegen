@@ -149,7 +149,7 @@ TypescriptVisitor.visitNodeConstraint = function (shape: any, context: any) {
       ],
     };
   } else {
-    visited.typeValue = generateTsType(visited);
+    visited.typeValue = generateTsType(visited.expression);
   }
 
   return visited;
