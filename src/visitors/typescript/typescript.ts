@@ -1,4 +1,3 @@
-import camelcase from "camelcase";
 import { normalizeDuplicateProperties, normalizeUrl } from "../common";
 import {
   generateShapeExport,
@@ -12,7 +11,7 @@ import {
   generateExtras,
   putInBraces,
   generateShape,
-  generateNameContextExport,
+  generateNameContextsExport,
 } from "./generates";
 import { addUniqueInlineEnums, reduceInlineEnums } from "./inlineEnumHelpers";
 import { mapEachOfExpression, mapOneOfExpressions } from "./mapExpressions";
@@ -183,11 +182,10 @@ TypescriptVisitor.visitShape = function (shape: any, context: any) {
 TypescriptVisitor.visitShapes = function (
   shapes: any[],
   prefixes: any,
-  fileName: string
 ) {
   if (shapes === undefined) return undefined;
+  const nameContexts: Record<string, string>[] = [];
   let inlineEnums: Record<string, any[]> = {};
-  let nameContexts: Record<string, string> = {};
 
   const visited = shapes.map((shape: any) => {
     if (shape.values) {
@@ -200,7 +198,7 @@ TypescriptVisitor.visitShapes = function (
       inlineEnums = addUniqueInlineEnums(inlineEnums, visitedShape.inlineEnums);
     }
 
-    nameContexts = { ...nameContexts, ...visitedShape.nameContext };
+    nameContexts.push({ id: visitedShape.id, ...visitedShape.nameContext });
 
     return { id: shape.id, ...visitedShape };
   });
@@ -216,17 +214,13 @@ TypescriptVisitor.visitShapes = function (
     }
   });
 
-  const generatedNameContext = generateNameContextExport(
-    "",
-    nameContexts,
-    `${camelcase(fileName)}Context`.replace(/^\w/, (c) => c.toUpperCase())
-  );
+  const generatedNameContexts = generateNameContextsExport(nameContexts);
 
   const generatedInlineEnums = Object.keys(inlineEnums).map((key) =>
     generateEnumExport(key, inlineEnums[key], prefixes)
   );
 
-  return [...generatedShapes, ...generatedInlineEnums, generatedNameContext];
+  return [...generatedShapes, ...generatedInlineEnums, ...generatedNameContexts];
 };
 
 function maybeGenerate(

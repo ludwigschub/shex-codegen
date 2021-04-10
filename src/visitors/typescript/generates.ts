@@ -51,14 +51,15 @@ export function generateEnumExport(
   )};\n`;
 }
 
-export function generateNameContextExport(
-  id: string,
-  nameContext: Record<string, string>,
-  name?: string
+export function generateNameContextsExport(
+  nameContexts: Record<string, string>[],
 ) {
-  return `export enum ${
-    id ? generateNameContextName(id) : name
-  } ${generateNameContextValues(nameContext)}\n`;
+  return nameContexts.map((nameContext) => {
+    const { id, ...context } = nameContext;
+    return `export enum ${generateNameContextName(
+      id
+    )} ${generateNameContextValues(context)}\n`;
+  });
 }
 
 export function generateExpressions(expressions: any[], join?: string) {

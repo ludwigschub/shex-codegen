@@ -16,6 +16,7 @@ export const predicateToNameContext = (
     }
     return { name: normalizedValue, value: `${prefix}:${normalizedValue}` };
   } else {
+    console.debug("Found expression without Predicate: " + expression)
     return;
   }
 };
