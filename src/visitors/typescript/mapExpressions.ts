@@ -1,3 +1,4 @@
+import { normalizeUrl } from "../common";
 import { putInBraces } from "./generates";
 
 export function mapOneOfExpressions(
@@ -5,6 +6,9 @@ export function mapOneOfExpressions(
   expression: any,
   context: any
 ) {
+  if (typeof expression === "string") {
+    return { extra: normalizeUrl(expression, true) };
+  }
   if (expression.type === "TripleConstraint") {
     const visitedExpression = visitor.visitTripleConstraint(
       expression,
@@ -31,6 +35,9 @@ export function mapEachOfExpression(
   expression: any,
   context: any
 ) {
+  if (typeof expression === "string") {
+    return { extra: normalizeUrl(expression, true) };
+  }
   if (expression.type === "TripleConstraint") {
     const visitedExpression = visitor.visitTripleConstraint(
       expression,
