@@ -16,7 +16,7 @@ export const predicateToNameContext = (
     }
     return { name: normalizedValue, value: `${prefix}:${normalizedValue}` };
   } else {
-    console.debug("Found expression without Predicate: " + expression)
+    console.debug("Found expression without Predicate: " + expression);
     return;
   }
 };
@@ -26,7 +26,11 @@ export const reduceNameContexts = (expressions: any[]) => {
     (entireShapeContext: Record<string, string>, expression: any) => {
       if (expression.nameContext) {
         const { name, value } = expression.nameContext;
-        return { ...entireShapeContext, [name]: value };
+        if (name && value) {
+          return { ...entireShapeContext, [name]: value };
+        } else {
+          return { ...entireShapeContext, ...expression.nameContext };
+        }
       } else {
         return entireShapeContext;
       }

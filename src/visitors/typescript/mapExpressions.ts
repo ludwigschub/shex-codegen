@@ -7,7 +7,7 @@ export function mapOneOfExpressions(
   context: any
 ) {
   if (typeof expression === "string") {
-    return { extra: normalizeUrl(expression, true) };
+    return { type: "TripleConstraint", extra: normalizeUrl(expression, true) };
   }
   if (expression.type === "TripleConstraint") {
     const visitedExpression = visitor.visitTripleConstraint(
@@ -36,7 +36,7 @@ export function mapEachOfExpression(
   context: any
 ) {
   if (typeof expression === "string") {
-    return { extra: normalizeUrl(expression, true) };
+    return { type: "TripleConstraint", extra: normalizeUrl(expression, true) };
   }
   if (expression.type === "TripleConstraint") {
     const visitedExpression = visitor.visitTripleConstraint(
@@ -55,8 +55,10 @@ export function mapEachOfExpression(
     return visited;
   } else if (expression.type === "OneOf") {
     const visited = visitor.visitOneOf(expression, context);
-    visited.extras = visited.generated;
-    visited.generated = "";
+    if (visited.generated) {
+      visited.extras = `(${visited.generated})`;
+      visited.generated = "";
+    }
     return visited;
   }
 }

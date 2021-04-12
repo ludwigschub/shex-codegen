@@ -30,7 +30,7 @@ export function generateShape(type: string, shape: string, extras: string) {
   }
   if (extras) {
     if (shape) {
-      return `${shape} & (${extras})`;
+      return `${shape} & ${extras}`;
     } else {
       return extras;
     }
@@ -52,7 +52,7 @@ export function generateEnumExport(
 }
 
 export function generateNameContextsExport(
-  nameContexts: Record<string, string>[],
+  nameContexts: Record<string, string>[]
 ) {
   return nameContexts.map((nameContext) => {
     const { id, ...context } = nameContext;
@@ -63,10 +63,11 @@ export function generateNameContextsExport(
 }
 
 export function generateExpressions(expressions: any[], join?: string) {
-  return expressions
+  const generated = expressions
     .filter((expression: any) => !!expression.generated)
     .map((expression: any) => expression.generated)
     .join(join ?? "\n");
+  return generated;
 }
 
 export function generateExtras(expressions: any[], join?: string) {

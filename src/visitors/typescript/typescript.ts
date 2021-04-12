@@ -69,6 +69,12 @@ TypescriptVisitor.visitOneOf = function (expr: any, context?: any) {
   visited.inlineEnums = reduceInlineEnums(visited.expressions);
   visited.nameContext = reduceNameContexts(visited.expressions);
 
+  // if (
+  //   context?.id === "https://shaperepo.com/schemas/solidProfile##cryptocurrency"
+  // ) {
+  //   console.debug(visited);
+  // }
+
   return visited;
 };
 
@@ -179,10 +185,7 @@ TypescriptVisitor.visitShape = function (shape: any, context: any) {
   return { ...visited, generatedShape, inlineEnums, nameContext };
 };
 
-TypescriptVisitor.visitShapes = function (
-  shapes: any[],
-  prefixes: any,
-) {
+TypescriptVisitor.visitShapes = function (shapes: any[], prefixes: any) {
   if (shapes === undefined) return undefined;
   const nameContexts: Record<string, string>[] = [];
   let inlineEnums: Record<string, any[]> = {};
@@ -220,7 +223,11 @@ TypescriptVisitor.visitShapes = function (
     generateEnumExport(key, inlineEnums[key], prefixes)
   );
 
-  return [...generatedShapes, ...generatedInlineEnums, ...generatedNameContexts];
+  return [
+    ...generatedShapes,
+    ...generatedInlineEnums,
+    ...generatedNameContexts,
+  ];
 };
 
 function maybeGenerate(
