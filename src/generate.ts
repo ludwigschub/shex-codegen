@@ -136,7 +136,7 @@ const readShexAndGenerate = async (
 
   // Parse and visit shape
   const parser = ShExParser.construct(
-    "https://shaperepo.com/schemas/solidProfile#",
+    "http://example.com/",
     null,
     { index: true }
   );

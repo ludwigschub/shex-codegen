@@ -4,10 +4,9 @@ PREFIX pq: <http://www.wikidata.org/prop/qualifier/>
 PREFIX wd: <http://www.wikidata.org/entity/>
 PREFIX wdt: <http://www.wikidata.org/prop/direct/>
 PREFIX xsd: <http://www.w3.org/2001/XMLSchema#>
+PREFIX ops: <https://www.wikidata.org/wiki/EntitySchema:E102#>
 
-start=@<#operating_system>
-
-<#operating_system> {
+ops:operating_system {
 # instance of; 
     p:P31 { ps:P31 { p:P279 {ps:P279 [wd:Q9135]}+} } ;
 # license; 

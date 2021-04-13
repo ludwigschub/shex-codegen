@@ -91,12 +91,11 @@ PREFIX pq: <http://www.wikidata.org/prop/qualifier/>
 PREFIX wd: <http://www.wikidata.org/entity/>
 PREFIX wdt: <http://www.wikidata.org/prop/direct/>
 PREFIX xsd: <http://www.w3.org/2001/XMLSchema#>
+PREFIX crc: <https://www.wikidata.org/wiki/EntitySchema:E82#>
 
 # QUERY MAP: SELECT ?item WHERE {?item wdt:P31 wd:Q13479982}  LIMIT 10
 
-start=@<#cryptocurrency>
-
-<#cryptocurrency> EXTRA p:P31 {
+crc:cryptocurrency EXTRA p:P31 {
 	# instance of
 	p:P31 { ps:P31  [wd:Q13479982] }* ;
 
@@ -127,7 +126,7 @@ start=@<#cryptocurrency>
 \`;
 
 export const cryptocurrency = new Shape<Cryptocurrency>({
-  id: \\"https://shaperepo.com/schemas/solidProfile##cryptocurrency\\",
+  id: \\"https://www.wikidata.org/wiki/EntitySchema:E82#cryptocurrency\\",
   shape: cryptocurrencyShex,
   context: CryptocurrencyContext,
 });
@@ -419,10 +418,9 @@ PREFIX pq: <http://www.wikidata.org/prop/qualifier/>
 PREFIX wd: <http://www.wikidata.org/entity/>
 PREFIX wdt: <http://www.wikidata.org/prop/direct/>
 PREFIX xsd: <http://www.w3.org/2001/XMLSchema#>
+PREFIX ops: <https://www.wikidata.org/wiki/EntitySchema:E102#>
 
-start=@<#operating_system>
-
-<#operating_system> {
+ops:operating_system {
 # instance of; 
     p:P31 { ps:P31 { p:P279 {ps:P279 [wd:Q9135]}+} } ;
 # license; 
@@ -445,7 +443,7 @@ start=@<#operating_system>
 \`;
 
 export const operatingSystem = new Shape<OperatingSystem>({
-  id: \\"https://shaperepo.com/schemas/solidProfile##operating_system\\",
+  id: \\"https://www.wikidata.org/wiki/EntitySchema:E102#operating_system\\",
   shape: operatingSystemShex,
   context: OperatingSystemContext,
 });
@@ -568,61 +566,60 @@ PREFIX wd: <http://www.wikidata.org/entity/>
 PREFIX wdt: <http://www.wikidata.org/prop/direct/>
 PREFIX p: <http://www.wikidata.org/prop/>
 PREFIX pq: <http://www.wikidata.org/prop/qualifier/>
+PREFIX pgl: <https://www.wikidata.org/wiki/EntitySchema:E55#>
 
 #test data:  SELECT * WHERE { ?item wdt:P31 wd:Q9143 . } LIMIT 10
 
-start = @<programminglanguage>
-
-<programminglanguage> EXTRA p:P31 {
-  (p:P31 @<#P31_instance_of_programminglanguage>|p:P31 @<#P279_subclass_of_programminglanguage>)+;
-  p:P178 @<#P178_developer>*;
-  p:P3966 @<#P3966_paradigm>*;
-  p:P577 @<#P577_publication_date>*;
-  p:P856 @<#P856_website>*;
+pgl:programminglanguage EXTRA p:P31 {
+  (p:P31 @pgl:P31_instance_of_programminglanguage|p:P31 @pgl:P279_subclass_of_programminglanguage)+;
+  p:P178 @pgl:P178_developer*;
+  p:P3966 @pgl:P3966_paradigm*;
+  p:P577 @pgl:P577_publication_date*;
+  p:P856 @pgl:P856_website*;
 }
 
-<#P31_instance_of_programminglanguage> {
-    ps:P31 @<#wd_programming_language> ;
+pgl:P31_instance_of_programminglanguage {
+    ps:P31 @pgl:wd_programming_language ;
 }
 
-<#P279_subclass_of_programminglanguage> {
-    (ps:P279 @<#wd_programming_language> ; ps:P279 IRI *) |
-    (ps:P279 @<#P279_subclass_of_programminglanguage>; ps:P279 IRI *)
+pgl:P279_subclass_of_programminglanguage {
+    (ps:P279 @pgl:wd_programming_language ; ps:P279 IRI *) |
+    (ps:P279 @pgl:P279_subclass_of_programminglanguage; ps:P279 IRI *)
 }
 
-<#wd_programming_language> [
+pgl:wd_programming_language [
   wd:Q9143  # Q9143 = programming language
 ]
 
-<#P178_developer> {
+pgl:P178_developer {
   ps:P178 IRI;
   pq:P580 xsd:dateTime? ;
   pq:P582 xsd:dateTime? ;
 }
 
-<#P3966_paradigm> {
+pgl:P3966_paradigm {
     ps:P3966 EXTRA p:P31 EXTRA p:P279  {
-              (p:P31 @<#Programming_paradigm> | p:P279 @<#Programming_paradigm> );
+              (p:P31 @pgl:Programming_paradigm | p:P279 @pgl:Programming_paradigm );
 
            } ;
 }
 
-<#Programming_paradigm> {
+pgl:Programming_paradigm {
     ps:P31 [wd:Q188267] # programming paradigm ;
 }
   
 
-<#P577_publication_date> {
+pgl:P577_publication_date {
   ps:P577 LITERAL;
 }
 
-<#P856_website> {
+pgl:P856_website {
   ps:P856 IRI;
 }
 \`;
 
 export const programminglanguage = new Shape<Programminglanguage>({
-  id: \\"https://shaperepo.com/schemas/programminglanguage\\",
+  id: \\"https://www.wikidata.org/wiki/EntitySchema:E55#programminglanguage\\",
   shape: programmingLanguageShex,
   context: ProgramminglanguageContext,
 
@@ -639,7 +636,7 @@ export const programminglanguage = new Shape<Programminglanguage>({
 export const p31InstanceOfProgramminglanguage = new Shape<P31InstanceOfProgramminglanguage>(
   {
     id:
-      \\"https://shaperepo.com/schemas/solidProfile##P31_instance_of_programminglanguage\\",
+      \\"https://www.wikidata.org/wiki/EntitySchema:E55#P31_instance_of_programminglanguage\\",
     shape: programmingLanguageShex,
     context: P31InstanceOfProgramminglanguageContext,
   }
@@ -648,38 +645,38 @@ export const p31InstanceOfProgramminglanguage = new Shape<P31InstanceOfProgrammi
 export const p279SubclassOfProgramminglanguage = new Shape<P279SubclassOfProgramminglanguage>(
   {
     id:
-      \\"https://shaperepo.com/schemas/solidProfile##P279_subclass_of_programminglanguage\\",
+      \\"https://www.wikidata.org/wiki/EntitySchema:E55#P279_subclass_of_programminglanguage\\",
     shape: programmingLanguageShex,
     context: P279SubclassOfProgramminglanguageContext,
   }
 );
 
 export const p178Developer = new Shape<P178Developer>({
-  id: \\"https://shaperepo.com/schemas/solidProfile##P178_developer\\",
+  id: \\"https://www.wikidata.org/wiki/EntitySchema:E55#P178_developer\\",
   shape: programmingLanguageShex,
   context: P178DeveloperContext,
 });
 
 export const p3966Paradigm = new Shape<P3966Paradigm>({
-  id: \\"https://shaperepo.com/schemas/solidProfile##P3966_paradigm\\",
+  id: \\"https://www.wikidata.org/wiki/EntitySchema:E55#P3966_paradigm\\",
   shape: programmingLanguageShex,
   context: P3966ParadigmContext,
 });
 
 export const programmingParadigm = new Shape<ProgrammingParadigm>({
-  id: \\"https://shaperepo.com/schemas/solidProfile##Programming_paradigm\\",
+  id: \\"https://www.wikidata.org/wiki/EntitySchema:E55#Programming_paradigm\\",
   shape: programmingLanguageShex,
   context: ProgrammingParadigmContext,
 });
 
 export const p577PublicationDate = new Shape<P577PublicationDate>({
-  id: \\"https://shaperepo.com/schemas/solidProfile##P577_publication_date\\",
+  id: \\"https://www.wikidata.org/wiki/EntitySchema:E55#P577_publication_date\\",
   shape: programmingLanguageShex,
   context: P577PublicationDateContext,
 });
 
 export const p856Website = new Shape<P856Website>({
-  id: \\"https://shaperepo.com/schemas/solidProfile##P856_website\\",
+  id: \\"https://www.wikidata.org/wiki/EntitySchema:E55#P856_website\\",
   shape: programmingLanguageShex,
   context: P856WebsiteContext,
 });
@@ -1137,13 +1134,12 @@ PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
 PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
 PREFIX wd: <http://www.wikidata.org/entity/>
 PREFIX wdt: <http://www.wikidata.org/prop/direct/>
+PREFIX sst: <https://www.wikidata.org/wiki/EntitySchema:E32#>
 
 #all non-historical sovereign states
 #SELECT ?item WHERE { ?item wdt:P31 wd:Q3624078 . OPTIONAL { ?item wdt:P576 ?end_time. } FILTER (!BOUND(?end_time)) }
 
-start = @<state>
-
-<state> EXTRA wdt:P31 {
+sst:state EXTRA wdt:P31 {
   wdt:P31 [wd:Q3624078]; #instance of \\"sovereign state\\" and possibly other classes;
   wdt:P1448 LITERAL+; #has one or more official names in various languages
   wdt:P1705 LITERAL+; #has one or more native labels
@@ -1173,7 +1169,7 @@ start = @<state>
 \`;
 
 export const state = new Shape<State>({
-  id: \\"https://shaperepo.com/schemas/state\\",
+  id: \\"https://www.wikidata.org/wiki/EntitySchema:E32#state\\",
   shape: sovereignStateShex,
   context: StateContext,
 });
