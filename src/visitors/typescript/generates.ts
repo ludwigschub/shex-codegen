@@ -6,6 +6,20 @@ export function putInBraces(expr: string) {
   return `{\n${expr}\n}`;
 }
 
+export function generateRdfImport() {
+  return `import { NamedNode, Literal } from "rdflib"; \n`;
+}
+
+export function generateShexExport(name: string, shex: string) {
+  return `export const ${generateShexName(name)} = \`
+${shex}
+\`\n`;
+}
+
+export function generateShexName(name: string) {
+  return name + "Shex";
+}
+
 export function generateShapeExport(name: string, shape: string) {
   return `export type ${name} = ${shape} & BasicShape;\n`;
 }
@@ -16,7 +30,7 @@ export function generateShape(type: string, shape: string, extras: string) {
   }
   if (extras) {
     if (shape) {
-      return `${shape} & (${extras})`;
+      return `${shape} & ${extras}`;
     } else {
       return extras;
     }
@@ -37,11 +51,23 @@ export function generateEnumExport(
   )};\n`;
 }
 
+export function generateNameContextsExport(
+  nameContexts: Record<string, string>[]
+) {
+  return nameContexts.map((nameContext) => {
+    const { id, ...context } = nameContext;
+    return `export enum ${generateNameContextName(
+      id
+    )} ${generateNameContextValues(context)}\n`;
+  });
+}
+
 export function generateExpressions(expressions: any[], join?: string) {
-  return expressions
+  const generated = expressions
     .filter((expression: any) => !!expression.generated)
     .map((expression: any) => expression.generated)
     .join(join ?? "\n");
+  return generated;
 }
 
 export function generateExtras(expressions: any[], join?: string) {
@@ -90,6 +116,18 @@ export function generateEnumValues(
       return { name: normalizedValue, value: value };
     })
     .map((value: any) => `${value.name} = "${value.value}"`)
+    .join(",\n")}
+  }`;
+}
+
+export function generateNameContextName(id: string) {
+  return normalizeUrl(id, true) + "Context";
+}
+
+export function generateNameContextValues(nameContext: Record<string, string>) {
+  return `{
+  ${Object.keys(nameContext)
+    .map((key: string) => `${key} = "${nameContext[key]}"`)
     .join(",\n")}
   }`;
 }
@@ -175,17 +213,14 @@ export function generateValueExpression(valueExpr: any, context: any) {
 }
 
 export function generateTsType(valueExpr: any) {
-  if (
-    valueExpr?.nodeKind === "literal" ||
-    valueExpr?.datatype === ns.xsd("string")
-  ) {
-    return "string";
-  } else if (valueExpr?.nodeKind === "iri") {
-    return "string | URL";
-  } else if (valueExpr?.datatype === ns.xsd("integer")) {
-    return "number";
+  if (valueExpr?.nodeKind === "iri") {
+    return "string | NamedNode";
+  } else if (numberTypes.includes(valueExpr?.datatype)) {
+    return "number | Literal";
   } else if (valueExpr?.datatype === ns.xsd("dateTime")) {
-    return "Date";
+    return "Date | Literal";
+  } else if (valueExpr?.datatype === ns.xsd("string")) {
+    return "string | Literal";
   } else if (valueExpr?.datatype) {
     return valueExpr?.datatype;
   } else if (typeof valueExpr === "string") {
@@ -196,3 +231,20 @@ export function generateTsType(valueExpr: any) {
     }
   }
 }
+
+const numberTypes = [
+  ns.xsd("integer"),
+  ns.xsd("decimal"),
+  ns.xsd("nonPositiveInteger"),
+  ns.xsd("negativeInteger"),
+  ns.xsd("long"),
+  ns.xsd("int"),
+  ns.xsd("short"),
+  ns.xsd("byte"),
+  ns.xsd("nonNegativeInteger"),
+  ns.xsd("unsignedLong"),
+  ns.xsd("unsignedInt"),
+  ns.xsd("unsignedShort"),
+  ns.xsd("unsignedByte"),
+  ns.xsd("positiveInteger"),
+];

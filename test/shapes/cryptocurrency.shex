@@ -4,12 +4,11 @@ PREFIX pq: <http://www.wikidata.org/prop/qualifier/>
 PREFIX wd: <http://www.wikidata.org/entity/>
 PREFIX wdt: <http://www.wikidata.org/prop/direct/>
 PREFIX xsd: <http://www.w3.org/2001/XMLSchema#>
+PREFIX crc: <https://www.wikidata.org/wiki/EntitySchema:E82#>
 
 # QUERY MAP: SELECT ?item WHERE {?item wdt:P31 wd:Q13479982}  LIMIT 10
 
-start=@<#cryptocurrency>
-
-<#cryptocurrency> EXTRA p:P31 {
+crc:cryptocurrency EXTRA p:P31 {
 	# instance of
 	p:P31 { ps:P31  [wd:Q13479982] }* ;
 

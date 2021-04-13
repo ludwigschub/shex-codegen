@@ -11,6 +11,8 @@ import {
   generateExtras,
   putInBraces,
   generateShape,
+  generateNameContextsExport,
+  generateRdfImport,
 } from "./generates";
 import { addUniqueInlineEnums, reduceInlineEnums } from "./inlineEnumHelpers";
 import { mapEachOfExpression, mapOneOfExpressions } from "./mapExpressions";
@@ -18,23 +20,33 @@ import {
   NodeConstraintMembers,
   ShapeMembers,
   TripleConstraintMembers,
-} from "./members";
+} from "../common/members";
+import {
+  predicateToNameContext,
+  reduceNameContexts,
+} from "./nameContextHelpers";
+import { BasicShapeInterface } from "./interfaces";
 
 const ShExUtil = require("@shexjs/core").Util;
 
 const TypescriptVisitor = ShExUtil.Visitor();
 
+TypescriptVisitor.generateImports = () => {
+  return [generateRdfImport(), BasicShapeInterface];
+};
+
 TypescriptVisitor._visitValue = function (v: any[]) {
   return Array.isArray(v) ? (v.length > 1 ? v.join("\n") : v.join("")) : v;
 };
 
-TypescriptVisitor.visitSchema = function (schema: any) {
+TypescriptVisitor.visitSchema = function (schema: any, fileName: string) {
   ShExUtil._expect(schema, "type", "Schema");
   const shapeDeclarations = this.visitShapes(
     schema["shapes"],
-    schema._prefixes
+    schema._prefixes,
+    fileName
   );
-  return shapeDeclarations.join("\n");
+  return shapeDeclarations;
 };
 
 TypescriptVisitor.visitExpression = function (expr: any, context?: any) {
@@ -61,6 +73,7 @@ TypescriptVisitor.visitOneOf = function (expr: any, context?: any) {
   visited.generated = generateExpressions(visited.expressions, " | ");
   visited.extras = generateExtras(visited.expressions);
   visited.inlineEnums = reduceInlineEnums(visited.expressions);
+  visited.nameContext = reduceNameContexts(visited.expressions);
 
   return visited;
 };
@@ -76,6 +89,7 @@ TypescriptVisitor.visitEachOf = function (expr: any, context?: any) {
   visited.generated = generatedExpressions && putInBraces(generatedExpressions);
   visited.extras = generateExtras(visited.expressions);
   visited.inlineEnums = reduceInlineEnums(visited.expressions);
+  visited.nameContext = reduceNameContexts(visited.expressions);
 
   return visited;
 };
@@ -100,9 +114,18 @@ TypescriptVisitor.visitTripleConstraint = function (expr: any, context?: any) {
     visited.typeValue,
     visited.predicate,
     comment,
-    visited.min > 0,
+    visited.min > 0 || (!visited.min && !visited.max),
     visited.max === -1
   );
+
+  if (valueExpr?.generatedShape) {
+    visited.nameContext = {
+      ...valueExpr.nameContext,
+      ...predicateToNameContext(expr, context?.prefixes),
+    };
+  } else {
+    visited.nameContext = predicateToNameContext(expr, context?.prefixes);
+  }
 
   if (context?.extra?.includes(visited.predicate) && !valueExpr.values) {
     visited.extra = visited.generated;
@@ -131,7 +154,7 @@ TypescriptVisitor.visitNodeConstraint = function (shape: any, context: any) {
       ],
     };
   } else {
-    visited.typeValue = generateTsType(visited);
+    visited.typeValue = generateTsType(visited.expression);
   }
 
   return visited;
@@ -144,7 +167,14 @@ TypescriptVisitor.visitShape = function (shape: any, context: any) {
   );
 
   const visited = maybeGenerate(this, shape, ShapeMembers, context);
-  const { generated, extras, extra, inlineEnums, type } = visited.expression;
+  const {
+    generated,
+    extras,
+    extra,
+    inlineEnums,
+    type,
+    nameContext,
+  } = visited.expression;
 
   // look for extras
   const generatedExtras = extras ?? (extra && putInBraces(extra));
@@ -152,14 +182,12 @@ TypescriptVisitor.visitShape = function (shape: any, context: any) {
   // generate shape from visited expression
   let generatedShape = generateShape(type, generated, generatedExtras);
 
-  // use inline enums from visited expression
-  visited.inlineEnums = inlineEnums;
-
-  return { ...visited, generatedShape };
+  return { ...visited, generatedShape, inlineEnums, nameContext };
 };
 
 TypescriptVisitor.visitShapes = function (shapes: any[], prefixes: any) {
   if (shapes === undefined) return undefined;
+  const nameContexts: Record<string, string>[] = [];
   let inlineEnums: Record<string, any[]> = {};
 
   const visited = shapes.map((shape: any) => {
@@ -172,6 +200,8 @@ TypescriptVisitor.visitShapes = function (shapes: any[], prefixes: any) {
     if (visitedShape.inlineEnums) {
       inlineEnums = addUniqueInlineEnums(inlineEnums, visitedShape.inlineEnums);
     }
+
+    nameContexts.push({ id: visitedShape.id, ...visitedShape.nameContext });
 
     return { id: shape.id, ...visitedShape };
   });
@@ -187,11 +217,17 @@ TypescriptVisitor.visitShapes = function (shapes: any[], prefixes: any) {
     }
   });
 
+  const generatedNameContexts = generateNameContextsExport(nameContexts);
+
   const generatedInlineEnums = Object.keys(inlineEnums).map((key) =>
     generateEnumExport(key, inlineEnums[key], prefixes)
   );
 
-  return [...generatedInlineEnums, ...generatedShapes];
+  return [
+    ...generatedShapes,
+    ...generatedInlineEnums,
+    ...generatedNameContexts,
+  ];
 };
 
 function maybeGenerate(

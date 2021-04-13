@@ -1,6 +1,6 @@
 # shex-codegen
 
-A library to generate typescript objects from Shape Expressions.
+A library to generate typescript from Shape Expressions.
 
 [Usage](#usage) | [Visitors](#visitors) | [Features](#features) | [Contributing](#contributing)
 
@@ -50,9 +50,9 @@ PREFIX xsd: <http://www.w3.org/2001/XMLSchema#>
 
 srs:SolidProfileShape EXTRA a {
   a [ schem:Person ]
-    // rdfs:comment  "Defines the node as a Person" ;
+    // rdfs:comment  "Declares the node to be a schema.org Person" ;
   a [ foaf:Person ]
-    // rdfs:comment  "Defines the node as a Person" ;
+    // rdfs:comment  "Declares the node to be a FOAF Person" ;
   vcard:hasPhoto IRI ?
     // rdfs:comment  "A link to the person's photo" ;
   foaf:name xsd:string ?
@@ -63,9 +63,9 @@ srs:SolidProfileShape EXTRA a {
 becomes
 ```typescript
 export type SolidProfileShape = {
+  id: string;
   hasPhoto?: string; // A link to the person's photo
   name?: string; // An alternate way to define a person's name
-  context: Record<string, string>; // An object that maps the property names to their corresponding iri's
 } & {
   type?: (
     | SolidProfileShapeType.SchemPerson
@@ -76,6 +76,12 @@ export type SolidProfileShape = {
 export enum SolidProfileShapeType {
   SchemPerson = "http://schema.org/Person",
   FoafPerson = "http://xmlns.com/foaf/0.1/Person",
+}
+
+export enum SolidProfileContext {
+  "type" = "rdf:type",
+  "name" = "foaf:name",
+  "hasPhoto" = "vcard:hasPhoto",
 }
 ```
 

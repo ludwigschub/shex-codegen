@@ -2,13 +2,12 @@ PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
 PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
 PREFIX wd: <http://www.wikidata.org/entity/>
 PREFIX wdt: <http://www.wikidata.org/prop/direct/>
+PREFIX sst: <https://www.wikidata.org/wiki/EntitySchema:E32#>
 
 #all non-historical sovereign states
 #SELECT ?item WHERE { ?item wdt:P31 wd:Q3624078 . OPTIONAL { ?item wdt:P576 ?end_time. } FILTER (!BOUND(?end_time)) }
 
-start = @<state>
-
-<state> EXTRA wdt:P31 {
+sst:state EXTRA wdt:P31 {
   wdt:P31 [wd:Q3624078]; #instance of "sovereign state" and possibly other classes;
   wdt:P1448 LITERAL+; #has one or more official names in various languages
   wdt:P1705 LITERAL+; #has one or more native labels
