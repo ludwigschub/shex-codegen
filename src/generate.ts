@@ -6,7 +6,9 @@ import find from "findit";
 import path from "path";
 
 import { readConfig } from "./config";
-import { BasicShapeInterface, generateRdfImport, generateShexExport } from "./visitors";
+import {
+  generateShexExport,
+} from "./visitors";
 
 interface CodegenConfig {
   schema: string;
@@ -67,10 +69,13 @@ export const generate = (
             ". Supported types are .ts & .tsx."
         );
       }
-      visitors[generates].forEach((visitor: any) => {
+      visitors[generates].forEach((visitor: any, visitorIndex: number) => {
         if ((generated[generates] as Promise<string>[] | undefined)?.push)
-          generated[generates]?.push(readShexAndGenerate(visitor, schema));
-        else generated[generates] = [readShexAndGenerate(visitor, schema)];
+          generated[generates]?.push(readShexAndGenerate(visitor, schema, visitorIndex === 0));
+        else
+          generated[generates] = [
+            readShexAndGenerate(visitor, schema, visitorIndex === 0),
+          ];
       });
     };
 
@@ -78,9 +83,20 @@ export const generate = (
       return Promise.all(
         generatesFiles.map((file: string) => {
           return Promise.all(generated[file]).then((generated) => {
+            const imports = visitors[file].reduce(
+              (allImports: string[], visitor: any) => {
+                const visitorImport =
+                  visitor?.generateImports &&
+                  visitor?.generateImports().join("\n");
+                return visitorImport
+                  ? [...allImports, visitorImport]
+                  : allImports;
+              },
+              []
+            );
             return writeShapesFile(
               file,
-              [generateRdfImport(), BasicShapeInterface, ...generated].join("\n") as string
+              [...imports, ...generated].join("\n") as string
             );
           });
         })
@@ -110,7 +126,11 @@ export const generate = (
     }
   });
 
-const readShexAndGenerate = async (visitor: any, file: string) => {
+const readShexAndGenerate = async (
+  visitor: any,
+  file: string,
+  generateShex?: boolean
+) => {
   // Read shape file
   const shapeFile = readFileSync(file, { encoding: "utf8" });
 
@@ -121,10 +141,14 @@ const readShexAndGenerate = async (visitor: any, file: string) => {
     { index: true }
   );
   const shapeSchema = parser.parse(shapeFile);
-  const fileName = path.parse(file).name
+  const fileName = path.parse(file).name;
   const generated = visitor.visitSchema(shapeSchema, fileName);
 
-  return [...generated, generateShexExport(fileName, shapeFile)].join("\n");
+  if (generateShex) {
+    return [...generated, generateShexExport(fileName, shapeFile)].join("\n");
+  } else {
+    return generated.join("\n");
+  }
 };
 
 const writeShapesFile = (generates: string, content: string) => {

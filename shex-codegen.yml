@@ -2,3 +2,4 @@ schema: "test"
 generates:
   test/generated/withConfig.ts:
     - typescript
+    - typescript-methods

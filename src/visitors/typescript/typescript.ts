@@ -12,6 +12,7 @@ import {
   putInBraces,
   generateShape,
   generateNameContextsExport,
+  generateRdfImport,
 } from "./generates";
 import { addUniqueInlineEnums, reduceInlineEnums } from "./inlineEnumHelpers";
 import { mapEachOfExpression, mapOneOfExpressions } from "./mapExpressions";
@@ -24,10 +25,15 @@ import {
   predicateToNameContext,
   reduceNameContexts,
 } from "./nameContextHelpers";
+import { BasicShapeInterface } from "./interfaces";
 
 const ShExUtil = require("@shexjs/core").Util;
 
 const TypescriptVisitor = ShExUtil.Visitor();
+
+TypescriptVisitor.generateImports = () => {
+  return [generateRdfImport(), BasicShapeInterface];
+};
 
 TypescriptVisitor._visitValue = function (v: any[]) {
   return Array.isArray(v) ? (v.length > 1 ? v.join("\n") : v.join("")) : v;
