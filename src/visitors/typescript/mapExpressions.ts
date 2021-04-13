@@ -7,7 +7,7 @@ export function mapOneOfExpressions(
   context: any
 ) {
   if (typeof expression === "string") {
-    return { type: "TripleConstraint", extra: normalizeUrl(expression, true) };
+    return { type: "Inclusion", include: normalizeUrl(expression, true) };
   }
   if (expression.type === "TripleConstraint") {
     const visitedExpression = visitor.visitTripleConstraint(
@@ -36,7 +36,7 @@ export function mapEachOfExpression(
   context: any
 ) {
   if (typeof expression === "string") {
-    return { type: "TripleConstraint", extra: normalizeUrl(expression, true) };
+    return { type: "Inclusion", include: normalizeUrl(expression, true) };
   }
   if (expression.type === "TripleConstraint") {
     const visitedExpression = visitor.visitTripleConstraint(

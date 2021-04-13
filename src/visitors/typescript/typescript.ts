@@ -19,7 +19,7 @@ import {
   NodeConstraintMembers,
   ShapeMembers,
   TripleConstraintMembers,
-} from "./members";
+} from "../common/members";
 import {
   predicateToNameContext,
   reduceNameContexts,
@@ -68,12 +68,6 @@ TypescriptVisitor.visitOneOf = function (expr: any, context?: any) {
   visited.extras = generateExtras(visited.expressions);
   visited.inlineEnums = reduceInlineEnums(visited.expressions);
   visited.nameContext = reduceNameContexts(visited.expressions);
-
-  // if (
-  //   context?.id === "https://shaperepo.com/schemas/solidProfile##cryptocurrency"
-  // ) {
-  //   console.debug(visited);
-  // }
 
   return visited;
 };
