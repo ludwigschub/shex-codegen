@@ -2,7 +2,7 @@ import { generate } from "../lib";
 
 jest.useFakeTimers();
 
-it.only("matches snapshots with config file", async () => {
+it("matches snapshots with config file", async () => {
   const generated = await generate();
   expect(generated).toMatchSnapshot();
 });

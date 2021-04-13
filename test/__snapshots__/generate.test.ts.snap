@@ -8,6 +8,8 @@ export interface BasicShape {
   id: string;
 }
 
+import { Shape } from \\"shex-methods\\";
+
 export type Cryptocurrency = {
   p279?: {
     p279: string | NamedNode;
@@ -124,6 +126,12 @@ start=@<#cryptocurrency>
 }
 \`;
 
+export const cryptocurrency = new Shape<Cryptocurrency>({
+  id: \\"https://shaperepo.com/schemas/solidProfile##cryptocurrency\\",
+  shape: cryptocurrencyShex,
+  context: CryptocurrencyContext,
+});
+
 export type BasicContainerShape = {
   contains?: ResourceShape | ResourceShape[]; // Contains these Resources
   size: number | Literal; // Size of Container
@@ -203,6 +211,20 @@ ldp:ResourceShape EXTRA a {
 }
 \`;
 
+export const basicContainer = new Shape<BasicContainerShape>({
+  id: \\"http://www.w3.org/ns/ldp#BasicContainerShape\\",
+  shape: ldpShapesShex,
+  context: BasicContainerShapeContext,
+  type: BasicContainerShapeType,
+});
+
+export const resource = new Shape<ResourceShape>({
+  id: \\"http://www.w3.org/ns/ldp#ResourceShape\\",
+  shape: ldpShapesShex,
+  context: ResourceShapeContext,
+  type: ResourceShapeType,
+});
+
 export type ChatShape = {
   type: ChatShapeType.LongChat; // Defines the type of the chat as a LongChat
   author: string | NamedNode; // The WebId of the entity that created this chat
@@ -210,8 +232,7 @@ export type ChatShape = {
   title: string | Literal; // The title of the chat
   participation?: ChatParticipationShape | ChatParticipationShape[]; // A list of people participating in this chat
   sharedPreferences?: string | NamedNode; // Chat preferences
-} & ChatMessageListShape &
-  BasicShape;
+} & BasicShape;
 
 export type ChatParticipationShape = {
   dtstart: Date | Literal; // The date and time this individual began participating in the chat.
@@ -312,6 +333,31 @@ srs:ChatMessageShape {
 }
 \`;
 
+export const chat = new Shape<ChatShape>({
+  id: \\"https://shaperepo.com/schemas/longChat#ChatShape\\",
+  shape: longChatShex,
+  context: ChatShapeContext,
+  type: ChatShapeType,
+});
+
+export const chatParticipation = new Shape<ChatParticipationShape>({
+  id: \\"https://shaperepo.com/schemas/longChat#ChatParticipationShape\\",
+  shape: longChatShex,
+  context: ChatParticipationShapeContext,
+});
+
+export const chatMessageList = new Shape<ChatMessageListShape>({
+  id: \\"https://shaperepo.com/schemas/longChat#ChatMessageListShape\\",
+  shape: longChatShex,
+  context: ChatMessageListShapeContext,
+});
+
+export const chatMessage = new Shape<ChatMessageShape>({
+  id: \\"https://shaperepo.com/schemas/longChat#ChatMessageShape\\",
+  shape: longChatShex,
+  context: ChatMessageShapeContext,
+});
+
 export type OperatingSystem = {
   p31: {
     p31: {
@@ -397,6 +443,12 @@ start=@<#operating_system>
     p:P268 {ps:P268 xsd:string * } ? ;
 }
 \`;
+
+export const operatingSystem = new Shape<OperatingSystem>({
+  id: \\"https://shaperepo.com/schemas/solidProfile##operating_system\\",
+  shape: operatingSystemShex,
+  context: OperatingSystemContext,
+});
 
 export type Programminglanguage = {
   p178?: P178Developer | P178Developer[];
@@ -569,6 +621,69 @@ start = @<programminglanguage>
 }
 \`;
 
+export const programminglanguage = new Shape<Programminglanguage>({
+  id: \\"https://shaperepo.com/schemas/programminglanguage\\",
+  shape: programmingLanguageShex,
+  context: ProgramminglanguageContext,
+
+  childContexts: [
+    P31InstanceOfProgramminglanguageContext,
+    P279SubclassOfProgramminglanguageContext,
+    P178DeveloperContext,
+    P3966ParadigmContext,
+    P577PublicationDateContext,
+    P856WebsiteContext,
+  ],
+});
+
+export const p31InstanceOfProgramminglanguage = new Shape<P31InstanceOfProgramminglanguage>(
+  {
+    id:
+      \\"https://shaperepo.com/schemas/solidProfile##P31_instance_of_programminglanguage\\",
+    shape: programmingLanguageShex,
+    context: P31InstanceOfProgramminglanguageContext,
+  }
+);
+
+export const p279SubclassOfProgramminglanguage = new Shape<P279SubclassOfProgramminglanguage>(
+  {
+    id:
+      \\"https://shaperepo.com/schemas/solidProfile##P279_subclass_of_programminglanguage\\",
+    shape: programmingLanguageShex,
+    context: P279SubclassOfProgramminglanguageContext,
+  }
+);
+
+export const p178Developer = new Shape<P178Developer>({
+  id: \\"https://shaperepo.com/schemas/solidProfile##P178_developer\\",
+  shape: programmingLanguageShex,
+  context: P178DeveloperContext,
+});
+
+export const p3966Paradigm = new Shape<P3966Paradigm>({
+  id: \\"https://shaperepo.com/schemas/solidProfile##P3966_paradigm\\",
+  shape: programmingLanguageShex,
+  context: P3966ParadigmContext,
+});
+
+export const programmingParadigm = new Shape<ProgrammingParadigm>({
+  id: \\"https://shaperepo.com/schemas/solidProfile##Programming_paradigm\\",
+  shape: programmingLanguageShex,
+  context: ProgrammingParadigmContext,
+});
+
+export const p577PublicationDate = new Shape<P577PublicationDate>({
+  id: \\"https://shaperepo.com/schemas/solidProfile##P577_publication_date\\",
+  shape: programmingLanguageShex,
+  context: P577PublicationDateContext,
+});
+
+export const p856Website = new Shape<P856Website>({
+  id: \\"https://shaperepo.com/schemas/solidProfile##P856_website\\",
+  shape: programmingLanguageShex,
+  context: P856WebsiteContext,
+});
+
 export type SolidProfileShape = {
   fn?: string | Literal; // The formatted name of a person. Example: John Smith
   name?: string | Literal; // An alternate way to define a person's name.
@@ -866,6 +981,52 @@ srs:RSAPublicKeyShape {
     // rdfs:comment  \\"RSA Exponent\\" ;
 }
 \`;
+
+export const solidProfile = new Shape<SolidProfileShape>({
+  id: \\"https://shaperepo.com/schemas/solidProfile#SolidProfileShape\\",
+  shape: solidProfileShex,
+  context: SolidProfileShapeContext,
+  type: SolidProfileShapeType,
+  childContexts: [
+    AddressShapeContext,
+    EmailShapeContext,
+    PhoneNumberShapeContext,
+    TrustedAppShapeContext,
+    RsaPublicKeyShapeContext,
+  ],
+});
+
+export const address = new Shape<AddressShape>({
+  id: \\"https://shaperepo.com/schemas/solidProfile#AddressShape\\",
+  shape: solidProfileShex,
+  context: AddressShapeContext,
+});
+
+export const email = new Shape<EmailShape>({
+  id: \\"https://shaperepo.com/schemas/solidProfile#EmailShape\\",
+  shape: solidProfileShex,
+  context: EmailShapeContext,
+  type: EmailShapeType,
+});
+
+export const phoneNumber = new Shape<PhoneNumberShape>({
+  id: \\"https://shaperepo.com/schemas/solidProfile#PhoneNumberShape\\",
+  shape: solidProfileShex,
+  context: PhoneNumberShapeContext,
+  type: PhoneNumberShapeType,
+});
+
+export const trustedApp = new Shape<TrustedAppShape>({
+  id: \\"https://shaperepo.com/schemas/solidProfile#TrustedAppShape\\",
+  shape: solidProfileShex,
+  context: TrustedAppShapeContext,
+});
+
+export const rsaPublicKey = new Shape<RsaPublicKeyShape>({
+  id: \\"https://shaperepo.com/schemas/solidProfile#RSAPublicKeyShape\\",
+  shape: solidProfileShex,
+  context: RsaPublicKeyShapeContext,
+});
 
 export type State = {
   p1448: string | string[];
@@ -1010,6 +1171,12 @@ start = @<state>
   wdt:P122 EXTRA wdt:P31 {wdt:P31 [wd:Q1307214]}; #has form of government
 }
 \`;
+
+export const state = new Shape<State>({
+  id: \\"https://shaperepo.com/schemas/state\\",
+  shape: sovereignStateShex,
+  context: StateContext,
+});
 ",
 ]
 `;
@@ -1021,6 +1188,8 @@ Array [
 export interface BasicShape {
   id: string;
 }
+
+import { Shape } from \\"shex-methods\\";
 
 export type SolidProfileShape = {
   fn?: string | Literal; // The formatted name of a person. Example: John Smith
@@ -1319,6 +1488,52 @@ srs:RSAPublicKeyShape {
     // rdfs:comment  \\"RSA Exponent\\" ;
 }
 \`;
+
+export const solidProfile = new Shape<SolidProfileShape>({
+  id: \\"https://shaperepo.com/schemas/solidProfile#SolidProfileShape\\",
+  shape: solidProfileShex,
+  context: SolidProfileShapeContext,
+  type: SolidProfileShapeType,
+  childContexts: [
+    AddressShapeContext,
+    EmailShapeContext,
+    PhoneNumberShapeContext,
+    TrustedAppShapeContext,
+    RsaPublicKeyShapeContext,
+  ],
+});
+
+export const address = new Shape<AddressShape>({
+  id: \\"https://shaperepo.com/schemas/solidProfile#AddressShape\\",
+  shape: solidProfileShex,
+  context: AddressShapeContext,
+});
+
+export const email = new Shape<EmailShape>({
+  id: \\"https://shaperepo.com/schemas/solidProfile#EmailShape\\",
+  shape: solidProfileShex,
+  context: EmailShapeContext,
+  type: EmailShapeType,
+});
+
+export const phoneNumber = new Shape<PhoneNumberShape>({
+  id: \\"https://shaperepo.com/schemas/solidProfile#PhoneNumberShape\\",
+  shape: solidProfileShex,
+  context: PhoneNumberShapeContext,
+  type: PhoneNumberShapeType,
+});
+
+export const trustedApp = new Shape<TrustedAppShape>({
+  id: \\"https://shaperepo.com/schemas/solidProfile#TrustedAppShape\\",
+  shape: solidProfileShex,
+  context: TrustedAppShapeContext,
+});
+
+export const rsaPublicKey = new Shape<RsaPublicKeyShape>({
+  id: \\"https://shaperepo.com/schemas/solidProfile#RSAPublicKeyShape\\",
+  shape: solidProfileShex,
+  context: RsaPublicKeyShapeContext,
+});
 ",
 ]
 `;
