@@ -26,7 +26,7 @@ export const ${normalizeUrl(id).replace(
   context: ${generateNameContextName(id)},
   ${typed ? `type: ${normalizeUrl(id, true) + "Type"},` : ""}
   ${
-    Array.isArray(childShapes) && childShapes.length > 1
+    Array.isArray(childShapes) && childShapes.length > 0
       ? `childContexts: [${childShapes
           .map((shape) => generateNameContextName(shape))
           .join(", ")}],`
