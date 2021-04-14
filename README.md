@@ -72,7 +72,7 @@ export type SolidProfileShape = {
   hasPhoto?: string | NamedNode; // A link to the person's photo
   name?: string | Literal; // An alternate way to define a person's name
 } & {
-  type?: (
+  type: (
     | SolidProfileShapeType.SchemPerson
     | SolidProfileShapeType.FoafPerson
   )[]; // Defines the node as a Person
