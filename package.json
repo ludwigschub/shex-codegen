@@ -10,7 +10,7 @@
     "test:watch": "rimraf ./test/generated && mkdir ./test/generated && node ./lib/watch.js"
   },
   "author": "Ludwig Schubert",
-  "license": "GPL-3.0",
+  "license": "AGPL-3.0",
   "dependencies": {
     "@shexjs/core": "^1.0.0-alpha.10",
     "@shexjs/parser": "^1.0.0-alpha.10",
