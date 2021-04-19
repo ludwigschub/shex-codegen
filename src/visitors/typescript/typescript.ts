@@ -25,14 +25,13 @@ import {
   predicateToNameContext,
   reduceNameContexts,
 } from "./nameContextHelpers";
-import { BasicShapeInterface } from "./interfaces";
 
 const ShExUtil = require("@shexjs/core").Util;
 
 const TypescriptVisitor = ShExUtil.Visitor();
 
 TypescriptVisitor.generateImports = () => {
-  return [generateRdfImport(), BasicShapeInterface];
+  return [generateRdfImport()];
 };
 
 TypescriptVisitor._visitValue = function (v: any[]) {
@@ -72,6 +71,12 @@ TypescriptVisitor.visitOneOf = function (expr: any, context?: any) {
 
   visited.generated = generateExpressions(visited.expressions, " | ");
   visited.extras = generateExtras(visited.expressions);
+  visited.generatedToCreate = generateExpressions(
+    visited.expressions,
+    " | ",
+    true
+  );
+  visited.extrasToCreate = generateExtras(visited.expressions, undefined, true);
   visited.inlineEnums = reduceInlineEnums(visited.expressions);
   visited.nameContext = reduceNameContexts(visited.expressions);
 
@@ -88,6 +93,14 @@ TypescriptVisitor.visitEachOf = function (expr: any, context?: any) {
   const generatedExpressions = generateExpressions(visited.expressions);
   visited.generated = generatedExpressions && putInBraces(generatedExpressions);
   visited.extras = generateExtras(visited.expressions);
+  const generatedToCreateExpressions = generateExpressions(
+    visited.expressions,
+    undefined,
+    true
+  );
+  visited.generatedToCreate =
+    generatedToCreateExpressions && putInBraces(generatedToCreateExpressions);
+  visited.extrasToCreate = generateExtras(visited.expressions, undefined, true);
   visited.inlineEnums = reduceInlineEnums(visited.expressions);
   visited.nameContext = reduceNameContexts(visited.expressions);
 
@@ -107,11 +120,20 @@ TypescriptVisitor.visitTripleConstraint = function (expr: any, context?: any) {
 
   visited.inlineEnums = inlineEnum ? [inlineEnum] : inlineEnums;
   visited.typeValue = generateValueExpression(valueExpr, context);
+  visited.typeValueToCreate = generateValueExpression(valueExpr, context, true);
 
   const comment = generateCommentFromAnnotations(visited.annotations);
   visited.generated = generateTripleConstraint(
     valueExpr,
     visited.typeValue,
+    visited.predicate,
+    comment,
+    visited.min > 0 || (!visited.min && !visited.max),
+    visited.max === -1
+  );
+  visited.generatedToCreate = generateTripleConstraint(
+    valueExpr,
+    visited.typeValueToCreate,
     visited.predicate,
     comment,
     visited.min > 0 || (!visited.min && !visited.max),
@@ -129,7 +151,9 @@ TypescriptVisitor.visitTripleConstraint = function (expr: any, context?: any) {
 
   if (context?.extra?.includes(visited.predicate) && !valueExpr.values) {
     visited.extra = visited.generated;
+    visited.extraToCreate = visited.generatedToCreate;
     visited.generated = "";
+    visited.generatedToCreate = "";
   }
 
   return visited;
@@ -155,6 +179,7 @@ TypescriptVisitor.visitNodeConstraint = function (shape: any, context: any) {
     };
   } else {
     visited.typeValue = generateTsType(visited.expression);
+    visited.typeValueToCreate = generateTsType(visited.expression, true);
   }
 
   return visited;
@@ -169,8 +194,11 @@ TypescriptVisitor.visitShape = function (shape: any, context: any) {
   const visited = maybeGenerate(this, shape, ShapeMembers, context);
   const {
     generated,
+    generatedToCreate,
     extras,
+    extrasToCreate,
     extra,
+    extraToCreate,
     inlineEnums,
     type,
     nameContext,
@@ -178,11 +206,26 @@ TypescriptVisitor.visitShape = function (shape: any, context: any) {
 
   // look for extras
   const generatedExtras = extras ?? (extra && putInBraces(extra));
+  const generatedExtrasToCreate =
+    extrasToCreate ?? (extraToCreate && putInBraces(extraToCreate));
 
   // generate shape from visited expression
   let generatedShape = generateShape(type, generated, generatedExtras);
 
-  return { ...visited, generatedShape, inlineEnums, nameContext };
+  // generate shape to create with from visited expression
+  let generatedShapeToCreate = generateShape(
+    type,
+    generatedToCreate,
+    generatedExtrasToCreate
+  );
+
+  return {
+    ...visited,
+    generatedShape,
+    generatedShapeToCreate,
+    inlineEnums,
+    nameContext,
+  };
 };
 
 TypescriptVisitor.visitShapes = function (shapes: any[], prefixes: any) {
@@ -210,10 +253,18 @@ TypescriptVisitor.visitShapes = function (shapes: any[], prefixes: any) {
     if (typeof shape === "string") {
       return shape;
     } else {
-      return generateShapeExport(
-        normalizeUrl(shape.id, true),
-        shape.generatedShape
-      );
+      const normalizedUrl = normalizeUrl(shape.id, true);
+      return [
+        generateShapeExport(normalizedUrl, shape.generatedShape),
+        generateShapeExport(
+          normalizedUrl + "CreateArgs",
+          shape.generatedShapeToCreate
+        ),
+        generateShapeExport(
+          normalizedUrl + "UpdateArgs",
+          `Partial<${normalizedUrl + "CreateArgs"}>`
+        ),
+      ].join("\n");
     }
   });
 

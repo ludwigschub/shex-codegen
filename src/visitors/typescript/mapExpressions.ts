@@ -20,6 +20,12 @@ export function mapOneOfExpressions(
     visitedExpression.extra = visitedExpression.extra
       ? putInBraces(visitedExpression.extra)
       : "";
+    visitedExpression.generatedToCreate = visitedExpression.generatedToCreate
+      ? putInBraces(visitedExpression.generatedToCreate)
+      : "";
+    visitedExpression.extraToCreate = visitedExpression.extraToCreate
+      ? putInBraces(visitedExpression.extraToCreate)
+      : "";
     return visitedExpression;
   }
 
@@ -46,6 +52,9 @@ export function mapEachOfExpression(
     visitedExpression.extra = visitedExpression.extra
       ? putInBraces(visitedExpression.extra)
       : "";
+    visitedExpression.extraToCreate = visitedExpression.extraToCreate
+      ? putInBraces(visitedExpression.extraToCreate)
+      : "";
 
     return visitedExpression;
   }
@@ -58,6 +67,10 @@ export function mapEachOfExpression(
     if (visited.generated) {
       visited.extras = `(${visited.generated})`;
       visited.generated = "";
+    }
+    if (visited.generatedToCreate) {
+      visited.extrasToCreate = `(${visited.generatedToCreate})`;
+      visited.generatedToCreate = "";
     }
     return visited;
   }

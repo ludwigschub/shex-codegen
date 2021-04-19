@@ -4,21 +4,18 @@ exports[`matches snapshots with config file 1`] = `
 Array [
   "import { NamedNode, Literal } from \\"rdflib\\";
 
-export interface BasicShape {
-  id: string;
-}
-
 import { Shape } from \\"shex-methods\\";
 
 export type Cryptocurrency = {
+  id: string;
   p279?: {
-    p279: string | NamedNode;
+    p279: string;
   };
   p178?: {
-    p178: string | NamedNode;
+    p178: string;
   };
   p170?: {
-    p170: string | NamedNode;
+    p170: string;
   };
   p2283:
     | {
@@ -45,7 +42,63 @@ export type Cryptocurrency = {
     | {
         p31: P31Type.Q13479982;
       }[];
-} & (
+} & ({
+    id: string;
+  } & (
+    | {
+        id: string;
+        p577: {
+          p577: Date;
+        };
+        p571?: {
+          p571: Date;
+        };
+      }
+    | {
+        p571: {
+          p571: Date;
+        };
+      }
+  ));
+
+export type CryptocurrencyCreateArgs = {
+  p279?: {
+    p279: URL | NamedNode;
+  };
+  p178?: {
+    p178: URL | NamedNode;
+  };
+  p170?: {
+    p170: URL | NamedNode;
+  };
+  p2283:
+    | {
+        p2283: (
+          | P2283Type.Q17083510
+          | P2283Type.Q7249984
+          | P2283Type.Q48834328
+        )[];
+      }
+    | {
+        p2283: (
+          | P2283Type.Q17083510
+          | P2283Type.Q7249984
+          | P2283Type.Q48834328
+        )[];
+      }[];
+  p5777?: string | string[];
+  p6363?: string | string[];
+} & {
+  p31?:
+    | {
+        p31: P31Type.Q13479982;
+      }
+    | {
+        p31: P31Type.Q13479982;
+      }[];
+} & ({
+    id: string;
+  } & (
     | {
         p577: {
           p577: Date | Literal;
@@ -59,8 +112,9 @@ export type Cryptocurrency = {
           p571: Date | Literal;
         };
       }
-  ) &
-  BasicShape;
+  ));
+
+export type CryptocurrencyUpdateArgs = Partial<CryptocurrencyCreateArgs>;
 
 export enum P31Type {
   Q13479982 = \\"http://www.wikidata.org/entity/Q13479982\\",
@@ -132,7 +186,20 @@ export const cryptocurrency = new Shape<Cryptocurrency>({
 });
 
 export type BasicContainerShape = {
+  id: string;
   contains?: ResourceShape | ResourceShape[]; // Contains these Resources
+  size: number; // Size of Container
+  mtime: number; // Time of Container creation created
+  modified: Date; // Time the Container was modified
+} & {
+  type: (
+    | BasicContainerShapeType.BasicContainer
+    | BasicContainerShapeType.Container
+  )[]; // Defines the node as a Container
+};
+
+export type BasicContainerShapeCreateArgs = {
+  contains?: URL | NamedNode | (URL | NamedNode)[]; // Contains these Resources
   size: number | Literal; // Size of Container
   mtime: number | Literal; // Time of Container creation created
   modified: Date | Literal; // Time the Container was modified
@@ -141,15 +208,28 @@ export type BasicContainerShape = {
     | BasicContainerShapeType.BasicContainer
     | BasicContainerShapeType.Container
   )[]; // Defines the node as a Container
-} & BasicShape;
+};
+
+export type BasicContainerShapeUpdateArgs = Partial<BasicContainerShapeCreateArgs>;
 
 export type ResourceShape = {
+  id: string;
+  size: number; // Size of Container
+  mtime: number; // Time of Container creation created
+  modified: Date; // Time the Container was modified
+} & {
+  type: ResourceShapeType.Resource; // Defines the node as a Resource
+};
+
+export type ResourceShapeCreateArgs = {
   size: number | Literal; // Size of Container
   mtime: number | Literal; // Time of Container creation created
   modified: Date | Literal; // Time the Container was modified
 } & {
   type: ResourceShapeType.Resource; // Defines the node as a Resource
-} & BasicShape;
+};
+
+export type ResourceShapeUpdateArgs = Partial<ResourceShapeCreateArgs>;
 
 export enum BasicContainerShapeType {
   BasicContainer = \\"http://www.w3.org/ns/ldp#BasicContainer\\",
@@ -215,6 +295,7 @@ export const basicContainer = new Shape<BasicContainerShape>({
   shape: ldpShapesShex,
   context: BasicContainerShapeContext,
   type: BasicContainerShapeType,
+  childContexts: [ResourceShapeContext],
 });
 
 export const resource = new Shape<ResourceShape>({
@@ -225,29 +306,65 @@ export const resource = new Shape<ResourceShape>({
 });
 
 export type ChatShape = {
+  id: string;
   type: ChatShapeType.LongChat; // Defines the type of the chat as a LongChat
-  author: string | NamedNode; // The WebId of the entity that created this chat
+  author: string; // The WebId of the entity that created this chat
+  created: Date; // The date and time the chat was created
+  title: string; // The title of the chat
+  participation?: ChatParticipationShape | ChatParticipationShape[]; // A list of people participating in this chat
+  sharedPreferences?: string; // Chat preferences
+};
+
+export type ChatShapeCreateArgs = {
+  type: ChatShapeType.LongChat; // Defines the type of the chat as a LongChat
+  author: URL | NamedNode; // The WebId of the entity that created this chat
   created: Date | Literal; // The date and time the chat was created
   title: string | Literal; // The title of the chat
-  participation?: ChatParticipationShape | ChatParticipationShape[]; // A list of people participating in this chat
-  sharedPreferences?: string | NamedNode; // Chat preferences
-} & BasicShape;
+  participation?: URL | NamedNode | (URL | NamedNode)[]; // A list of people participating in this chat
+  sharedPreferences?: URL | NamedNode; // Chat preferences
+};
+
+export type ChatShapeUpdateArgs = Partial<ChatShapeCreateArgs>;
 
 export type ChatParticipationShape = {
+  id: string;
+  dtstart: Date; // The date and time this individual began participating in the chat.
+  participant: string; // The WebId of the participant
+  backgroundColor?: string; // The background color of the participant's chat bubbles
+};
+
+export type ChatParticipationShapeCreateArgs = {
   dtstart: Date | Literal; // The date and time this individual began participating in the chat.
-  participant: string | NamedNode; // The WebId of the participant
+  participant: URL | NamedNode; // The WebId of the participant
   backgroundColor?: string | Literal; // The background color of the participant's chat bubbles
-} & BasicShape;
+};
+
+export type ChatParticipationShapeUpdateArgs = Partial<ChatParticipationShapeCreateArgs>;
 
 export type ChatMessageListShape = {
   message?: ChatMessageShape | ChatMessageShape[]; // A list of messages in the chat
-} & BasicShape;
+};
+
+export type ChatMessageListShapeCreateArgs = {
+  message?: URL | NamedNode | (URL | NamedNode)[]; // A list of messages in the chat
+};
+
+export type ChatMessageListShapeUpdateArgs = Partial<ChatMessageListShapeCreateArgs>;
 
 export type ChatMessageShape = {
+  id: string;
+  created: Date; // The date and time this message was posted.
+  content: string; // The text content of the message
+  maker: string; // The WebId of the person who sent the message.
+};
+
+export type ChatMessageShapeCreateArgs = {
   created: Date | Literal; // The date and time this message was posted.
   content: string | Literal; // The text content of the message
-  maker: string | NamedNode; // The WebId of the person who sent the message.
-} & BasicShape;
+  maker: URL | NamedNode; // The WebId of the person who sent the message.
+};
+
+export type ChatMessageShapeUpdateArgs = Partial<ChatMessageShapeCreateArgs>;
 
 export enum ChatShapeType {
   LongChat = \\"http://www.w3.org/ns/pim/meeting#LongChat\\",
@@ -337,6 +454,7 @@ export const chat = new Shape<ChatShape>({
   shape: longChatShex,
   context: ChatShapeContext,
   type: ChatShapeType,
+  childContexts: [ChatParticipationShapeContext],
 });
 
 export const chatParticipation = new Shape<ChatParticipationShape>({
@@ -349,6 +467,7 @@ export const chatMessageList = new Shape<ChatMessageListShape>({
   id: \\"https://shaperepo.com/schemas/longChat#ChatMessageListShape\\",
   shape: longChatShex,
   context: ChatMessageListShapeContext,
+  childContexts: [ChatMessageShapeContext],
 });
 
 export const chatMessage = new Shape<ChatMessageShape>({
@@ -358,6 +477,7 @@ export const chatMessage = new Shape<ChatMessageShape>({
 });
 
 export type OperatingSystem = {
+  id: string;
   p31: {
     p31: {
       p279:
@@ -370,16 +490,54 @@ export type OperatingSystem = {
     };
   };
   p275: {
-    p275: string | NamedNode | (string | NamedNode)[];
+    p275: string | string[];
   };
   p178?: {
-    p178: string | NamedNode;
+    p178: string;
   };
   p176?: {
-    p176: string | NamedNode;
+    p176: string;
   };
   p910?: {
-    p910: string | NamedNode;
+    p910: string;
+  };
+  p373?: {
+    p373?: string | string[];
+  };
+  p5795?: {
+    p5795?: string | string[];
+  };
+  p5868?: {
+    p5868?: string | string[];
+  };
+  p268?: {
+    p268?: string | string[];
+  };
+};
+
+export type OperatingSystemCreateArgs = {
+  p31: {
+    p31: {
+      p279:
+        | {
+            p279: P279Type.Q9135;
+          }
+        | {
+            p279: P279Type.Q9135;
+          }[];
+    };
+  };
+  p275: {
+    p275: URL | NamedNode | (URL | NamedNode)[];
+  };
+  p178?: {
+    p178: URL | NamedNode;
+  };
+  p176?: {
+    p176: URL | NamedNode;
+  };
+  p910?: {
+    p910: URL | NamedNode;
   };
   p373?: {
     p373?: string | Literal | (string | Literal)[];
@@ -393,7 +551,9 @@ export type OperatingSystem = {
   p268?: {
     p268?: string | Literal | (string | Literal)[];
   };
-} & BasicShape;
+};
+
+export type OperatingSystemUpdateArgs = Partial<OperatingSystemCreateArgs>;
 
 export enum P279Type {
   Q9135 = \\"http://www.wikidata.org/entity/Q9135\\",
@@ -448,276 +608,85 @@ export const operatingSystem = new Shape<OperatingSystem>({
   context: OperatingSystemContext,
 });
 
-export type Programminglanguage = {
-  p178?: P178Developer | P178Developer[];
-  p3966?: P3966Paradigm | P3966Paradigm[];
-  p577?: P577PublicationDate | P577PublicationDate[];
-  p856?: P856Website | P856Website[];
-} & {
-  p31: P31InstanceOfProgramminglanguage;
-} & {
-  p31: P279SubclassOfProgramminglanguage;
-} & BasicShape;
-
-export type P31InstanceOfProgramminglanguage = {
-  p31: WdProgrammingLanguage;
-} & BasicShape;
-
-export type P279SubclassOfProgramminglanguage =
-  | {
-      p279: WdProgrammingLanguage;
-      p279?: string | NamedNode | (string | NamedNode)[];
-    }
-  | ({
-      p279: P279SubclassOfProgramminglanguage;
-      p279?: string | NamedNode | (string | NamedNode)[];
-    } & BasicShape);
-
-export enum WdProgrammingLanguage {
-  Q9143 = \\"http://www.wikidata.org/entity/Q9143\\",
-}
-
-export type P178Developer = {
-  p178: string | NamedNode;
-  p580?: Date | Literal;
-  p582?: Date | Literal;
-} & BasicShape;
-
-export type P3966Paradigm = {
-  p3966:
-    | {
-        p31: ProgrammingParadigm;
-      }
-    | {
-        p279: ProgrammingParadigm;
-      };
-} & BasicShape;
-
-export type ProgrammingParadigm = {
-  p31: P31Type.Q188267;
-} & BasicShape;
-
-export type P577PublicationDate = {
-  p577: string;
-} & BasicShape;
-
-export type P856Website = {
-  p856: string | NamedNode;
-} & BasicShape;
-
-export enum P31Type {
-  Q188267 = \\"http://www.wikidata.org/entity/Q188267\\",
-}
-
-export enum ProgramminglanguageContext {
-  p31 = \\"p:p31\\",
-  p178 = \\"p:p178\\",
-  p3966 = \\"p:p3966\\",
-  p577 = \\"p:p577\\",
-  p856 = \\"p:p856\\",
-}
-
-export enum P31InstanceOfProgramminglanguageContext {
-  name = \\"p31\\",
-  value = \\"p:p31\\",
-}
-
-export enum P279SubclassOfProgramminglanguageContext {
-  p279 = \\"p:p279\\",
-}
-
-export enum P178DeveloperContext {
-  p178 = \\"p:p178\\",
-  p580 = \\"p:p580\\",
-  p582 = \\"p:p582\\",
-}
-
-export enum P3966ParadigmContext {
-  p31 = \\"p:p31\\",
-  p279 = \\"p:p279\\",
-  name = \\"p3966\\",
-  value = \\"p:p3966\\",
-}
-
-export enum ProgrammingParadigmContext {
-  name = \\"p31\\",
-  value = \\"p:p31\\",
-}
-
-export enum P577PublicationDateContext {
-  name = \\"p577\\",
-  value = \\"p:p577\\",
-}
-
-export enum P856WebsiteContext {
-  name = \\"p856\\",
-  value = \\"p:p856\\",
-}
-
-export const programmingLanguageShex = \`
-PREFIX xsd: <http://www.w3.org/2001/XMLSchema#>
-PREFIX prov: <http://www.w3.org/ns/prov#>
-PREFIX p: <http://www.wikidata.org/prop/>
-PREFIX pr: <http://www.wikidata.org/prop/reference/>
-PREFIX ps: <http://www.wikidata.org/prop/statement/>
-PREFIX xsd: <http://www.w3.org/2001/XMLSchema#>
-PREFIX prov: <http://www.w3.org/ns/prov#>
-PREFIX wd: <http://www.wikidata.org/entity/>
-PREFIX wdt: <http://www.wikidata.org/prop/direct/>
-PREFIX p: <http://www.wikidata.org/prop/>
-PREFIX pq: <http://www.wikidata.org/prop/qualifier/>
-PREFIX pgl: <https://www.wikidata.org/wiki/EntitySchema:E55#>
-
-#test data:  SELECT * WHERE { ?item wdt:P31 wd:Q9143 . } LIMIT 10
-
-pgl:programminglanguage EXTRA p:P31 {
-  (p:P31 @pgl:P31_instance_of_programminglanguage|p:P31 @pgl:P279_subclass_of_programminglanguage)+;
-  p:P178 @pgl:P178_developer*;
-  p:P3966 @pgl:P3966_paradigm*;
-  p:P577 @pgl:P577_publication_date*;
-  p:P856 @pgl:P856_website*;
-}
-
-pgl:P31_instance_of_programminglanguage {
-    ps:P31 @pgl:wd_programming_language ;
-}
-
-pgl:P279_subclass_of_programminglanguage {
-    (ps:P279 @pgl:wd_programming_language ; ps:P279 IRI *) |
-    (ps:P279 @pgl:P279_subclass_of_programminglanguage; ps:P279 IRI *)
-}
-
-pgl:wd_programming_language [
-  wd:Q9143  # Q9143 = programming language
-]
-
-pgl:P178_developer {
-  ps:P178 IRI;
-  pq:P580 xsd:dateTime? ;
-  pq:P582 xsd:dateTime? ;
-}
-
-pgl:P3966_paradigm {
-    ps:P3966 EXTRA p:P31 EXTRA p:P279  {
-              (p:P31 @pgl:Programming_paradigm | p:P279 @pgl:Programming_paradigm );
-
-           } ;
-}
-
-pgl:Programming_paradigm {
-    ps:P31 [wd:Q188267] # programming paradigm ;
-}
-  
-
-pgl:P577_publication_date {
-  ps:P577 LITERAL;
-}
-
-pgl:P856_website {
-  ps:P856 IRI;
-}
-\`;
-
-export const programminglanguage = new Shape<Programminglanguage>({
-  id: \\"https://www.wikidata.org/wiki/EntitySchema:E55#programminglanguage\\",
-  shape: programmingLanguageShex,
-  context: ProgramminglanguageContext,
-
-  childContexts: [
-    P31InstanceOfProgramminglanguageContext,
-    P279SubclassOfProgramminglanguageContext,
-    P178DeveloperContext,
-    P3966ParadigmContext,
-    P577PublicationDateContext,
-    P856WebsiteContext,
-  ],
-});
-
-export const p31InstanceOfProgramminglanguage = new Shape<P31InstanceOfProgramminglanguage>(
-  {
-    id:
-      \\"https://www.wikidata.org/wiki/EntitySchema:E55#P31_instance_of_programminglanguage\\",
-    shape: programmingLanguageShex,
-    context: P31InstanceOfProgramminglanguageContext,
-  }
-);
-
-export const p279SubclassOfProgramminglanguage = new Shape<P279SubclassOfProgramminglanguage>(
-  {
-    id:
-      \\"https://www.wikidata.org/wiki/EntitySchema:E55#P279_subclass_of_programminglanguage\\",
-    shape: programmingLanguageShex,
-    context: P279SubclassOfProgramminglanguageContext,
-  }
-);
-
-export const p178Developer = new Shape<P178Developer>({
-  id: \\"https://www.wikidata.org/wiki/EntitySchema:E55#P178_developer\\",
-  shape: programmingLanguageShex,
-  context: P178DeveloperContext,
-});
-
-export const p3966Paradigm = new Shape<P3966Paradigm>({
-  id: \\"https://www.wikidata.org/wiki/EntitySchema:E55#P3966_paradigm\\",
-  shape: programmingLanguageShex,
-  context: P3966ParadigmContext,
-});
-
-export const programmingParadigm = new Shape<ProgrammingParadigm>({
-  id: \\"https://www.wikidata.org/wiki/EntitySchema:E55#Programming_paradigm\\",
-  shape: programmingLanguageShex,
-  context: ProgrammingParadigmContext,
-});
-
-export const p577PublicationDate = new Shape<P577PublicationDate>({
-  id: \\"https://www.wikidata.org/wiki/EntitySchema:E55#P577_publication_date\\",
-  shape: programmingLanguageShex,
-  context: P577PublicationDateContext,
-});
-
-export const p856Website = new Shape<P856Website>({
-  id: \\"https://www.wikidata.org/wiki/EntitySchema:E55#P856_website\\",
-  shape: programmingLanguageShex,
-  context: P856WebsiteContext,
-});
-
 export type SolidProfileShape = {
-  fn?: string | Literal; // The formatted name of a person. Example: John Smith
-  name?: string | Literal; // An alternate way to define a person's name.
+  id: string;
+  fn?: string; // The formatted name of a person. Example: John Smith
+  name?: string; // An alternate way to define a person's name.
   hasAddress?: AddressShape | AddressShape[]; // The person's street address.
   hasEmail?: EmailShape | EmailShape[]; // The person's email.
-  hasPhoto?: string | NamedNode; // A link to the person's photo
-  img?: string | Literal; // Photo link but in string form
+  hasPhoto?: string; // A link to the person's photo
+  img?: string; // Photo link but in string form
   hasTelephone?: PhoneNumberShape | PhoneNumberShape[]; // Person's telephone number
-  phone?: string | Literal; // An alternative way to define a person's telephone number using a string
-  organizationName?: string | Literal; // The name of the organization with which the person is affiliated
-  role?: string | Literal; // The name of the person's role in their organization
+  phone?: string; // An alternative way to define a person's telephone number using a string
+  organizationName?: string; // The name of the organization with which the person is affiliated
+  role?: string; // The name of the person's role in their organization
   trustedApp?: TrustedAppShape | TrustedAppShape[]; // A list of app origins that are trusted by this user
   key?: RsaPublicKeyShape | RsaPublicKeyShape[]; // A list of RSA public keys that are associated with private keys the user holds.
-  inbox: string | NamedNode; // The user's LDP inbox to which apps can post notifications
-  preferencesFile?: string | NamedNode; // The user's preferences
-  storage?: string | NamedNode | (string | NamedNode)[]; // The location of a Solid storage server related to this WebId
-  account?: string | NamedNode; // The user's account
-  privateTypeIndex?: string | NamedNode | (string | NamedNode)[]; // A registry of all types used on the user's Pod (for private access only)
-  publicTypeIndex?: string | NamedNode | (string | NamedNode)[]; // A registry of all types used on the user's Pod (for public access)
-  knows?: string | NamedNode | (string | NamedNode)[]; // A list of WebIds for all the people this user knows.
+  inbox: string; // The user's LDP inbox to which apps can post notifications
+  preferencesFile?: string; // The user's preferences
+  storage?: string | string[]; // The location of a Solid storage server related to this WebId
+  account?: string; // The user's account
+  privateTypeIndex?: string | string[]; // A registry of all types used on the user's Pod (for private access only)
+  publicTypeIndex?: string | string[]; // A registry of all types used on the user's Pod (for public access)
+  knows?: string | string[]; // A list of WebIds for all the people this user knows.
 } & {
   type: (
     | SolidProfileShapeType.SchemPerson
     | SolidProfileShapeType.FoafPerson
   )[]; // Defines the node as a Person (from foaf)
-} & BasicShape;
+};
+
+export type SolidProfileShapeCreateArgs = {
+  fn?: string | Literal; // The formatted name of a person. Example: John Smith
+  name?: string | Literal; // An alternate way to define a person's name.
+  hasAddress?: URL | NamedNode | (URL | NamedNode)[]; // The person's street address.
+  hasEmail?: URL | NamedNode | (URL | NamedNode)[]; // The person's email.
+  hasPhoto?: URL | NamedNode; // A link to the person's photo
+  img?: string | Literal; // Photo link but in string form
+  hasTelephone?: URL | NamedNode | (URL | NamedNode)[]; // Person's telephone number
+  phone?: string | Literal; // An alternative way to define a person's telephone number using a string
+  organizationName?: string | Literal; // The name of the organization with which the person is affiliated
+  role?: string | Literal; // The name of the person's role in their organization
+  trustedApp?: URL | NamedNode | (URL | NamedNode)[]; // A list of app origins that are trusted by this user
+  key?: URL | NamedNode | (URL | NamedNode)[]; // A list of RSA public keys that are associated with private keys the user holds.
+  inbox: URL | NamedNode; // The user's LDP inbox to which apps can post notifications
+  preferencesFile?: URL | NamedNode; // The user's preferences
+  storage?: URL | NamedNode | (URL | NamedNode)[]; // The location of a Solid storage server related to this WebId
+  account?: URL | NamedNode; // The user's account
+  privateTypeIndex?: URL | NamedNode | (URL | NamedNode)[]; // A registry of all types used on the user's Pod (for private access only)
+  publicTypeIndex?: URL | NamedNode | (URL | NamedNode)[]; // A registry of all types used on the user's Pod (for public access)
+  knows?: URL | NamedNode | (URL | NamedNode)[]; // A list of WebIds for all the people this user knows.
+} & {
+  type: (
+    | SolidProfileShapeType.SchemPerson
+    | SolidProfileShapeType.FoafPerson
+  )[]; // Defines the node as a Person (from foaf)
+};
+
+export type SolidProfileShapeUpdateArgs = Partial<SolidProfileShapeCreateArgs>;
 
 export type AddressShape = {
+  id: string;
+  countryName?: string; // The name of the user's country of residence
+  locality?: string; // The name of the user's locality (City, Town etc.) of residence
+  postalCode?: string; // The user's postal code
+  region?: string; // The name of the user's region (State, Province etc.) of residence
+  streetAddress?: string; // The user's street address
+};
+
+export type AddressShapeCreateArgs = {
   countryName?: string | Literal; // The name of the user's country of residence
   locality?: string | Literal; // The name of the user's locality (City, Town etc.) of residence
   postalCode?: string | Literal; // The user's postal code
   region?: string | Literal; // The name of the user's region (State, Province etc.) of residence
   streetAddress?: string | Literal; // The user's street address
-} & BasicShape;
+};
+
+export type AddressShapeUpdateArgs = Partial<AddressShapeCreateArgs>;
 
 export type EmailShape = {
-  value: string | NamedNode; // The value of an email as a mailto link (Example <mailto:jane@example.com>)
+  id: string;
+  value: string; // The value of an email as a mailto link (Example <mailto:jane@example.com>)
 } & {
   type?: (
     | EmailShapeType.Dom
@@ -732,10 +701,31 @@ export type EmailShape = {
     | EmailShapeType.Work
     | EmailShapeType.X400
   )[]; // The type of email.
-} & BasicShape;
+};
+
+export type EmailShapeCreateArgs = {
+  value: URL | NamedNode; // The value of an email as a mailto link (Example <mailto:jane@example.com>)
+} & {
+  type?: (
+    | EmailShapeType.Dom
+    | EmailShapeType.Home
+    | EmailShapeType.Isdn
+    | EmailShapeType.Internet
+    | EmailShapeType.Intl
+    | EmailShapeType.Label
+    | EmailShapeType.Parcel
+    | EmailShapeType.Postal
+    | EmailShapeType.Pref
+    | EmailShapeType.Work
+    | EmailShapeType.X400
+  )[]; // The type of email.
+};
+
+export type EmailShapeUpdateArgs = Partial<EmailShapeCreateArgs>;
 
 export type PhoneNumberShape = {
-  value: string | NamedNode; // The value of a phone number as a tel link (Example <tel:555-555-5555>)
+  id: string;
+  value: string; // The value of a phone number as a tel link (Example <tel:555-555-5555>)
 } & {
   type?: (
     | PhoneNumberShapeType.Dom
@@ -750,19 +740,57 @@ export type PhoneNumberShape = {
     | PhoneNumberShapeType.Work
     | PhoneNumberShapeType.X400
   )[]; // They type of Phone Number
-} & BasicShape;
+};
+
+export type PhoneNumberShapeCreateArgs = {
+  value: URL | NamedNode; // The value of a phone number as a tel link (Example <tel:555-555-5555>)
+} & {
+  type?: (
+    | PhoneNumberShapeType.Dom
+    | PhoneNumberShapeType.Home
+    | PhoneNumberShapeType.Isdn
+    | PhoneNumberShapeType.Internet
+    | PhoneNumberShapeType.Intl
+    | PhoneNumberShapeType.Label
+    | PhoneNumberShapeType.Parcel
+    | PhoneNumberShapeType.Postal
+    | PhoneNumberShapeType.Pref
+    | PhoneNumberShapeType.Work
+    | PhoneNumberShapeType.X400
+  )[]; // They type of Phone Number
+};
+
+export type PhoneNumberShapeUpdateArgs = Partial<PhoneNumberShapeCreateArgs>;
 
 export type TrustedAppShape = {
+  id: string;
   mode:
     | (ModeType.Append | ModeType.Control | ModeType.Read | ModeType.Write)[]
     | (ModeType.Append | ModeType.Control | ModeType.Read | ModeType.Write)[][]; // The level of access provided to this origin
-  origin: string | NamedNode; // The app origin the user trusts
-} & BasicShape;
+  origin: string; // The app origin the user trusts
+};
+
+export type TrustedAppShapeCreateArgs = {
+  mode:
+    | (ModeType.Append | ModeType.Control | ModeType.Read | ModeType.Write)[]
+    | (ModeType.Append | ModeType.Control | ModeType.Read | ModeType.Write)[][]; // The level of access provided to this origin
+  origin: URL | NamedNode; // The app origin the user trusts
+};
+
+export type TrustedAppShapeUpdateArgs = Partial<TrustedAppShapeCreateArgs>;
 
 export type RsaPublicKeyShape = {
+  id: string;
+  modulus: string; // RSA Modulus
+  exponent: number; // RSA Exponent
+};
+
+export type RsaPublicKeyShapeCreateArgs = {
   modulus: string | Literal; // RSA Modulus
   exponent: number | Literal; // RSA Exponent
-} & BasicShape;
+};
+
+export type RsaPublicKeyShapeUpdateArgs = Partial<RsaPublicKeyShapeCreateArgs>;
 
 export enum SolidProfileShapeType {
   SchemPerson = \\"http://schema.org/Person\\",
@@ -1026,13 +1054,14 @@ export const rsaPublicKey = new Shape<RsaPublicKeyShape>({
 });
 
 export type State = {
+  id: string;
   p1448: string | string[];
   p1705: string | string[];
   p487: string;
   p30: {
     p31: P31Type.Q5107;
   };
-  p3896: string | NamedNode;
+  p3896: string;
   p935: string;
   p373: string;
   p3722: string;
@@ -1066,7 +1095,7 @@ export type State = {
   p2184: {
     p31: P31Type.Q17544377;
   };
-  p948: string | NamedNode;
+  p948: string;
   p85: {
     p31: P31Type.Q23691;
   };
@@ -1084,7 +1113,70 @@ export type State = {
   };
 } & {
   p31: P31Type.Q3624078;
-} & BasicShape;
+};
+
+export type StateCreateArgs = {
+  p1448: string | string[];
+  p1705: string | string[];
+  p487: string;
+  p30: {
+    p31: P31Type.Q5107;
+  };
+  p3896: URL | NamedNode;
+  p935: string;
+  p373: string;
+  p3722: string;
+  p910: {
+    p31: P31Type.Q4167836;
+  };
+  p5125: {
+    p31: P31Type.Q26884324;
+  };
+  p1151: {
+    p31: P31Type.Q4663903;
+  };
+  p1792: {
+    p31: P31Type.Q4167836;
+  };
+  p1464: {
+    p31: P31Type.Q4167836;
+  };
+  p1465: {
+    p31: P31Type.Q4167836;
+  };
+  p1791: {
+    p31: P31Type.Q4167836;
+  };
+  p1740: {
+    p31: P31Type.Q4167836;
+  };
+  p2633: {
+    p31: P31Type.Q46865913;
+  };
+  p2184: {
+    p31: P31Type.Q17544377;
+  };
+  p948: URL | NamedNode;
+  p85: {
+    p31: P31Type.Q23691;
+  };
+  p163: {
+    p31: P31Type.Q186516;
+  };
+  p237: {
+    p31: P31Type.Q645466;
+  };
+  p36: {
+    p31: P31Type.Q5119;
+  };
+  p122: {
+    p31: P31Type.Q1307214;
+  };
+} & {
+  p31: P31Type.Q3624078;
+};
+
+export type StateUpdateArgs = Partial<StateCreateArgs>;
 
 export enum P31Type {
   Q1307214 = \\"http://www.wikidata.org/entity/Q1307214\\",
@@ -1173,6 +1265,304 @@ export const state = new Shape<State>({
   shape: sovereignStateShex,
   context: StateContext,
 });
+
+export type Programminglanguage = {
+  id: string;
+  p178?: P178Developer | P178Developer[];
+  p3966?: P3966Paradigm | P3966Paradigm[];
+  p577?: P577PublicationDate | P577PublicationDate[];
+  p856?: P856Website | P856Website[];
+} & {
+  id: string;
+};
+
+export type ProgramminglanguageCreateArgs = {
+  p178?: URL | NamedNode | (URL | NamedNode)[];
+  p3966?: URL | NamedNode | (URL | NamedNode)[];
+  p577?: URL | NamedNode | (URL | NamedNode)[];
+  p856?: URL | NamedNode | (URL | NamedNode)[];
+} & {
+  id: string;
+};
+
+export type ProgramminglanguageUpdateArgs = Partial<ProgramminglanguageCreateArgs>;
+
+export type P31InstanceOfProgramminglanguage = {
+  p31: WdProgrammingLanguage;
+};
+
+export type P31InstanceOfProgramminglanguageCreateArgs = {
+  p31: URL | NamedNode;
+};
+
+export type P31InstanceOfProgramminglanguageUpdateArgs = Partial<P31InstanceOfProgramminglanguageCreateArgs>;
+
+export type P279SubclassOfProgramminglanguage = {
+  id: string;
+} & {
+  p279: P279SubclassOfProgramminglanguage;
+};
+
+export type P279SubclassOfProgramminglanguageCreateArgs = {
+  id: string;
+} & {
+  p279: URL | NamedNode;
+};
+
+export type P279SubclassOfProgramminglanguageUpdateArgs = Partial<P279SubclassOfProgramminglanguageCreateArgs>;
+
+export enum WdProgrammingLanguage {
+  Q9143 = \\"http://www.wikidata.org/entity/Q9143\\",
+}
+
+export type P178Developer = {
+  id: string;
+  p178: string;
+  p580?: Date;
+  p582?: Date;
+};
+
+export type P178DeveloperCreateArgs = {
+  p178: URL | NamedNode;
+  p580?: Date | Literal;
+  p582?: Date | Literal;
+};
+
+export type P178DeveloperUpdateArgs = Partial<P178DeveloperCreateArgs>;
+
+export type P3966Paradigm = {
+  p3966: {
+    id: string;
+  } & (
+    | {
+        p31: ProgrammingParadigm;
+      }
+    | {
+        p279: ProgrammingParadigm;
+      }
+  );
+};
+
+export type P3966ParadigmCreateArgs = {
+  p3966: {
+    id: string;
+  } & (
+    | {
+        p31: URL | NamedNode;
+      }
+    | {
+        p279: URL | NamedNode;
+      }
+  );
+};
+
+export type P3966ParadigmUpdateArgs = Partial<P3966ParadigmCreateArgs>;
+
+export type ProgrammingParadigm = {
+  p31: P31Type.Q188267;
+};
+
+export type ProgrammingParadigmCreateArgs = {
+  p31: P31Type.Q188267;
+};
+
+export type ProgrammingParadigmUpdateArgs = Partial<ProgrammingParadigmCreateArgs>;
+
+export type P577PublicationDate = {
+  p577: string;
+};
+
+export type P577PublicationDateCreateArgs = {
+  p577: string;
+};
+
+export type P577PublicationDateUpdateArgs = Partial<P577PublicationDateCreateArgs>;
+
+export type P856Website = {
+  p856: string;
+};
+
+export type P856WebsiteCreateArgs = {
+  p856: URL | NamedNode;
+};
+
+export type P856WebsiteUpdateArgs = Partial<P856WebsiteCreateArgs>;
+
+export enum P31Type {
+  Q188267 = \\"http://www.wikidata.org/entity/Q188267\\",
+}
+
+export enum ProgramminglanguageContext {
+  p31 = \\"p:p31\\",
+  p178 = \\"p:p178\\",
+  p3966 = \\"p:p3966\\",
+  p577 = \\"p:p577\\",
+  p856 = \\"p:p856\\",
+}
+
+export enum P31InstanceOfProgramminglanguageContext {
+  name = \\"p31\\",
+  value = \\"p:p31\\",
+}
+
+export enum P279SubclassOfProgramminglanguageContext {
+  p279 = \\"p:p279\\",
+}
+
+export enum P178DeveloperContext {
+  p178 = \\"p:p178\\",
+  p580 = \\"p:p580\\",
+  p582 = \\"p:p582\\",
+}
+
+export enum P3966ParadigmContext {
+  p31 = \\"p:p31\\",
+  p279 = \\"p:p279\\",
+  name = \\"p3966\\",
+  value = \\"p:p3966\\",
+}
+
+export enum ProgrammingParadigmContext {
+  name = \\"p31\\",
+  value = \\"p:p31\\",
+}
+
+export enum P577PublicationDateContext {
+  name = \\"p577\\",
+  value = \\"p:p577\\",
+}
+
+export enum P856WebsiteContext {
+  name = \\"p856\\",
+  value = \\"p:p856\\",
+}
+
+export const programmingLanguageShex = \`
+PREFIX xsd: <http://www.w3.org/2001/XMLSchema#>
+PREFIX prov: <http://www.w3.org/ns/prov#>
+PREFIX p: <http://www.wikidata.org/prop/>
+PREFIX pr: <http://www.wikidata.org/prop/reference/>
+PREFIX ps: <http://www.wikidata.org/prop/statement/>
+PREFIX xsd: <http://www.w3.org/2001/XMLSchema#>
+PREFIX prov: <http://www.w3.org/ns/prov#>
+PREFIX wd: <http://www.wikidata.org/entity/>
+PREFIX wdt: <http://www.wikidata.org/prop/direct/>
+PREFIX p: <http://www.wikidata.org/prop/>
+PREFIX pq: <http://www.wikidata.org/prop/qualifier/>
+PREFIX pgl: <https://www.wikidata.org/wiki/EntitySchema:E55#>
+
+#test data:  SELECT * WHERE { ?item wdt:P31 wd:Q9143 . } LIMIT 10
+
+pgl:programminglanguage EXTRA p:P31 {
+  (p:P31 @pgl:P31_instance_of_programminglanguage|p:P31 @pgl:P279_subclass_of_programminglanguage)+;
+  p:P178 @pgl:P178_developer*;
+  p:P3966 @pgl:P3966_paradigm*;
+  p:P577 @pgl:P577_publication_date*;
+  p:P856 @pgl:P856_website*;
+}
+
+pgl:P31_instance_of_programminglanguage {
+    ps:P31 @pgl:wd_programming_language ;
+}
+
+pgl:P279_subclass_of_programminglanguage {
+    ps:P279 @pgl:wd_programming_language |
+      ps:P279 @pgl:P279_subclass_of_programminglanguage;
+}
+
+pgl:wd_programming_language [
+  wd:Q9143  # Q9143 = programming language
+]
+
+pgl:P178_developer {
+  ps:P178 IRI;
+  pq:P580 xsd:dateTime? ;
+  pq:P582 xsd:dateTime? ;
+}
+
+pgl:P3966_paradigm {
+    ps:P3966 EXTRA p:P31 EXTRA p:P279  {
+              (p:P31 @pgl:Programming_paradigm | p:P279 @pgl:Programming_paradigm );
+
+           } ;
+}
+
+pgl:Programming_paradigm {
+    ps:P31 [wd:Q188267] # programming paradigm ;
+}
+  
+
+pgl:P577_publication_date {
+  ps:P577 LITERAL;
+}
+
+pgl:P856_website {
+  ps:P856 IRI;
+}
+\`;
+
+export const programminglanguage = new Shape<Programminglanguage>({
+  id: \\"https://www.wikidata.org/wiki/EntitySchema:E55#programminglanguage\\",
+  shape: programmingLanguageShex,
+  context: ProgramminglanguageContext,
+  childContexts: [
+    P31InstanceOfProgramminglanguageContext,
+    P279SubclassOfProgramminglanguageContext,
+    P178DeveloperContext,
+    P3966ParadigmContext,
+    P577PublicationDateContext,
+    P856WebsiteContext,
+  ],
+});
+
+export const p31InstanceOfProgramminglanguage = new Shape<P31InstanceOfProgramminglanguage>(
+  {
+    id:
+      \\"https://www.wikidata.org/wiki/EntitySchema:E55#P31_instance_of_programminglanguage\\",
+    shape: programmingLanguageShex,
+    context: P31InstanceOfProgramminglanguageContext,
+  }
+);
+
+export const p279SubclassOfProgramminglanguage = new Shape<P279SubclassOfProgramminglanguage>(
+  {
+    id:
+      \\"https://www.wikidata.org/wiki/EntitySchema:E55#P279_subclass_of_programminglanguage\\",
+    shape: programmingLanguageShex,
+    context: P279SubclassOfProgramminglanguageContext,
+    childContexts: [P279SubclassOfProgramminglanguageContext],
+  }
+);
+
+export const p178Developer = new Shape<P178Developer>({
+  id: \\"https://www.wikidata.org/wiki/EntitySchema:E55#P178_developer\\",
+  shape: programmingLanguageShex,
+  context: P178DeveloperContext,
+});
+
+export const p3966Paradigm = new Shape<P3966Paradigm>({
+  id: \\"https://www.wikidata.org/wiki/EntitySchema:E55#P3966_paradigm\\",
+  shape: programmingLanguageShex,
+  context: P3966ParadigmContext,
+});
+
+export const programmingParadigm = new Shape<ProgrammingParadigm>({
+  id: \\"https://www.wikidata.org/wiki/EntitySchema:E55#Programming_paradigm\\",
+  shape: programmingLanguageShex,
+  context: ProgrammingParadigmContext,
+});
+
+export const p577PublicationDate = new Shape<P577PublicationDate>({
+  id: \\"https://www.wikidata.org/wiki/EntitySchema:E55#P577_publication_date\\",
+  shape: programmingLanguageShex,
+  context: P577PublicationDateContext,
+});
+
+export const p856Website = new Shape<P856Website>({
+  id: \\"https://www.wikidata.org/wiki/EntitySchema:E55#P856_website\\",
+  shape: programmingLanguageShex,
+  context: P856WebsiteContext,
+});
 ",
 ]
 `;
@@ -1181,49 +1571,87 @@ exports[`matches snapshots without config file 1`] = `
 Array [
   "import { NamedNode, Literal } from \\"rdflib\\";
 
-export interface BasicShape {
-  id: string;
-}
-
 import { Shape } from \\"shex-methods\\";
 
 export type SolidProfileShape = {
-  fn?: string | Literal; // The formatted name of a person. Example: John Smith
-  name?: string | Literal; // An alternate way to define a person's name.
+  id: string;
+  fn?: string; // The formatted name of a person. Example: John Smith
+  name?: string; // An alternate way to define a person's name.
   hasAddress?: AddressShape | AddressShape[]; // The person's street address.
   hasEmail?: EmailShape | EmailShape[]; // The person's email.
-  hasPhoto?: string | NamedNode; // A link to the person's photo
-  img?: string | Literal; // Photo link but in string form
+  hasPhoto?: string; // A link to the person's photo
+  img?: string; // Photo link but in string form
   hasTelephone?: PhoneNumberShape | PhoneNumberShape[]; // Person's telephone number
-  phone?: string | Literal; // An alternative way to define a person's telephone number using a string
-  organizationName?: string | Literal; // The name of the organization with which the person is affiliated
-  role?: string | Literal; // The name of the person's role in their organization
+  phone?: string; // An alternative way to define a person's telephone number using a string
+  organizationName?: string; // The name of the organization with which the person is affiliated
+  role?: string; // The name of the person's role in their organization
   trustedApp?: TrustedAppShape | TrustedAppShape[]; // A list of app origins that are trusted by this user
   key?: RsaPublicKeyShape | RsaPublicKeyShape[]; // A list of RSA public keys that are associated with private keys the user holds.
-  inbox: string | NamedNode; // The user's LDP inbox to which apps can post notifications
-  preferencesFile?: string | NamedNode; // The user's preferences
-  storage?: string | NamedNode | (string | NamedNode)[]; // The location of a Solid storage server related to this WebId
-  account?: string | NamedNode; // The user's account
-  privateTypeIndex?: string | NamedNode | (string | NamedNode)[]; // A registry of all types used on the user's Pod (for private access only)
-  publicTypeIndex?: string | NamedNode | (string | NamedNode)[]; // A registry of all types used on the user's Pod (for public access)
-  knows?: string | NamedNode | (string | NamedNode)[]; // A list of WebIds for all the people this user knows.
+  inbox: string; // The user's LDP inbox to which apps can post notifications
+  preferencesFile?: string; // The user's preferences
+  storage?: string | string[]; // The location of a Solid storage server related to this WebId
+  account?: string; // The user's account
+  privateTypeIndex?: string | string[]; // A registry of all types used on the user's Pod (for private access only)
+  publicTypeIndex?: string | string[]; // A registry of all types used on the user's Pod (for public access)
+  knows?: string | string[]; // A list of WebIds for all the people this user knows.
 } & {
   type: (
     | SolidProfileShapeType.SchemPerson
     | SolidProfileShapeType.FoafPerson
   )[]; // Defines the node as a Person (from foaf)
-} & BasicShape;
+};
+
+export type SolidProfileShapeCreateArgs = {
+  fn?: string | Literal; // The formatted name of a person. Example: John Smith
+  name?: string | Literal; // An alternate way to define a person's name.
+  hasAddress?: URL | NamedNode | (URL | NamedNode)[]; // The person's street address.
+  hasEmail?: URL | NamedNode | (URL | NamedNode)[]; // The person's email.
+  hasPhoto?: URL | NamedNode; // A link to the person's photo
+  img?: string | Literal; // Photo link but in string form
+  hasTelephone?: URL | NamedNode | (URL | NamedNode)[]; // Person's telephone number
+  phone?: string | Literal; // An alternative way to define a person's telephone number using a string
+  organizationName?: string | Literal; // The name of the organization with which the person is affiliated
+  role?: string | Literal; // The name of the person's role in their organization
+  trustedApp?: URL | NamedNode | (URL | NamedNode)[]; // A list of app origins that are trusted by this user
+  key?: URL | NamedNode | (URL | NamedNode)[]; // A list of RSA public keys that are associated with private keys the user holds.
+  inbox: URL | NamedNode; // The user's LDP inbox to which apps can post notifications
+  preferencesFile?: URL | NamedNode; // The user's preferences
+  storage?: URL | NamedNode | (URL | NamedNode)[]; // The location of a Solid storage server related to this WebId
+  account?: URL | NamedNode; // The user's account
+  privateTypeIndex?: URL | NamedNode | (URL | NamedNode)[]; // A registry of all types used on the user's Pod (for private access only)
+  publicTypeIndex?: URL | NamedNode | (URL | NamedNode)[]; // A registry of all types used on the user's Pod (for public access)
+  knows?: URL | NamedNode | (URL | NamedNode)[]; // A list of WebIds for all the people this user knows.
+} & {
+  type: (
+    | SolidProfileShapeType.SchemPerson
+    | SolidProfileShapeType.FoafPerson
+  )[]; // Defines the node as a Person (from foaf)
+};
+
+export type SolidProfileShapeUpdateArgs = Partial<SolidProfileShapeCreateArgs>;
 
 export type AddressShape = {
+  id: string;
+  countryName?: string; // The name of the user's country of residence
+  locality?: string; // The name of the user's locality (City, Town etc.) of residence
+  postalCode?: string; // The user's postal code
+  region?: string; // The name of the user's region (State, Province etc.) of residence
+  streetAddress?: string; // The user's street address
+};
+
+export type AddressShapeCreateArgs = {
   countryName?: string | Literal; // The name of the user's country of residence
   locality?: string | Literal; // The name of the user's locality (City, Town etc.) of residence
   postalCode?: string | Literal; // The user's postal code
   region?: string | Literal; // The name of the user's region (State, Province etc.) of residence
   streetAddress?: string | Literal; // The user's street address
-} & BasicShape;
+};
+
+export type AddressShapeUpdateArgs = Partial<AddressShapeCreateArgs>;
 
 export type EmailShape = {
-  value: string | NamedNode; // The value of an email as a mailto link (Example <mailto:jane@example.com>)
+  id: string;
+  value: string; // The value of an email as a mailto link (Example <mailto:jane@example.com>)
 } & {
   type?: (
     | EmailShapeType.Dom
@@ -1238,10 +1666,31 @@ export type EmailShape = {
     | EmailShapeType.Work
     | EmailShapeType.X400
   )[]; // The type of email.
-} & BasicShape;
+};
+
+export type EmailShapeCreateArgs = {
+  value: URL | NamedNode; // The value of an email as a mailto link (Example <mailto:jane@example.com>)
+} & {
+  type?: (
+    | EmailShapeType.Dom
+    | EmailShapeType.Home
+    | EmailShapeType.Isdn
+    | EmailShapeType.Internet
+    | EmailShapeType.Intl
+    | EmailShapeType.Label
+    | EmailShapeType.Parcel
+    | EmailShapeType.Postal
+    | EmailShapeType.Pref
+    | EmailShapeType.Work
+    | EmailShapeType.X400
+  )[]; // The type of email.
+};
+
+export type EmailShapeUpdateArgs = Partial<EmailShapeCreateArgs>;
 
 export type PhoneNumberShape = {
-  value: string | NamedNode; // The value of a phone number as a tel link (Example <tel:555-555-5555>)
+  id: string;
+  value: string; // The value of a phone number as a tel link (Example <tel:555-555-5555>)
 } & {
   type?: (
     | PhoneNumberShapeType.Dom
@@ -1256,19 +1705,57 @@ export type PhoneNumberShape = {
     | PhoneNumberShapeType.Work
     | PhoneNumberShapeType.X400
   )[]; // They type of Phone Number
-} & BasicShape;
+};
+
+export type PhoneNumberShapeCreateArgs = {
+  value: URL | NamedNode; // The value of a phone number as a tel link (Example <tel:555-555-5555>)
+} & {
+  type?: (
+    | PhoneNumberShapeType.Dom
+    | PhoneNumberShapeType.Home
+    | PhoneNumberShapeType.Isdn
+    | PhoneNumberShapeType.Internet
+    | PhoneNumberShapeType.Intl
+    | PhoneNumberShapeType.Label
+    | PhoneNumberShapeType.Parcel
+    | PhoneNumberShapeType.Postal
+    | PhoneNumberShapeType.Pref
+    | PhoneNumberShapeType.Work
+    | PhoneNumberShapeType.X400
+  )[]; // They type of Phone Number
+};
+
+export type PhoneNumberShapeUpdateArgs = Partial<PhoneNumberShapeCreateArgs>;
 
 export type TrustedAppShape = {
+  id: string;
   mode:
     | (ModeType.Append | ModeType.Control | ModeType.Read | ModeType.Write)[]
     | (ModeType.Append | ModeType.Control | ModeType.Read | ModeType.Write)[][]; // The level of access provided to this origin
-  origin: string | NamedNode; // The app origin the user trusts
-} & BasicShape;
+  origin: string; // The app origin the user trusts
+};
+
+export type TrustedAppShapeCreateArgs = {
+  mode:
+    | (ModeType.Append | ModeType.Control | ModeType.Read | ModeType.Write)[]
+    | (ModeType.Append | ModeType.Control | ModeType.Read | ModeType.Write)[][]; // The level of access provided to this origin
+  origin: URL | NamedNode; // The app origin the user trusts
+};
+
+export type TrustedAppShapeUpdateArgs = Partial<TrustedAppShapeCreateArgs>;
 
 export type RsaPublicKeyShape = {
+  id: string;
+  modulus: string; // RSA Modulus
+  exponent: number; // RSA Exponent
+};
+
+export type RsaPublicKeyShapeCreateArgs = {
   modulus: string | Literal; // RSA Modulus
   exponent: number | Literal; // RSA Exponent
-} & BasicShape;
+};
+
+export type RsaPublicKeyShapeUpdateArgs = Partial<RsaPublicKeyShapeCreateArgs>;
 
 export enum SolidProfileShapeType {
   SchemPerson = \\"http://schema.org/Person\\",

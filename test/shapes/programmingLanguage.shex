@@ -26,8 +26,8 @@ pgl:P31_instance_of_programminglanguage {
 }
 
 pgl:P279_subclass_of_programminglanguage {
-    (ps:P279 @pgl:wd_programming_language ; ps:P279 IRI *) |
-    (ps:P279 @pgl:P279_subclass_of_programminglanguage; ps:P279 IRI *)
+    ps:P279 @pgl:wd_programming_language |
+      ps:P279 @pgl:P279_subclass_of_programminglanguage;
 }
 
 pgl:wd_programming_language [

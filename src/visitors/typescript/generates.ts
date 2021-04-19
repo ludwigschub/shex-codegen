@@ -2,7 +2,8 @@ import { normalizeUrl } from "../common";
 
 const ns = require("own-namespace")();
 
-export function putInBraces(expr: string) {
+export function putInBraces(expr: string, wrapInParentheses?: boolean) {
+  if (wrapInParentheses) return `({\n${expr}\n})`;
   return `{\n${expr}\n}`;
 }
 
@@ -21,13 +22,14 @@ export function generateShexName(name: string) {
 }
 
 export function generateShapeExport(name: string, shape: string) {
-  return `export type ${name} = ${shape} & BasicShape;\n`;
+  return `export type ${name} = ${shape};\n`;
 }
 
 export function generateShape(type: string, shape: string, extras: string) {
   if (type === "TripleConstraint") {
     return !!shape ? putInBraces(shape) : extras;
   }
+
   if (extras) {
     if (shape) {
       return `${shape} & ${extras}`;
@@ -62,25 +64,49 @@ export function generateNameContextsExport(
   });
 }
 
-export function generateExpressions(expressions: any[], join?: string) {
-  const generated = expressions
-    .filter((expression: any) => !!expression.generated)
-    .map((expression: any) => expression.generated)
-    .join(join ?? "\n");
-  return generated;
+export function generateExpressions(
+  expressions: any[],
+  join?: string,
+  toCreate?: boolean
+) {
+  const generated = [
+    {
+      generated: join?.includes("|") ? null : "id: string;",
+    },
+    ...expressions,
+  ]
+    .filter((expression) =>
+      toCreate ? !!expression.generatedToCreate : !!expression.generated
+    )
+    .map((expression: any) =>
+      toCreate ? expression.generatedToCreate : expression.generated
+    );
+  if (generated.length === 0) return putInBraces("id: string;");
+  if (join?.includes("|"))
+    return `${putInBraces("id: string;")} & (${generated.join(join)})`;
+  return generated.join(join ?? "\n");
 }
 
-export function generateExtras(expressions: any[], join?: string) {
+export function generateExtras(
+  expressions: any[],
+  join?: string,
+  toCreate?: boolean
+) {
   return expressions
-    .reduce(
-      (extras: any[], expression: any) =>
-        expression.extra
-          ? [...extras, expression.extra]
-          : expression.extras
-          ? [...extras, expression.extras]
-          : extras,
-      []
-    )
+    .reduce((extras: any[], expression: any) => {
+      if (toCreate) {
+        return expression.extraToCreate
+          ? [...extras, expression.extraToCreate]
+          : expression.extrasToCreate
+          ? [...extras, expression.extrasToCreate]
+          : extras;
+      }
+      return expression.extra
+        ? [...extras, expression.extra]
+        : expression.extras
+        ? [...extras, expression.extras]
+        : extras;
+    }, [])
     .join(join ?? " & ");
 }
 
@@ -192,10 +218,15 @@ export function generateValues(
   }
 }
 
-export function generateValueExpression(valueExpr: any, context: any) {
+export function generateValueExpression(
+  valueExpr: any,
+  context: any,
+  toCreate?: boolean
+) {
   if (typeof valueExpr === "string") {
-    return generateTsType(valueExpr);
+    return generateTsType(valueExpr, toCreate);
   } else if (valueExpr?.typeValue) {
+    if (valueExpr.typeValueToCreate === "string") console.debug(valueExpr);
     if (valueExpr.expression.values) {
       return generateValues(
         valueExpr.expression.values,
@@ -203,29 +234,31 @@ export function generateValueExpression(valueExpr: any, context: any) {
         context
       );
     } else {
-      return valueExpr.typeValue;
+      return toCreate ? valueExpr.typeValueToCreate : valueExpr.typeValue;
     }
   } else if (valueExpr?.generatedShape) {
-    return valueExpr?.generatedShape;
+    return toCreate
+      ? valueExpr.generatedShapeToCreate
+      : valueExpr.generatedShape;
   } else {
     return "string";
   }
 }
 
-export function generateTsType(valueExpr: any) {
+export function generateTsType(valueExpr: any, toCreate?: boolean) {
   if (valueExpr?.nodeKind === "iri") {
-    return "string | NamedNode";
+    return toCreate ? "URL | NamedNode" : "string";
   } else if (numberTypes.includes(valueExpr?.datatype)) {
-    return "number | Literal";
+    return toCreate ? "number | Literal" : "number";
   } else if (valueExpr?.datatype === ns.xsd("dateTime")) {
-    return "Date | Literal";
+    return toCreate ? "Date | Literal" : "Date";
   } else if (valueExpr?.datatype === ns.xsd("string")) {
-    return "string | Literal";
+    return toCreate ? "string | Literal" : "string";
   } else if (valueExpr?.datatype) {
     return valueExpr?.datatype;
   } else if (typeof valueExpr === "string") {
     try {
-      return normalizeUrl(valueExpr, true);
+      return toCreate ? `URL | NamedNode` : normalizeUrl(valueExpr, true);
     } catch {
       return valueExpr;
     }
