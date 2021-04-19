@@ -62,7 +62,11 @@ export function generateNameContextsExport(
   });
 }
 
-export function generateExpressions(expressions: any[], join?: string) {
+export function generateExpressions(
+  expressions: any[],
+  join?: string,
+  toCreate?: boolean
+) {
   const generated = [
     {
       generated: join?.includes("|")
@@ -71,22 +75,35 @@ export function generateExpressions(expressions: any[], join?: string) {
     },
     ...expressions,
   ]
-    .filter((expression) => !!expression.generated)
-    .map((expression: any) => expression.generated);
+    .filter((expression) =>
+      toCreate ? !!expression.generatedToCreate : !!expression.generated
+    )
+    .map((expression: any) =>
+      toCreate ? expression.generatedToCreate : expression.generated
+    );
   return generated.join(join ?? "\n");
 }
 
-export function generateExtras(expressions: any[], join?: string) {
+export function generateExtras(
+  expressions: any[],
+  join?: string,
+  toCreate?: boolean
+) {
   return expressions
-    .reduce(
-      (extras: any[], expression: any) =>
-        expression.extra
-          ? [...extras, expression.extra]
-          : expression.extras
-          ? [...extras, expression.extras]
-          : extras,
-      []
-    )
+    .reduce((extras: any[], expression: any) => {
+      if (toCreate) {
+        return expression.extraToCreate
+          ? [...extras, expression.extraToCreate]
+          : expression.extrasToCreate
+          ? [...extras, expression.extrasToCreate]
+          : extras;
+      }
+      return expression.extra
+        ? [...extras, expression.extra]
+        : expression.extras
+        ? [...extras, expression.extras]
+        : extras;
+    }, [])
     .join(join ?? " & ");
 }
 
@@ -198,9 +215,13 @@ export function generateValues(
   }
 }
 
-export function generateValueExpression(valueExpr: any, context: any) {
+export function generateValueExpression(
+  valueExpr: any,
+  context: any,
+  toCreate?: boolean
+) {
   if (typeof valueExpr === "string") {
-    return generateTsType(valueExpr);
+    return generateTsType(valueExpr, toCreate);
   } else if (valueExpr?.typeValue) {
     if (valueExpr.expression.values) {
       return generateValues(
@@ -209,7 +230,7 @@ export function generateValueExpression(valueExpr: any, context: any) {
         context
       );
     } else {
-      return valueExpr.typeValue;
+      return toCreate ? valueExpr.typeValueToCreate : valueExpr.typeValue;
     }
   } else if (valueExpr?.generatedShape) {
     return valueExpr?.generatedShape;
@@ -218,7 +239,7 @@ export function generateValueExpression(valueExpr: any, context: any) {
   }
 }
 
-export function generateTsType(valueExpr: any, toCreate: boolean) {
+export function generateTsType(valueExpr: any, toCreate?: boolean) {
   if (valueExpr?.nodeKind === "iri") {
     return toCreate ? "string | NamedNode" : "string";
   } else if (numberTypes.includes(valueExpr?.datatype)) {
@@ -231,7 +252,8 @@ export function generateTsType(valueExpr: any, toCreate: boolean) {
     return valueExpr?.datatype;
   } else if (typeof valueExpr === "string") {
     try {
-      return normalizeUrl(valueExpr, true);
+      const normalizedIri = normalizeUrl(valueExpr, true);
+      return toCreate ? `URL` : normalizedIri;
     } catch {
       return valueExpr;
     }
