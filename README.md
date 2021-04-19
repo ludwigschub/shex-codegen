@@ -18,6 +18,7 @@ generates:
   node_modules/@generated/shex.ts:
     # the visitors to visit the schema with
     - typescript
+    - typescript-methods
 
 ```
 Then you can use the package in one of your scripts e.g.:
@@ -62,12 +63,16 @@ srs:SolidProfileShape EXTRA a {
 
 becomes
 ```typescript
+// node_modules/@generated/shex.ts
+import { NamedNode, Literal } from "rdflib";
+import { Shape } from "shex-methods";
+
 export type SolidProfileShape = {
   id: string;
-  hasPhoto?: string; // A link to the person's photo
-  name?: string; // An alternate way to define a person's name
+  hasPhoto?: string | NamedNode; // A link to the person's photo
+  name?: string | Literal; // An alternate way to define a person's name
 } & {
-  type?: (
+  type: (
     | SolidProfileShapeType.SchemPerson
     | SolidProfileShapeType.FoafPerson
   )[]; // Defines the node as a Person
@@ -78,11 +83,18 @@ export enum SolidProfileShapeType {
   FoafPerson = "http://xmlns.com/foaf/0.1/Person",
 }
 
-export enum SolidProfileContext {
+export enum SolidProfileShapeContext {
   "type" = "rdf:type",
   "name" = "foaf:name",
   "hasPhoto" = "vcard:hasPhoto",
 }
+
+export const solidProfile = new Shape<SolidProfileShape>({
+  id: "https://shaperepo.com/schemas/solidProfile#SolidProfileShape",
+  shape: solidProfileShex,
+  context: SolidProfileShapeContext,
+  type: SolidProfileShapeType,
+});
 ```
 
 ## Features
@@ -90,9 +102,9 @@ export enum SolidProfileContext {
 Existing capabilities:
 * Configure codegen with config file
 * Generate Typescript types and enums from shex
+* Typescript operations generator
 
 Some planned features include:
-* Typescript operations generator (in planning)
 * Typescript publisher/subscriber generator (in planning)
 * Typescript react hooks (in planning)
 

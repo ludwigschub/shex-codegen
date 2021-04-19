@@ -10,7 +10,7 @@
     "test:watch": "rimraf ./test/generated && mkdir ./test/generated && node ./lib/watch.js"
   },
   "author": "Ludwig Schubert",
-  "license": "GPL-3.0",
+  "license": "AGPL-3.0",
   "dependencies": {
     "@shexjs/core": "^1.0.0-alpha.10",
     "@shexjs/parser": "^1.0.0-alpha.10",
@@ -25,10 +25,10 @@
   "devDependencies": {
     "@babel/preset-env": "7.13.12",
     "@babel/preset-typescript": "7.13.0",
-    "@types/fs-extra": "9.0.9",
+    "@types/fs-extra": "9.0.11",
     "@types/jest": "26.0.22",
     "@types/js-yaml": "4.0.0",
-    "@types/node": "14.14.37",
+    "@types/node": "14.14.39",
     "@types/nodemon": "1.19.0",
     "@types/prettier": "2.2.3",
     "concurrently": "6.0.0",
