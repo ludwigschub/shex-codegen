@@ -78,6 +78,19 @@ export type SolidProfileShape = {
   )[]; // Defines the node as a Person
 };
 
+export type SolidProfileShapeCreateArgs = {
+  id: string;
+  name?: string | Literal; // An alternate way to define a person's name.
+  hasPhoto?: URL | NamedNode; // A link to the person's photo
+} & {
+  type: (
+    | SolidProfileShapeType.SchemPerson
+    | SolidProfileShapeType.FoafPerson
+  )[]; // Defines the node as a Person (from foaf)
+};
+
+export type SolidProfileShapeUpdateArgs = Partial<SolidProfileShapeCreateArgs>;
+
 export enum SolidProfileShapeType {
   SchemPerson = "http://schema.org/Person",
   FoafPerson = "http://xmlns.com/foaf/0.1/Person",
