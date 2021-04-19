@@ -71,7 +71,9 @@ export function generateExpressions(
 ) {
   const generated = [
     {
-      generated: join?.includes("|") ? null : "id: string;",
+      [toCreate ? "generatedToCreate" : "generated"]: join?.includes("|")
+        ? null
+        : "id: string;",
     },
     ...expressions,
   ]
