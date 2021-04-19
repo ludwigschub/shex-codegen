@@ -21,7 +21,7 @@ export function generateShexName(name: string) {
 }
 
 export function generateShapeExport(name: string, shape: string) {
-  return `export type ${name} = ${shape} & BasicShape;\n`;
+  return `export type ${name} = ${shape};\n`;
 }
 
 export function generateShape(type: string, shape: string, extras: string) {
@@ -63,11 +63,17 @@ export function generateNameContextsExport(
 }
 
 export function generateExpressions(expressions: any[], join?: string) {
-  const generated = expressions
-    .filter((expression: any) => !!expression.generated)
-    .map((expression: any) => expression.generated)
-    .join(join ?? "\n");
-  return generated;
+  const generated = [
+    {
+      generated: join?.includes("|")
+        ? putInBraces("id: string;")
+        : "id: string;",
+    },
+    ...expressions,
+  ]
+    .filter((expression) => !!expression.generated)
+    .map((expression: any) => expression.generated);
+  return generated.join(join ?? "\n");
 }
 
 export function generateExtras(expressions: any[], join?: string) {
@@ -212,15 +218,15 @@ export function generateValueExpression(valueExpr: any, context: any) {
   }
 }
 
-export function generateTsType(valueExpr: any) {
+export function generateTsType(valueExpr: any, toCreate: boolean) {
   if (valueExpr?.nodeKind === "iri") {
-    return "string | NamedNode";
+    return toCreate ? "string | NamedNode" : "string";
   } else if (numberTypes.includes(valueExpr?.datatype)) {
-    return "number | Literal";
+    return toCreate ? "number | Literal" : "number";
   } else if (valueExpr?.datatype === ns.xsd("dateTime")) {
-    return "Date | Literal";
+    return toCreate ? "Date | Literal" : "Date";
   } else if (valueExpr?.datatype === ns.xsd("string")) {
-    return "string | Literal";
+    return toCreate ? "string | Literal" : "string";
   } else if (valueExpr?.datatype) {
     return valueExpr?.datatype;
   } else if (typeof valueExpr === "string") {

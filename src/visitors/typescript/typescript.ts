@@ -25,14 +25,13 @@ import {
   predicateToNameContext,
   reduceNameContexts,
 } from "./nameContextHelpers";
-import { BasicShapeInterface } from "./interfaces";
 
 const ShExUtil = require("@shexjs/core").Util;
 
 const TypescriptVisitor = ShExUtil.Visitor();
 
 TypescriptVisitor.generateImports = () => {
-  return [generateRdfImport(), BasicShapeInterface];
+  return [generateRdfImport()];
 };
 
 TypescriptVisitor._visitValue = function (v: any[]) {
