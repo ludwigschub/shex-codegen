@@ -2,7 +2,8 @@ import { normalizeUrl } from "../common";
 
 const ns = require("own-namespace")();
 
-export function putInBraces(expr: string) {
+export function putInBraces(expr: string, wrapInParentheses?: boolean) {
+  if (wrapInParentheses) return `({\n${expr}\n})`;
   return `{\n${expr}\n}`;
 }
 
@@ -28,6 +29,7 @@ export function generateShape(type: string, shape: string, extras: string) {
   if (type === "TripleConstraint") {
     return !!shape ? putInBraces(shape) : extras;
   }
+
   if (extras) {
     if (shape) {
       return `${shape} & ${extras}`;
@@ -223,6 +225,7 @@ export function generateValueExpression(
   if (typeof valueExpr === "string") {
     return generateTsType(valueExpr, toCreate);
   } else if (valueExpr?.typeValue) {
+    if (valueExpr.typeValueToCreate === "string") console.debug(valueExpr);
     if (valueExpr.expression.values) {
       return generateValues(
         valueExpr.expression.values,
@@ -233,7 +236,7 @@ export function generateValueExpression(
       return toCreate ? valueExpr.typeValueToCreate : valueExpr.typeValue;
     }
   } else if (valueExpr?.generatedShape) {
-    return valueExpr?.generatedShape;
+    return toCreate ? valueExpr.generatedShapeToCreate : valueExpr.generatedShape;
   } else {
     return "string";
   }
@@ -241,7 +244,7 @@ export function generateValueExpression(
 
 export function generateTsType(valueExpr: any, toCreate?: boolean) {
   if (valueExpr?.nodeKind === "iri") {
-    return toCreate ? "string | NamedNode" : "string";
+    return toCreate ? "URL | NamedNode" : "string";
   } else if (numberTypes.includes(valueExpr?.datatype)) {
     return toCreate ? "number | Literal" : "number";
   } else if (valueExpr?.datatype === ns.xsd("dateTime")) {
@@ -252,8 +255,7 @@ export function generateTsType(valueExpr: any, toCreate?: boolean) {
     return valueExpr?.datatype;
   } else if (typeof valueExpr === "string") {
     try {
-      const normalizedIri = normalizeUrl(valueExpr, true);
-      return toCreate ? `URL` : normalizedIri;
+      return toCreate ? `URL | NamedNode` : normalizeUrl(valueExpr, true);
     } catch {
       return valueExpr;
     }

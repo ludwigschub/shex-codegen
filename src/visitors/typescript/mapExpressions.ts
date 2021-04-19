@@ -68,6 +68,10 @@ export function mapEachOfExpression(
       visited.extras = `(${visited.generated})`;
       visited.generated = "";
     }
+    if (visited.generatedToCreate) {
+      visited.extrasToCreate = `(${visited.generatedToCreate})`;
+      visited.generatedToCreate = "";
+    }
     return visited;
   }
 }

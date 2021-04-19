@@ -6,9 +6,7 @@ import find from "findit";
 import path from "path";
 
 import { readConfig } from "./config";
-import {
-  generateShexExport,
-} from "./visitors";
+import { generateShexExport } from "./visitors";
 
 interface CodegenConfig {
   schema: string;
@@ -57,7 +55,7 @@ export const generate = (
       }))
     );
 
-    const visitFile = (generates: string, schema: string) => {
+    const visitFile = (generates: string, schemaFile: string) => {
       if (
         !path.parse(generates).ext ||
         (path.parse(generates).ext !== ".ts" &&
@@ -71,10 +69,12 @@ export const generate = (
       }
       visitors[generates].forEach((visitor: any, visitorIndex: number) => {
         if ((generated[generates] as Promise<string>[] | undefined)?.push)
-          generated[generates]?.push(readShexAndGenerate(visitor, schema, visitorIndex === 0));
+          generated[generates]?.push(
+            readShexAndGenerate(visitor, schemaFile, visitorIndex === 0)
+          );
         else
           generated[generates] = [
-            readShexAndGenerate(visitor, schema, visitorIndex === 0),
+            readShexAndGenerate(visitor, schemaFile, visitorIndex === 0),
           ];
       });
     };
@@ -94,10 +94,10 @@ export const generate = (
               },
               []
             );
-            return writeShapesFile(
-              file,
-              [...imports, ...generated].join("\n") as string
-            );
+            const generatedContent = [...imports, ...generated].join(
+              "\n"
+            ) as string;
+            return writeShapesFile(file, generatedContent);
           });
         })
       );
@@ -135,11 +135,9 @@ const readShexAndGenerate = async (
   const shapeFile = readFileSync(file, { encoding: "utf8" });
 
   // Parse and visit shape
-  const parser = ShExParser.construct(
-    "http://example.com/",
-    null,
-    { index: true }
-  );
+  const parser = ShExParser.construct("http://example.com/", null, {
+    index: true,
+  });
   const shapeSchema = parser.parse(shapeFile);
   const fileName = path.parse(file).name;
   const generated = visitor.visitSchema(shapeSchema, fileName);
@@ -155,7 +153,6 @@ const writeShapesFile = (generates: string, content: string) => {
   return new Promise<string>(async (resolve, reject) => {
     // prettier formatting
     const prettierConfig = await prettier.resolveConfig(process.cwd());
-
     const formatted = prettier.format(content, {
       ...prettierConfig,
       filepath: generates,
