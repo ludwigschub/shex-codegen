@@ -69,8 +69,8 @@ import { Shape } from "shex-methods";
 
 export type SolidProfileShape = {
   id: string;
-  hasPhoto?: string | NamedNode; // A link to the person's photo
-  name?: string | Literal; // An alternate way to define a person's name
+  hasPhoto?: string; // A link to the person's photo
+  name?: string; // An alternate way to define a person's name
 } & {
   type: (
     | SolidProfileShapeType.SchemPerson
