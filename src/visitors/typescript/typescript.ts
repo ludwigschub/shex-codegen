@@ -253,11 +253,16 @@ TypescriptVisitor.visitShapes = function (shapes: any[], prefixes: any) {
     if (typeof shape === "string") {
       return shape;
     } else {
+      const normalizedUrl = normalizeUrl(shape.id, true);
       return [
-        generateShapeExport(normalizeUrl(shape.id, true), shape.generatedShape),
+        generateShapeExport(normalizedUrl, shape.generatedShape),
         generateShapeExport(
-          normalizeUrl(shape.id, true) + "CreateArgs",
+          normalizedUrl + "CreateArgs",
           shape.generatedShapeToCreate
+        ),
+        generateShapeExport(
+          normalizedUrl + "UpdateArgs",
+          `Partial<${normalizedUrl + "CreateArgs"}>`
         ),
       ].join("\n");
     }

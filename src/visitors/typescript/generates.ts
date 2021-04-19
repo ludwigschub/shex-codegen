@@ -71,9 +71,7 @@ export function generateExpressions(
 ) {
   const generated = [
     {
-      generated: join?.includes("|")
-        ? putInBraces("id: string;")
-        : "id: string;",
+      generated: join?.includes("|") ? null : "id: string;",
     },
     ...expressions,
   ]
@@ -83,6 +81,9 @@ export function generateExpressions(
     .map((expression: any) =>
       toCreate ? expression.generatedToCreate : expression.generated
     );
+  if (generated.length === 0) return putInBraces("id: string;");
+  if (join?.includes("|"))
+    return `${putInBraces("id: string;")} & (${generated.join(join)})`;
   return generated.join(join ?? "\n");
 }
 
@@ -236,7 +237,9 @@ export function generateValueExpression(
       return toCreate ? valueExpr.typeValueToCreate : valueExpr.typeValue;
     }
   } else if (valueExpr?.generatedShape) {
-    return toCreate ? valueExpr.generatedShapeToCreate : valueExpr.generatedShape;
+    return toCreate
+      ? valueExpr.generatedShapeToCreate
+      : valueExpr.generatedShape;
   } else {
     return "string";
   }
