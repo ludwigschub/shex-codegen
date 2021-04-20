@@ -69,14 +69,27 @@ import { Shape } from "shex-methods";
 
 export type SolidProfileShape = {
   id: string;
-  hasPhoto?: string | NamedNode; // A link to the person's photo
-  name?: string | Literal; // An alternate way to define a person's name
+  name?: string; // An alternate way to define a person's name
+  hasPhoto?: string; // A link to the person's photo
 } & {
   type: (
     | SolidProfileShapeType.SchemPerson
     | SolidProfileShapeType.FoafPerson
   )[]; // Defines the node as a Person
 };
+
+export type SolidProfileShapeCreateArgs = {
+  id: string;
+  name?: string | Literal; // An alternate way to define a person's name.
+  hasPhoto?: URL | NamedNode; // A link to the person's photo
+} & {
+  type: (
+    | SolidProfileShapeType.SchemPerson
+    | SolidProfileShapeType.FoafPerson
+  )[]; // Defines the node as a Person (from foaf)
+};
+
+export type SolidProfileShapeUpdateArgs = Partial<SolidProfileShapeCreateArgs>;
 
 export enum SolidProfileShapeType {
   SchemPerson = "http://schema.org/Person",
