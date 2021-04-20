@@ -73,7 +73,7 @@ export function generateExpressions(
     {
       [toCreate ? "generatedToCreate" : "generated"]: join?.includes("|")
         ? null
-        : "id: string;",
+        : toCreate ? "id: string | NamedNode;" : "id: string;",
     },
     ...expressions,
   ]

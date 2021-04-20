@@ -62,7 +62,7 @@ export type Cryptocurrency = {
   ));
 
 export type CryptocurrencyCreateArgs = {
-  id: string;
+  id: string | NamedNode;
   p279?: {
     p279: URL | NamedNode;
   };
@@ -101,7 +101,7 @@ export type CryptocurrencyCreateArgs = {
     id: string;
   } & (
     | {
-        id: string;
+        id: string | NamedNode;
         p577: {
           p577: Date | Literal;
         };
@@ -190,6 +190,135 @@ export const cryptocurrency = new Shape<
   context: CryptocurrencyContext,
 });
 
+export type BasicContainerShape = {
+  id: string;
+  contains?: ResourceShape | ResourceShape[]; // Contains these Resources
+  size: number; // Size of Container
+  mtime: number; // Time of Container creation created
+  modified: Date; // Time the Container was modified
+} & {
+  type: (
+    | BasicContainerShapeType.BasicContainer
+    | BasicContainerShapeType.Container
+  )[]; // Defines the node as a Container
+};
+
+export type BasicContainerShapeCreateArgs = {
+  id: string | NamedNode;
+  contains?:
+    | URL
+    | NamedNode
+    | ResourceShape
+    | (URL | NamedNode | ResourceShape)[]; // Contains these Resources
+  size: number | Literal; // Size of Container
+  mtime: number | Literal; // Time of Container creation created
+  modified: Date | Literal; // Time the Container was modified
+} & {
+  type: (
+    | BasicContainerShapeType.BasicContainer
+    | BasicContainerShapeType.Container
+  )[]; // Defines the node as a Container
+};
+
+export type BasicContainerShapeUpdateArgs = Partial<BasicContainerShapeCreateArgs>;
+
+export type ResourceShape = {
+  id: string;
+  size: number; // Size of Container
+  mtime: number; // Time of Container creation created
+  modified: Date; // Time the Container was modified
+} & {
+  type: ResourceShapeType.Resource; // Defines the node as a Resource
+};
+
+export type ResourceShapeCreateArgs = {
+  id: string | NamedNode;
+  size: number | Literal; // Size of Container
+  mtime: number | Literal; // Time of Container creation created
+  modified: Date | Literal; // Time the Container was modified
+} & {
+  type: ResourceShapeType.Resource; // Defines the node as a Resource
+};
+
+export type ResourceShapeUpdateArgs = Partial<ResourceShapeCreateArgs>;
+
+export enum BasicContainerShapeType {
+  BasicContainer = \\"http://www.w3.org/ns/ldp#BasicContainer\\",
+  Container = \\"http://www.w3.org/ns/ldp#Container\\",
+}
+
+export enum ResourceShapeType {
+  Resource = \\"http://www.w3.org/ns/ldp#Resource\\",
+}
+
+export enum BasicContainerShapeContext {
+  type = \\"rdf:type\\",
+  contains = \\"ldp:contains\\",
+  size = \\"st:size\\",
+  mtime = \\"st:mtime\\",
+  modified = \\"terms:modified\\",
+}
+
+export enum ResourceShapeContext {
+  type = \\"rdf:type\\",
+  size = \\"st:size\\",
+  mtime = \\"st:mtime\\",
+  modified = \\"terms:modified\\",
+}
+
+export const ldpShapesShex = \`
+PREFIX ldp: <http://www.w3.org/ns/ldp#>
+PREFIX st: <http://www.w3.org/ns/posix/stat#>
+PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+PREFIX terms: <http://purl.org/dc/terms/>
+PREFIX xsd: <http://www.w3.org/2001/XMLSchema#>
+PREFIX tur: <http://www.w3.org/ns/iana/media-types/text/turtle#>
+
+ldp:BasicContainerShape EXTRA a {
+  a [ ldp:BasicContainer ]
+    // rdfs:comment  \\"Defines the node as a Container\\" ;
+  a [ ldp:Container ]
+    // rdfs:comment  \\"Defines the node as a Container\\" ;
+  ldp:contains @ldp:ResourceShape *
+    // rdfs:comment  \\"Contains these Resources\\" ;
+  st:size xsd:integer
+    // rdfs:comment  \\"Size of Container\\" ;
+  st:mtime xsd:decimal 
+    // rdfs:comment  \\"Time of Container creation created\\" ;
+  terms:modified xsd:dateTime 
+    // rdfs:comment  \\"Time the Container was modified\\" ;
+}
+
+ldp:ResourceShape EXTRA a {
+  a [ ldp:Resource ]
+    // rdfs:comment  \\"Defines the node as a Resource\\" ;
+  st:size xsd:integer
+    // rdfs:comment  \\"Size of Container\\" ;
+  st:mtime xsd:decimal
+    // rdfs:comment  \\"Time of Container creation created\\" ;
+  terms:modified xsd:dateTime
+    // rdfs:comment  \\"Time the Container was modified\\" ;
+}
+\`;
+
+export const basicContainer = new Shape<
+  BasicContainerShape,
+  BasicContainerShapeCreateArgs
+>({
+  id: \\"http://www.w3.org/ns/ldp#BasicContainerShape\\",
+  shape: ldpShapesShex,
+  context: BasicContainerShapeContext,
+  type: BasicContainerShapeType,
+  childContexts: [ResourceShapeContext],
+});
+
+export const resource = new Shape<ResourceShape, ResourceShapeCreateArgs>({
+  id: \\"http://www.w3.org/ns/ldp#ResourceShape\\",
+  shape: ldpShapesShex,
+  context: ResourceShapeContext,
+  type: ResourceShapeType,
+});
+
 export type ChatShape = {
   id: string;
   type: ChatShapeType.LongChat; // Defines the type of the chat as a LongChat
@@ -201,7 +330,7 @@ export type ChatShape = {
 };
 
 export type ChatShapeCreateArgs = {
-  id: string;
+  id: string | NamedNode;
   type: ChatShapeType.LongChat; // Defines the type of the chat as a LongChat
   author: URL | NamedNode; // The WebId of the entity that created this chat
   created: Date | Literal; // The date and time the chat was created
@@ -224,7 +353,7 @@ export type ChatParticipationShape = {
 };
 
 export type ChatParticipationShapeCreateArgs = {
-  id: string;
+  id: string | NamedNode;
   dtstart: Date | Literal; // The date and time this individual began participating in the chat.
   participant: URL | NamedNode; // The WebId of the participant
   backgroundColor?: string | Literal; // The background color of the participant's chat bubbles
@@ -254,7 +383,7 @@ export type ChatMessageShape = {
 };
 
 export type ChatMessageShapeCreateArgs = {
-  id: string;
+  id: string | NamedNode;
   created: Date | Literal; // The date and time this message was posted.
   content: string | Literal; // The text content of the message
   maker: URL | NamedNode; // The WebId of the person who sent the message.
@@ -381,135 +510,6 @@ export const chatMessage = new Shape<
   context: ChatMessageShapeContext,
 });
 
-export type BasicContainerShape = {
-  id: string;
-  contains?: ResourceShape | ResourceShape[]; // Contains these Resources
-  size: number; // Size of Container
-  mtime: number; // Time of Container creation created
-  modified: Date; // Time the Container was modified
-} & {
-  type: (
-    | BasicContainerShapeType.BasicContainer
-    | BasicContainerShapeType.Container
-  )[]; // Defines the node as a Container
-};
-
-export type BasicContainerShapeCreateArgs = {
-  id: string;
-  contains?:
-    | URL
-    | NamedNode
-    | ResourceShape
-    | (URL | NamedNode | ResourceShape)[]; // Contains these Resources
-  size: number | Literal; // Size of Container
-  mtime: number | Literal; // Time of Container creation created
-  modified: Date | Literal; // Time the Container was modified
-} & {
-  type: (
-    | BasicContainerShapeType.BasicContainer
-    | BasicContainerShapeType.Container
-  )[]; // Defines the node as a Container
-};
-
-export type BasicContainerShapeUpdateArgs = Partial<BasicContainerShapeCreateArgs>;
-
-export type ResourceShape = {
-  id: string;
-  size: number; // Size of Container
-  mtime: number; // Time of Container creation created
-  modified: Date; // Time the Container was modified
-} & {
-  type: ResourceShapeType.Resource; // Defines the node as a Resource
-};
-
-export type ResourceShapeCreateArgs = {
-  id: string;
-  size: number | Literal; // Size of Container
-  mtime: number | Literal; // Time of Container creation created
-  modified: Date | Literal; // Time the Container was modified
-} & {
-  type: ResourceShapeType.Resource; // Defines the node as a Resource
-};
-
-export type ResourceShapeUpdateArgs = Partial<ResourceShapeCreateArgs>;
-
-export enum BasicContainerShapeType {
-  BasicContainer = \\"http://www.w3.org/ns/ldp#BasicContainer\\",
-  Container = \\"http://www.w3.org/ns/ldp#Container\\",
-}
-
-export enum ResourceShapeType {
-  Resource = \\"http://www.w3.org/ns/ldp#Resource\\",
-}
-
-export enum BasicContainerShapeContext {
-  type = \\"rdf:type\\",
-  contains = \\"ldp:contains\\",
-  size = \\"st:size\\",
-  mtime = \\"st:mtime\\",
-  modified = \\"terms:modified\\",
-}
-
-export enum ResourceShapeContext {
-  type = \\"rdf:type\\",
-  size = \\"st:size\\",
-  mtime = \\"st:mtime\\",
-  modified = \\"terms:modified\\",
-}
-
-export const ldpShapesShex = \`
-PREFIX ldp: <http://www.w3.org/ns/ldp#>
-PREFIX st: <http://www.w3.org/ns/posix/stat#>
-PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
-PREFIX terms: <http://purl.org/dc/terms/>
-PREFIX xsd: <http://www.w3.org/2001/XMLSchema#>
-PREFIX tur: <http://www.w3.org/ns/iana/media-types/text/turtle#>
-
-ldp:BasicContainerShape EXTRA a {
-  a [ ldp:BasicContainer ]
-    // rdfs:comment  \\"Defines the node as a Container\\" ;
-  a [ ldp:Container ]
-    // rdfs:comment  \\"Defines the node as a Container\\" ;
-  ldp:contains @ldp:ResourceShape *
-    // rdfs:comment  \\"Contains these Resources\\" ;
-  st:size xsd:integer
-    // rdfs:comment  \\"Size of Container\\" ;
-  st:mtime xsd:decimal 
-    // rdfs:comment  \\"Time of Container creation created\\" ;
-  terms:modified xsd:dateTime 
-    // rdfs:comment  \\"Time the Container was modified\\" ;
-}
-
-ldp:ResourceShape EXTRA a {
-  a [ ldp:Resource ]
-    // rdfs:comment  \\"Defines the node as a Resource\\" ;
-  st:size xsd:integer
-    // rdfs:comment  \\"Size of Container\\" ;
-  st:mtime xsd:decimal
-    // rdfs:comment  \\"Time of Container creation created\\" ;
-  terms:modified xsd:dateTime
-    // rdfs:comment  \\"Time the Container was modified\\" ;
-}
-\`;
-
-export const basicContainer = new Shape<
-  BasicContainerShape,
-  BasicContainerShapeCreateArgs
->({
-  id: \\"http://www.w3.org/ns/ldp#BasicContainerShape\\",
-  shape: ldpShapesShex,
-  context: BasicContainerShapeContext,
-  type: BasicContainerShapeType,
-  childContexts: [ResourceShapeContext],
-});
-
-export const resource = new Shape<ResourceShape, ResourceShapeCreateArgs>({
-  id: \\"http://www.w3.org/ns/ldp#ResourceShape\\",
-  shape: ldpShapesShex,
-  context: ResourceShapeContext,
-  type: ResourceShapeType,
-});
-
 export type OperatingSystem = {
   id: string;
   p31: {
@@ -550,7 +550,7 @@ export type OperatingSystem = {
 };
 
 export type OperatingSystemCreateArgs = {
-  id: string;
+  id: string | NamedNode;
   p31: {
     p31: {
       p279:
@@ -657,7 +657,7 @@ export type Programminglanguage = {
 };
 
 export type ProgramminglanguageCreateArgs = {
-  id: string;
+  id: string | NamedNode;
   p178?: URL | NamedNode | P178Developer | (URL | NamedNode | P178Developer)[];
   p3966?: URL | NamedNode | P3966Paradigm | (URL | NamedNode | P3966Paradigm)[];
   p577?:
@@ -708,7 +708,7 @@ export type P178Developer = {
 };
 
 export type P178DeveloperCreateArgs = {
-  id: string;
+  id: string | NamedNode;
   p178: URL | NamedNode;
   p580?: Date | Literal;
   p582?: Date | Literal;
@@ -990,7 +990,7 @@ export type SolidProfileShape = {
 };
 
 export type SolidProfileShapeCreateArgs = {
-  id: string;
+  id: string | NamedNode;
   fn?: string | Literal; // The formatted name of a person. Example: John Smith
   name?: string | Literal; // An alternate way to define a person's name.
   hasAddress?:
@@ -1045,7 +1045,7 @@ export type AddressShape = {
 };
 
 export type AddressShapeCreateArgs = {
-  id: string;
+  id: string | NamedNode;
   countryName?: string | Literal; // The name of the user's country of residence
   locality?: string | Literal; // The name of the user's locality (City, Town etc.) of residence
   postalCode?: string | Literal; // The user's postal code
@@ -1075,7 +1075,7 @@ export type EmailShape = {
 };
 
 export type EmailShapeCreateArgs = {
-  id: string;
+  id: string | NamedNode;
   value: URL | NamedNode; // The value of an email as a mailto link (Example <mailto:jane@example.com>)
 } & {
   type?: (
@@ -1115,7 +1115,7 @@ export type PhoneNumberShape = {
 };
 
 export type PhoneNumberShapeCreateArgs = {
-  id: string;
+  id: string | NamedNode;
   value: URL | NamedNode; // The value of a phone number as a tel link (Example <tel:555-555-5555>)
 } & {
   type?: (
@@ -1144,7 +1144,7 @@ export type TrustedAppShape = {
 };
 
 export type TrustedAppShapeCreateArgs = {
-  id: string;
+  id: string | NamedNode;
   mode:
     | (ModeType.Append | ModeType.Control | ModeType.Read | ModeType.Write)[]
     | (ModeType.Append | ModeType.Control | ModeType.Read | ModeType.Write)[][]; // The level of access provided to this origin
@@ -1160,7 +1160,7 @@ export type RsaPublicKeyShape = {
 };
 
 export type RsaPublicKeyShapeCreateArgs = {
-  id: string;
+  id: string | NamedNode;
   modulus: string | Literal; // RSA Modulus
   exponent: number | Literal; // RSA Exponent
 };
@@ -1502,7 +1502,7 @@ export type State = {
 };
 
 export type StateCreateArgs = {
-  id: string;
+  id: string | NamedNode;
   p1448: string | string[];
   p1705: string | string[];
   p487: string;
@@ -1691,7 +1691,7 @@ export type SolidProfileShape = {
 };
 
 export type SolidProfileShapeCreateArgs = {
-  id: string;
+  id: string | NamedNode;
   fn?: string | Literal; // The formatted name of a person. Example: John Smith
   name?: string | Literal; // An alternate way to define a person's name.
   hasAddress?:
@@ -1746,7 +1746,7 @@ export type AddressShape = {
 };
 
 export type AddressShapeCreateArgs = {
-  id: string;
+  id: string | NamedNode;
   countryName?: string | Literal; // The name of the user's country of residence
   locality?: string | Literal; // The name of the user's locality (City, Town etc.) of residence
   postalCode?: string | Literal; // The user's postal code
@@ -1776,7 +1776,7 @@ export type EmailShape = {
 };
 
 export type EmailShapeCreateArgs = {
-  id: string;
+  id: string | NamedNode;
   value: URL | NamedNode; // The value of an email as a mailto link (Example <mailto:jane@example.com>)
 } & {
   type?: (
@@ -1816,7 +1816,7 @@ export type PhoneNumberShape = {
 };
 
 export type PhoneNumberShapeCreateArgs = {
-  id: string;
+  id: string | NamedNode;
   value: URL | NamedNode; // The value of a phone number as a tel link (Example <tel:555-555-5555>)
 } & {
   type?: (
@@ -1845,7 +1845,7 @@ export type TrustedAppShape = {
 };
 
 export type TrustedAppShapeCreateArgs = {
-  id: string;
+  id: string | NamedNode;
   mode:
     | (ModeType.Append | ModeType.Control | ModeType.Read | ModeType.Write)[]
     | (ModeType.Append | ModeType.Control | ModeType.Read | ModeType.Write)[][]; // The level of access provided to this origin
@@ -1861,7 +1861,7 @@ export type RsaPublicKeyShape = {
 };
 
 export type RsaPublicKeyShapeCreateArgs = {
-  id: string;
+  id: string | NamedNode;
   modulus: string | Literal; // RSA Modulus
   exponent: number | Literal; // RSA Exponent
 };
