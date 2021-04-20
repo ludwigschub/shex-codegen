@@ -16,15 +16,16 @@ export function generateShapeMethodsExport(
   },
   fileName: string
 ) {
+  const shapeName = normalizeUrl(id, true);
   const shape = `
 export const ${normalizeUrl(id).replace(
     "Shape",
     ""
-  )} = new Shape<${normalizeUrl(id, true)}>({
+  )} = new Shape<${shapeName}, ${shapeName + "CreateArgs"}>({
   id: "${id}",
   shape: ${generateShexName(fileName)},
   context: ${generateNameContextName(id)},
-  ${typed ? `type: ${normalizeUrl(id, true) + "Type"},` : ""}${
+  ${typed ? `type: ${shapeName + "Type"},` : ""}${
     Array.isArray(childShapes) && childShapes.length > 0
       ? `childContexts: [${childShapes
           .map((shape) => generateNameContextName(shape))

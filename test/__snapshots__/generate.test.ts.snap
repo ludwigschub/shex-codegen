@@ -181,7 +181,10 @@ crc:cryptocurrency EXTRA p:P31 {
 }
 \`;
 
-export const cryptocurrency = new Shape<Cryptocurrency>({
+export const cryptocurrency = new Shape<
+  Cryptocurrency,
+  CryptocurrencyCreateArgs
+>({
   id: \\"https://www.wikidata.org/wiki/EntitySchema:E82#cryptocurrency\\",
   shape: cryptocurrencyShex,
   context: CryptocurrencyContext,
@@ -294,7 +297,10 @@ ldp:ResourceShape EXTRA a {
 }
 \`;
 
-export const basicContainer = new Shape<BasicContainerShape>({
+export const basicContainer = new Shape<
+  BasicContainerShape,
+  BasicContainerShapeCreateArgs
+>({
   id: \\"http://www.w3.org/ns/ldp#BasicContainerShape\\",
   shape: ldpShapesShex,
   context: BasicContainerShapeContext,
@@ -302,7 +308,7 @@ export const basicContainer = new Shape<BasicContainerShape>({
   childContexts: [ResourceShapeContext],
 });
 
-export const resource = new Shape<ResourceShape>({
+export const resource = new Shape<ResourceShape, ResourceShapeCreateArgs>({
   id: \\"http://www.w3.org/ns/ldp#ResourceShape\\",
   shape: ldpShapesShex,
   context: ResourceShapeContext,
@@ -456,7 +462,7 @@ srs:ChatMessageShape {
 }
 \`;
 
-export const chat = new Shape<ChatShape>({
+export const chat = new Shape<ChatShape, ChatShapeCreateArgs>({
   id: \\"https://shaperepo.com/schemas/longChat#ChatShape\\",
   shape: longChatShex,
   context: ChatShapeContext,
@@ -464,20 +470,29 @@ export const chat = new Shape<ChatShape>({
   childContexts: [ChatParticipationShapeContext],
 });
 
-export const chatParticipation = new Shape<ChatParticipationShape>({
+export const chatParticipation = new Shape<
+  ChatParticipationShape,
+  ChatParticipationShapeCreateArgs
+>({
   id: \\"https://shaperepo.com/schemas/longChat#ChatParticipationShape\\",
   shape: longChatShex,
   context: ChatParticipationShapeContext,
 });
 
-export const chatMessageList = new Shape<ChatMessageListShape>({
+export const chatMessageList = new Shape<
+  ChatMessageListShape,
+  ChatMessageListShapeCreateArgs
+>({
   id: \\"https://shaperepo.com/schemas/longChat#ChatMessageListShape\\",
   shape: longChatShex,
   context: ChatMessageListShapeContext,
   childContexts: [ChatMessageShapeContext],
 });
 
-export const chatMessage = new Shape<ChatMessageShape>({
+export const chatMessage = new Shape<
+  ChatMessageShape,
+  ChatMessageShapeCreateArgs
+>({
   id: \\"https://shaperepo.com/schemas/longChat#ChatMessageShape\\",
   shape: longChatShex,
   context: ChatMessageShapeContext,
@@ -610,7 +625,10 @@ ops:operating_system {
 }
 \`;
 
-export const operatingSystem = new Shape<OperatingSystem>({
+export const operatingSystem = new Shape<
+  OperatingSystem,
+  OperatingSystemCreateArgs
+>({
   id: \\"https://www.wikidata.org/wiki/EntitySchema:E102#operating_system\\",
   shape: operatingSystemShex,
   context: OperatingSystemContext,
@@ -853,7 +871,10 @@ pgl:P856_website {
 }
 \`;
 
-export const programminglanguage = new Shape<Programminglanguage>({
+export const programminglanguage = new Shape<
+  Programminglanguage,
+  ProgramminglanguageCreateArgs
+>({
   id: \\"https://www.wikidata.org/wiki/EntitySchema:E55#programminglanguage\\",
   shape: programmingLanguageShex,
   context: ProgramminglanguageContext,
@@ -867,50 +888,58 @@ export const programminglanguage = new Shape<Programminglanguage>({
   ],
 });
 
-export const p31InstanceOfProgramminglanguage = new Shape<P31InstanceOfProgramminglanguage>(
-  {
-    id:
-      \\"https://www.wikidata.org/wiki/EntitySchema:E55#P31_instance_of_programminglanguage\\",
-    shape: programmingLanguageShex,
-    context: P31InstanceOfProgramminglanguageContext,
-  }
-);
+export const p31InstanceOfProgramminglanguage = new Shape<
+  P31InstanceOfProgramminglanguage,
+  P31InstanceOfProgramminglanguageCreateArgs
+>({
+  id:
+    \\"https://www.wikidata.org/wiki/EntitySchema:E55#P31_instance_of_programminglanguage\\",
+  shape: programmingLanguageShex,
+  context: P31InstanceOfProgramminglanguageContext,
+});
 
-export const p279SubclassOfProgramminglanguage = new Shape<P279SubclassOfProgramminglanguage>(
-  {
-    id:
-      \\"https://www.wikidata.org/wiki/EntitySchema:E55#P279_subclass_of_programminglanguage\\",
-    shape: programmingLanguageShex,
-    context: P279SubclassOfProgramminglanguageContext,
-    childContexts: [P279SubclassOfProgramminglanguageContext],
-  }
-);
+export const p279SubclassOfProgramminglanguage = new Shape<
+  P279SubclassOfProgramminglanguage,
+  P279SubclassOfProgramminglanguageCreateArgs
+>({
+  id:
+    \\"https://www.wikidata.org/wiki/EntitySchema:E55#P279_subclass_of_programminglanguage\\",
+  shape: programmingLanguageShex,
+  context: P279SubclassOfProgramminglanguageContext,
+  childContexts: [P279SubclassOfProgramminglanguageContext],
+});
 
-export const p178Developer = new Shape<P178Developer>({
+export const p178Developer = new Shape<P178Developer, P178DeveloperCreateArgs>({
   id: \\"https://www.wikidata.org/wiki/EntitySchema:E55#P178_developer\\",
   shape: programmingLanguageShex,
   context: P178DeveloperContext,
 });
 
-export const p3966Paradigm = new Shape<P3966Paradigm>({
+export const p3966Paradigm = new Shape<P3966Paradigm, P3966ParadigmCreateArgs>({
   id: \\"https://www.wikidata.org/wiki/EntitySchema:E55#P3966_paradigm\\",
   shape: programmingLanguageShex,
   context: P3966ParadigmContext,
 });
 
-export const programmingParadigm = new Shape<ProgrammingParadigm>({
+export const programmingParadigm = new Shape<
+  ProgrammingParadigm,
+  ProgrammingParadigmCreateArgs
+>({
   id: \\"https://www.wikidata.org/wiki/EntitySchema:E55#Programming_paradigm\\",
   shape: programmingLanguageShex,
   context: ProgrammingParadigmContext,
 });
 
-export const p577PublicationDate = new Shape<P577PublicationDate>({
+export const p577PublicationDate = new Shape<
+  P577PublicationDate,
+  P577PublicationDateCreateArgs
+>({
   id: \\"https://www.wikidata.org/wiki/EntitySchema:E55#P577_publication_date\\",
   shape: programmingLanguageShex,
   context: P577PublicationDateContext,
 });
 
-export const p856Website = new Shape<P856Website>({
+export const p856Website = new Shape<P856Website, P856WebsiteCreateArgs>({
   id: \\"https://www.wikidata.org/wiki/EntitySchema:E55#P856_website\\",
   shape: programmingLanguageShex,
   context: P856WebsiteContext,
@@ -1321,7 +1350,10 @@ srs:RSAPublicKeyShape {
 }
 \`;
 
-export const solidProfile = new Shape<SolidProfileShape>({
+export const solidProfile = new Shape<
+  SolidProfileShape,
+  SolidProfileShapeCreateArgs
+>({
   id: \\"https://shaperepo.com/schemas/solidProfile#SolidProfileShape\\",
   shape: solidProfileShex,
   context: SolidProfileShapeContext,
@@ -1335,33 +1367,41 @@ export const solidProfile = new Shape<SolidProfileShape>({
   ],
 });
 
-export const address = new Shape<AddressShape>({
+export const address = new Shape<AddressShape, AddressShapeCreateArgs>({
   id: \\"https://shaperepo.com/schemas/solidProfile#AddressShape\\",
   shape: solidProfileShex,
   context: AddressShapeContext,
 });
 
-export const email = new Shape<EmailShape>({
+export const email = new Shape<EmailShape, EmailShapeCreateArgs>({
   id: \\"https://shaperepo.com/schemas/solidProfile#EmailShape\\",
   shape: solidProfileShex,
   context: EmailShapeContext,
   type: EmailShapeType,
 });
 
-export const phoneNumber = new Shape<PhoneNumberShape>({
+export const phoneNumber = new Shape<
+  PhoneNumberShape,
+  PhoneNumberShapeCreateArgs
+>({
   id: \\"https://shaperepo.com/schemas/solidProfile#PhoneNumberShape\\",
   shape: solidProfileShex,
   context: PhoneNumberShapeContext,
   type: PhoneNumberShapeType,
 });
 
-export const trustedApp = new Shape<TrustedAppShape>({
-  id: \\"https://shaperepo.com/schemas/solidProfile#TrustedAppShape\\",
-  shape: solidProfileShex,
-  context: TrustedAppShapeContext,
-});
+export const trustedApp = new Shape<TrustedAppShape, TrustedAppShapeCreateArgs>(
+  {
+    id: \\"https://shaperepo.com/schemas/solidProfile#TrustedAppShape\\",
+    shape: solidProfileShex,
+    context: TrustedAppShapeContext,
+  }
+);
 
-export const rsaPublicKey = new Shape<RsaPublicKeyShape>({
+export const rsaPublicKey = new Shape<
+  RsaPublicKeyShape,
+  RsaPublicKeyShapeCreateArgs
+>({
   id: \\"https://shaperepo.com/schemas/solidProfile#RSAPublicKeyShape\\",
   shape: solidProfileShex,
   context: RsaPublicKeyShapeContext,
@@ -1575,7 +1615,7 @@ sst:state EXTRA wdt:P31 {
 }
 \`;
 
-export const state = new Shape<State>({
+export const state = new Shape<State, StateCreateArgs>({
   id: \\"https://www.wikidata.org/wiki/EntitySchema:E32#state\\",
   shape: sovereignStateShex,
   context: StateContext,
@@ -1995,7 +2035,10 @@ srs:RSAPublicKeyShape {
 }
 \`;
 
-export const solidProfile = new Shape<SolidProfileShape>({
+export const solidProfile = new Shape<
+  SolidProfileShape,
+  SolidProfileShapeCreateArgs
+>({
   id: \\"https://shaperepo.com/schemas/solidProfile#SolidProfileShape\\",
   shape: solidProfileShex,
   context: SolidProfileShapeContext,
@@ -2009,33 +2052,41 @@ export const solidProfile = new Shape<SolidProfileShape>({
   ],
 });
 
-export const address = new Shape<AddressShape>({
+export const address = new Shape<AddressShape, AddressShapeCreateArgs>({
   id: \\"https://shaperepo.com/schemas/solidProfile#AddressShape\\",
   shape: solidProfileShex,
   context: AddressShapeContext,
 });
 
-export const email = new Shape<EmailShape>({
+export const email = new Shape<EmailShape, EmailShapeCreateArgs>({
   id: \\"https://shaperepo.com/schemas/solidProfile#EmailShape\\",
   shape: solidProfileShex,
   context: EmailShapeContext,
   type: EmailShapeType,
 });
 
-export const phoneNumber = new Shape<PhoneNumberShape>({
+export const phoneNumber = new Shape<
+  PhoneNumberShape,
+  PhoneNumberShapeCreateArgs
+>({
   id: \\"https://shaperepo.com/schemas/solidProfile#PhoneNumberShape\\",
   shape: solidProfileShex,
   context: PhoneNumberShapeContext,
   type: PhoneNumberShapeType,
 });
 
-export const trustedApp = new Shape<TrustedAppShape>({
-  id: \\"https://shaperepo.com/schemas/solidProfile#TrustedAppShape\\",
-  shape: solidProfileShex,
-  context: TrustedAppShapeContext,
-});
+export const trustedApp = new Shape<TrustedAppShape, TrustedAppShapeCreateArgs>(
+  {
+    id: \\"https://shaperepo.com/schemas/solidProfile#TrustedAppShape\\",
+    shape: solidProfileShex,
+    context: TrustedAppShapeContext,
+  }
+);
 
-export const rsaPublicKey = new Shape<RsaPublicKeyShape>({
+export const rsaPublicKey = new Shape<
+  RsaPublicKeyShape,
+  RsaPublicKeyShapeCreateArgs
+>({
   id: \\"https://shaperepo.com/schemas/solidProfile#RSAPublicKeyShape\\",
   shape: solidProfileShex,
   context: RsaPublicKeyShapeContext,
