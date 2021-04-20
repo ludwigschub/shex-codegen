@@ -68,7 +68,7 @@ import { NamedNode, Literal } from "rdflib";
 import { Shape } from "shex-methods";
 
 export type SolidProfileShape = {
-  id: string;
+  id: string; // the url of a node of this shape
   name?: string; // An alternate way to define a person's name
   hasPhoto?: string; // A link to the person's photo
 } & {
@@ -79,7 +79,7 @@ export type SolidProfileShape = {
 };
 
 export type SolidProfileShapeCreateArgs = {
-  id: string;
+  id: string | NamedNode; // the url to match or create the node with e.g. 'https://example.com#this'
   name?: string | Literal; // An alternate way to define a person's name.
   hasPhoto?: URL | NamedNode; // A link to the person's photo
 } & {
