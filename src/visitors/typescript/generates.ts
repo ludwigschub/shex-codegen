@@ -260,7 +260,9 @@ export function generateTsType(valueExpr: any, toCreate?: boolean) {
     return valueExpr?.datatype;
   } else if (typeof valueExpr === "string") {
     try {
-      return toCreate ? `URL | NamedNode` : normalizeUrl(valueExpr, true);
+      return toCreate
+        ? `URL | NamedNode | ${normalizeUrl(valueExpr, true)}`
+        : normalizeUrl(valueExpr, true);
     } catch {
       return valueExpr;
     }
