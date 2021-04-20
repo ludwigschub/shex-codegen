@@ -2,6 +2,10 @@ import { normalizeUrl } from "../common";
 
 const ns = require("own-namespace")();
 
+const idField = "id: string; // the url of a node of this shape";
+const idFieldToCreate =
+  "id: string | NamedNode; // the url to match or create the node with e.g. 'https://example.com#this', 'https://example.com/profile/card#me'";
+
 export function putInBraces(expr: string, wrapInParentheses?: boolean) {
   if (wrapInParentheses) return `({\n${expr}\n})`;
   return `{\n${expr}\n}`;
@@ -25,12 +29,23 @@ export function generateShapeExport(name: string, shape: string) {
   return `export type ${name} = ${shape};\n`;
 }
 
-export function generateShape(type: string, shape: string, extras: string) {
+export function generateShape(
+  type: string,
+  shape: string,
+  extras: string,
+  toCreate?: boolean
+) {
   if (type === "TripleConstraint") {
-    return !!shape ? putInBraces(shape) : extras;
+    return !!shape
+      ? putInBraces([toCreate ? idFieldToCreate : idField, shape].join("\n"))
+      : extras;
   }
 
-  if (extras) {
+  if (
+    extras &&
+    extras !== putInBraces(idField, true) &&
+    extras !== putInBraces(idFieldToCreate, true)
+  ) {
     if (shape) {
       return `${shape} & ${extras}`;
     } else {
@@ -73,7 +88,9 @@ export function generateExpressions(
     {
       [toCreate ? "generatedToCreate" : "generated"]: join?.includes("|")
         ? null
-        : toCreate ? "id: string | NamedNode;" : "id: string;",
+        : toCreate
+        ? idFieldToCreate
+        : idField,
     },
     ...expressions,
   ]
@@ -83,9 +100,9 @@ export function generateExpressions(
     .map((expression: any) =>
       toCreate ? expression.generatedToCreate : expression.generated
     );
-  if (generated.length === 0) return putInBraces("id: string;");
+  if (generated.length === 0) return putInBraces(idField);
   if (join?.includes("|"))
-    return `${putInBraces("id: string;")} & (${generated.join(join)})`;
+    return `${putInBraces(idField)} & (${generated.join(join)})`;
   return generated.join(join ?? "\n");
 }
 
@@ -228,7 +245,6 @@ export function generateValueExpression(
   if (typeof valueExpr === "string") {
     return generateTsType(valueExpr, toCreate);
   } else if (valueExpr?.typeValue) {
-    if (valueExpr.typeValueToCreate === "string") console.debug(valueExpr);
     if (valueExpr.expression.values) {
       return generateValues(
         valueExpr.expression.values,

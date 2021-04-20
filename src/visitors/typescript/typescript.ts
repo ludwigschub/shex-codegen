@@ -216,7 +216,8 @@ TypescriptVisitor.visitShape = function (shape: any, context: any) {
   let generatedShapeToCreate = generateShape(
     type,
     generatedToCreate,
-    generatedExtrasToCreate
+    generatedExtrasToCreate,
+    true
   );
 
   return {
