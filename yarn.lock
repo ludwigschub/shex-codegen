@@ -6004,10 +6004,10 @@ shellwords@^0.1.1:
   resolved "https://registry.yarnpkg.com/shellwords/-/shellwords-0.1.1.tgz#d6b9181c1a48d397324c84871efbcfc73fc0654b"
   integrity sha512-vFwSUfQvqybiICwZY5+DAWIPLKsWO31Q91JSKl3UYv+K5c2QRPzn0qzec6QPu1Qc9eHYItiP3NdJqNVqetYAww==
 
-shex-methods@0.1.20:
-  version "0.1.20"
-  resolved "https://registry.yarnpkg.com/shex-methods/-/shex-methods-0.1.20.tgz#8848c14677c130cfa7735bfd40733c6f695ebc96"
-  integrity sha512-2Y2T7A1CbU2Qshq+Xx2WlO7iXRnm55IwEdealMeCDKIO/LVRlI5HGe/wDOOoluBbdzj5U84Mwk9uTKQP7fvLNA==
+shex-methods@0.1.21:
+  version "0.1.21"
+  resolved "https://registry.yarnpkg.com/shex-methods/-/shex-methods-0.1.21.tgz#a8065f12046f9a9e3f0d8c40140fe6557a844299"
+  integrity sha512-ZAATiJU2vvLlRI/S1FKnb33WMvmXOEg0N/eYeApges4L8LcTc5yGvPLuBs67oyqIHoML5BYXx351qxl05JGSEw==
   dependencies:
     camelcase "^6.2.0"
     n3 "0.11.3"
