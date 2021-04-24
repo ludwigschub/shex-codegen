@@ -36,7 +36,7 @@ export function generateShape(
   toCreate?: boolean
 ) {
   if (type === "TripleConstraint") {
-    return !!shape
+    return shape
       ? putInBraces([toCreate ? idFieldToCreate : idField, shape].join("\n"))
       : extras;
   }

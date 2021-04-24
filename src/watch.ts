@@ -1,5 +1,6 @@
-import chalk from "chalk";
 import { spawn } from "child_process";
+
+import chalk from "chalk";
 
 import { generate } from "./generate";
 import { readConfig } from "./config";
@@ -26,11 +27,10 @@ function spawnCodegenDemon(watch: string) {
 export function watch(schema?: string) {
   const config = readConfig();
   schema = schema ?? config?.schema ?? process.cwd();
-  var app = spawnCodegenDemon(schema);
+  const app = spawnCodegenDemon(schema);
 
   app.on("message", function (event: { type: string; data: string[] }) {
-    if (event.type === "start") {
-    } else if (event.type === "restart") {
+    if (event.type === "restart") {
       console.clear();
       log(`shex-codegen is watching ${schema}...\n`);
       if (Array.isArray(event.data)) {

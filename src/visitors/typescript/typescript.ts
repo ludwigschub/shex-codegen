@@ -1,5 +1,11 @@
 import { normalizeDuplicateProperties, normalizeUrl } from "../common";
 import {
+  NodeConstraintMembers,
+  ShapeMembers,
+  TripleConstraintMembers,
+} from "../common/members";
+
+import {
   generateShapeExport,
   generateEnumName,
   generateEnumExport,
@@ -16,11 +22,6 @@ import {
 } from "./generates";
 import { addUniqueInlineEnums, reduceInlineEnums } from "./inlineEnumHelpers";
 import { mapEachOfExpression, mapOneOfExpressions } from "./mapExpressions";
-import {
-  NodeConstraintMembers,
-  ShapeMembers,
-  TripleConstraintMembers,
-} from "../common/members";
 import {
   predicateToNameContext,
   reduceNameContexts,
@@ -210,10 +211,10 @@ TypescriptVisitor.visitShape = function (shape: any, context: any) {
     extrasToCreate ?? (extraToCreate && putInBraces(extraToCreate));
 
   // generate shape from visited expression
-  let generatedShape = generateShape(type, generated, generatedExtras);
+  const generatedShape = generateShape(type, generated, generatedExtras);
 
   // generate shape to create with from visited expression
-  let generatedShapeToCreate = generateShape(
+  const generatedShapeToCreate = generateShape(
     type,
     generatedToCreate,
     generatedExtrasToCreate,
@@ -290,13 +291,13 @@ function maybeGenerate(
 ) {
   const generated: Record<string, any> = {};
   members.forEach(function (member) {
-    var methodName = "visit" + member.charAt(0).toUpperCase() + member.slice(1);
+    const methodName = "visit" + member.charAt(0).toUpperCase() + member.slice(1);
     if (member in obj) {
-      var f = Visitor[methodName];
+      const f = Visitor[methodName];
       if (typeof f !== "function") {
         throw Error(methodName + " not found in Visitor");
       }
-      var t = f.call(
+      const t = f.call(
         Visitor,
         obj[member],
         context ?? {
