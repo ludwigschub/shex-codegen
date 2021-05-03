@@ -4,7 +4,7 @@ const ns = require("own-namespace")();
 
 const idField = "id: string; // the url of a node of this shape";
 const idFieldToCreate =
-  "id: string | NamedNode; // the url to match or create the node with e.g. 'https://example.com#this', 'https://example.com/profile/card#me'";
+  "id?: string | NamedNode; // the url to match or create the node with e.g. 'https://example.com#this', 'https://example.com/profile/card#me'";
 
 export function putInBraces(expr: string, wrapInParentheses?: boolean) {
   if (wrapInParentheses) return `({\n${expr}\n})`;
@@ -277,7 +277,7 @@ export function generateTsType(valueExpr: any, toCreate?: boolean) {
   } else if (typeof valueExpr === "string") {
     try {
       return toCreate
-        ? `URL | NamedNode | ${normalizeUrl(valueExpr, true)}`
+        ? `URL | NamedNode | ${normalizeUrl(valueExpr, true)}CreateArgs`
         : normalizeUrl(valueExpr, true);
     } catch {
       return valueExpr;
