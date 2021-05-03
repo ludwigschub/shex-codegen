@@ -728,12 +728,12 @@ export type ProgramminglanguageUpdateArgs = Partial<ProgramminglanguageCreateArg
 
 export type P31InstanceOfProgramminglanguage = {
   id: string; // the url of a node of this shape
-  p31: WdProgrammingLanguage;
+  p31: P31Type.Q9143;
 };
 
 export type P31InstanceOfProgramminglanguageCreateArgs = {
   id?: string | NamedNode; // the url to match or create the node with e.g. 'https://example.com#this', 'https://example.com/profile/card#me'
-  p31: URL | NamedNode | WdProgrammingLanguageCreateArgs;
+  p31: P31Type.Q9143;
 };
 
 export type P31InstanceOfProgramminglanguageUpdateArgs = Partial<P31InstanceOfProgramminglanguageCreateArgs>;
@@ -751,10 +751,6 @@ export type P279SubclassOfProgramminglanguageCreateArgs = {
 };
 
 export type P279SubclassOfProgramminglanguageUpdateArgs = Partial<P279SubclassOfProgramminglanguageCreateArgs>;
-
-export enum WdProgrammingLanguage {
-  Q9143 = 'http://www.wikidata.org/entity/Q9143',
-}
 
 export type P178Developer = {
   id: string; // the url of a node of this shape
@@ -840,6 +836,7 @@ export type P856WebsiteUpdateArgs = Partial<P856WebsiteCreateArgs>;
 
 export enum P31Type {
   Q188267 = 'http://www.wikidata.org/entity/Q188267',
+  Q9143 = 'http://www.wikidata.org/entity/Q9143',
 }
 
 export enum ProgramminglanguageContext {
@@ -912,17 +909,13 @@ pgl:programminglanguage EXTRA p:P31 {
 }
 
 pgl:P31_instance_of_programminglanguage {
-    ps:P31 @pgl:wd_programming_language ;
+    ps:P31 [ wd:Q9143 ] ;
 }
 
 pgl:P279_subclass_of_programminglanguage {
-    ps:P279 @pgl:wd_programming_language |
+    ps:P279 [ wd:Q9143 ] |
       ps:P279 @pgl:P279_subclass_of_programminglanguage;
 }
-
-pgl:wd_programming_language [
-  wd:Q9143  # Q9143 = programming language
-]
 
 pgl:P178_developer {
   ps:P178 IRI;
