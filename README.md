@@ -18,7 +18,6 @@ generates:
   node_modules/@generated/shex.ts:
     # the visitors to visit the schema with
     - typescript
-    - typescript-methods
 
 ```
 Then you can use the package in one of your scripts e.g.:
@@ -101,7 +100,23 @@ export enum SolidProfileShapeContext {
   "name" = "foaf:name",
   "hasPhoto" = "vcard:hasPhoto",
 }
+```
 
+### Typescript methods
+With a config like this:
+```yaml
+# path to the folder or file with shape expressions
+schema: "src"
+generates:
+  # this will be the path of the generated file. It has to end with .ts
+  node_modules/@generated/shex.ts:
+    # the visitors to visit the schema with
+    - typescript
+    - typescript-methods
+```
+
+The above mentioned shex generates:
+```typescript
 export const solidProfile = new Shape<SolidProfileShape>({
   id: "https://shaperepo.com/schemas/solidProfile#SolidProfileShape",
   shape: solidProfileShex,
@@ -109,6 +124,8 @@ export const solidProfile = new Shape<SolidProfileShape>({
   type: SolidProfileShapeType,
 });
 ```
+
+You can then use the Shape object's methods to read, create, update or delete nodes of this shape. See [shex-methods](https://github.com/ludwigschubi/shex-methods) or [shex-codegen-demo](https://github.com/ludwigschubi/shex-codegen-demo)
 
 ## Features
 
