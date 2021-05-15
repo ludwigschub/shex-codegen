@@ -1,6 +1,6 @@
 {
   "name": "shex-codegen",
-  "version": "0.3.6",
+  "version": "0.3.7",
   "description": "",
   "main": "lib/index.js",
   "scripts": {
@@ -33,7 +33,7 @@
     "@types/prettier": "2.2.3",
     "concurrently": "6.0.0",
     "jest": "26.6.3",
-    "own-namespace": "0.4.5",
+    "own-namespace": "^0.4.5",
     "rdflib": "2.2.0",
     "rimraf": "3.0.2",
     "shex-methods": "0.1.20",
