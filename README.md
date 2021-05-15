@@ -103,6 +103,8 @@ export enum SolidProfileShapeContext {
 ```
 
 ### Typescript methods
+For this visitor you will need to additionaly install `shex-methods`
+
 With a config like this:
 ```yaml
 # path to the folder or file with shape expressions
@@ -115,7 +117,7 @@ generates:
     - typescript-methods
 ```
 
-The above mentioned shex generates:
+When using the above mentioned Shape Expression, this will be added to the generated code:
 ```typescript
 export const solidProfile = new Shape<SolidProfileShape>({
   id: "https://shaperepo.com/schemas/solidProfile#SolidProfileShape",
