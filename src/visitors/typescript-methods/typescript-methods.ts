@@ -1,14 +1,15 @@
 import { normalizeDuplicateProperties } from "../common";
 import {
-  generateShapeMethodsExport,
-  generateShapeMethodsImport,
-} from "./generates";
-import { mapExpression } from "./mapExpressions";
-import {
   NodeConstraintMembers,
   ShapeMembers,
   TripleConstraintMembers,
 } from "../common/members";
+
+import {
+  generateShapeMethodsExport,
+  generateShapeMethodsImport,
+} from "./generates";
+import { mapExpression } from "./mapExpressions";
 
 const ShExUtil = require("@shexjs/core").Util;
 
@@ -175,13 +176,13 @@ function maybeGenerate(
 ) {
   const generated: Record<string, any> = {};
   members.forEach(function (member) {
-    var methodName = "visit" + member.charAt(0).toUpperCase() + member.slice(1);
+    const methodName = "visit" + member.charAt(0).toUpperCase() + member.slice(1);
     if (member in obj) {
-      var f = Visitor[methodName];
+      const f = Visitor[methodName];
       if (typeof f !== "function") {
         throw Error(methodName + " not found in Visitor");
       }
-      var t = f.call(
+      const t = f.call(
         Visitor,
         obj[member],
         context ?? {

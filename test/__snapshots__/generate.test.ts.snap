@@ -2,9 +2,9 @@
 
 exports[`matches snapshots with config file 1`] = `
 Array [
-  "import { NamedNode, Literal } from \\"rdflib\\";
+  "import { NamedNode, Literal } from 'rdflib';
 
-import { Shape } from \\"shex-methods\\";
+import { Shape } from 'shex-methods';
 
 export type Cryptocurrency = {
   id: string; // the url of a node of this shape
@@ -72,22 +72,22 @@ export type Cryptocurrency = {
   ));
 
 export type CryptocurrencyCreateArgs = {
-  id: string | NamedNode; // the url to match or create the node with e.g. 'https://example.com#this', 'https://example.com/profile/card#me'
+  id?: string | NamedNode; // the url to match or create the node with e.g. 'https://example.com#this', 'https://example.com/profile/card#me'
   p279?: {
-    id: string | NamedNode; // the url to match or create the node with e.g. 'https://example.com#this', 'https://example.com/profile/card#me'
+    id?: string | NamedNode; // the url to match or create the node with e.g. 'https://example.com#this', 'https://example.com/profile/card#me'
     p279: URL | NamedNode;
   };
   p178?: {
-    id: string | NamedNode; // the url to match or create the node with e.g. 'https://example.com#this', 'https://example.com/profile/card#me'
+    id?: string | NamedNode; // the url to match or create the node with e.g. 'https://example.com#this', 'https://example.com/profile/card#me'
     p178: URL | NamedNode;
   };
   p170?: {
-    id: string | NamedNode; // the url to match or create the node with e.g. 'https://example.com#this', 'https://example.com/profile/card#me'
+    id?: string | NamedNode; // the url to match or create the node with e.g. 'https://example.com#this', 'https://example.com/profile/card#me'
     p170: URL | NamedNode;
   };
   p2283:
     | {
-        id: string | NamedNode; // the url to match or create the node with e.g. 'https://example.com#this', 'https://example.com/profile/card#me'
+        id?: string | NamedNode; // the url to match or create the node with e.g. 'https://example.com#this', 'https://example.com/profile/card#me'
         p2283: (
           | P2283Type.Q17083510
           | P2283Type.Q7249984
@@ -95,7 +95,7 @@ export type CryptocurrencyCreateArgs = {
         )[];
       }
     | {
-        id: string | NamedNode; // the url to match or create the node with e.g. 'https://example.com#this', 'https://example.com/profile/card#me'
+        id?: string | NamedNode; // the url to match or create the node with e.g. 'https://example.com#this', 'https://example.com/profile/card#me'
         p2283: (
           | P2283Type.Q17083510
           | P2283Type.Q7249984
@@ -107,30 +107,30 @@ export type CryptocurrencyCreateArgs = {
 } & {
   p31?:
     | {
-        id: string | NamedNode; // the url to match or create the node with e.g. 'https://example.com#this', 'https://example.com/profile/card#me'
+        id?: string | NamedNode; // the url to match or create the node with e.g. 'https://example.com#this', 'https://example.com/profile/card#me'
         p31: P31Type.Q13479982;
       }
     | {
-        id: string | NamedNode; // the url to match or create the node with e.g. 'https://example.com#this', 'https://example.com/profile/card#me'
+        id?: string | NamedNode; // the url to match or create the node with e.g. 'https://example.com#this', 'https://example.com/profile/card#me'
         p31: P31Type.Q13479982;
       }[];
 } & ({
     id: string; // the url of a node of this shape
   } & (
     | {
-        id: string | NamedNode; // the url to match or create the node with e.g. 'https://example.com#this', 'https://example.com/profile/card#me'
+        id?: string | NamedNode; // the url to match or create the node with e.g. 'https://example.com#this', 'https://example.com/profile/card#me'
         p577: {
-          id: string | NamedNode; // the url to match or create the node with e.g. 'https://example.com#this', 'https://example.com/profile/card#me'
+          id?: string | NamedNode; // the url to match or create the node with e.g. 'https://example.com#this', 'https://example.com/profile/card#me'
           p577: Date | Literal;
         };
         p571?: {
-          id: string | NamedNode; // the url to match or create the node with e.g. 'https://example.com#this', 'https://example.com/profile/card#me'
+          id?: string | NamedNode; // the url to match or create the node with e.g. 'https://example.com#this', 'https://example.com/profile/card#me'
           p571: Date | Literal;
         };
       }
     | {
         p571: {
-          id: string | NamedNode; // the url to match or create the node with e.g. 'https://example.com#this', 'https://example.com/profile/card#me'
+          id?: string | NamedNode; // the url to match or create the node with e.g. 'https://example.com#this', 'https://example.com/profile/card#me'
           p571: Date | Literal;
         };
       }
@@ -139,25 +139,25 @@ export type CryptocurrencyCreateArgs = {
 export type CryptocurrencyUpdateArgs = Partial<CryptocurrencyCreateArgs>;
 
 export enum P31Type {
-  Q13479982 = \\"http://www.wikidata.org/entity/Q13479982\\",
+  Q13479982 = 'http://www.wikidata.org/entity/Q13479982',
 }
 
 export enum P2283Type {
-  Q17083510 = \\"http://www.wikidata.org/entity/Q17083510\\",
-  Q7249984 = \\"http://www.wikidata.org/entity/Q7249984\\",
-  Q48834328 = \\"http://www.wikidata.org/entity/Q48834328\\",
+  Q17083510 = 'http://www.wikidata.org/entity/Q17083510',
+  Q7249984 = 'http://www.wikidata.org/entity/Q7249984',
+  Q48834328 = 'http://www.wikidata.org/entity/Q48834328',
 }
 
 export enum CryptocurrencyContext {
-  p31 = \\"p:p31\\",
-  p279 = \\"p:p279\\",
-  p577 = \\"p:p577\\",
-  p571 = \\"p:p571\\",
-  p178 = \\"p:p178\\",
-  p170 = \\"p:p170\\",
-  p2283 = \\"p:p2283\\",
-  p5777 = \\"p:p5777\\",
-  p6363 = \\"p:p6363\\",
+  p31 = 'p:p31',
+  p279 = 'p:p279',
+  p577 = 'p:p577',
+  p571 = 'p:p571',
+  p178 = 'p:p178',
+  p170 = 'p:p170',
+  p2283 = 'p:p2283',
+  p5777 = 'p:p5777',
+  p6363 = 'p:p6363',
 }
 
 export const cryptocurrencyShex = \`
@@ -205,7 +205,7 @@ export const cryptocurrency = new Shape<
   Cryptocurrency,
   CryptocurrencyCreateArgs
 >({
-  id: \\"https://www.wikidata.org/wiki/EntitySchema:E82#cryptocurrency\\",
+  id: 'https://www.wikidata.org/wiki/EntitySchema:E82#cryptocurrency',
   shape: cryptocurrencyShex,
   context: CryptocurrencyContext,
 });
@@ -224,12 +224,12 @@ export type BasicContainerShape = {
 };
 
 export type BasicContainerShapeCreateArgs = {
-  id: string | NamedNode; // the url to match or create the node with e.g. 'https://example.com#this', 'https://example.com/profile/card#me'
+  id?: string | NamedNode; // the url to match or create the node with e.g. 'https://example.com#this', 'https://example.com/profile/card#me'
   contains?:
     | URL
     | NamedNode
-    | ResourceShape
-    | (URL | NamedNode | ResourceShape)[]; // Contains these Resources
+    | ResourceShapeCreateArgs
+    | (URL | NamedNode | ResourceShapeCreateArgs)[]; // Contains these Resources
   size: number | Literal; // Size of Container
   mtime: number | Literal; // Time of Container creation created
   modified: Date | Literal; // Time the Container was modified
@@ -252,7 +252,7 @@ export type ResourceShape = {
 };
 
 export type ResourceShapeCreateArgs = {
-  id: string | NamedNode; // the url to match or create the node with e.g. 'https://example.com#this', 'https://example.com/profile/card#me'
+  id?: string | NamedNode; // the url to match or create the node with e.g. 'https://example.com#this', 'https://example.com/profile/card#me'
   size: number | Literal; // Size of Container
   mtime: number | Literal; // Time of Container creation created
   modified: Date | Literal; // Time the Container was modified
@@ -263,27 +263,27 @@ export type ResourceShapeCreateArgs = {
 export type ResourceShapeUpdateArgs = Partial<ResourceShapeCreateArgs>;
 
 export enum BasicContainerShapeType {
-  BasicContainer = \\"http://www.w3.org/ns/ldp#BasicContainer\\",
-  Container = \\"http://www.w3.org/ns/ldp#Container\\",
+  BasicContainer = 'http://www.w3.org/ns/ldp#BasicContainer',
+  Container = 'http://www.w3.org/ns/ldp#Container',
 }
 
 export enum ResourceShapeType {
-  Resource = \\"http://www.w3.org/ns/ldp#Resource\\",
+  Resource = 'http://www.w3.org/ns/ldp#Resource',
 }
 
 export enum BasicContainerShapeContext {
-  type = \\"rdf:type\\",
-  contains = \\"ldp:contains\\",
-  size = \\"st:size\\",
-  mtime = \\"st:mtime\\",
-  modified = \\"terms:modified\\",
+  type = 'rdf:type',
+  contains = 'ldp:contains',
+  size = 'st:size',
+  mtime = 'st:mtime',
+  modified = 'terms:modified',
 }
 
 export enum ResourceShapeContext {
-  type = \\"rdf:type\\",
-  size = \\"st:size\\",
-  mtime = \\"st:mtime\\",
-  modified = \\"terms:modified\\",
+  type = 'rdf:type',
+  size = 'st:size',
+  mtime = 'st:mtime',
+  modified = 'terms:modified',
 }
 
 export const ldpShapesShex = \`
@@ -325,7 +325,7 @@ export const basicContainer = new Shape<
   BasicContainerShape,
   BasicContainerShapeCreateArgs
 >({
-  id: \\"http://www.w3.org/ns/ldp#BasicContainerShape\\",
+  id: 'http://www.w3.org/ns/ldp#BasicContainerShape',
   shape: ldpShapesShex,
   context: BasicContainerShapeContext,
   type: BasicContainerShapeType,
@@ -333,7 +333,7 @@ export const basicContainer = new Shape<
 });
 
 export const resource = new Shape<ResourceShape, ResourceShapeCreateArgs>({
-  id: \\"http://www.w3.org/ns/ldp#ResourceShape\\",
+  id: 'http://www.w3.org/ns/ldp#ResourceShape',
   shape: ldpShapesShex,
   context: ResourceShapeContext,
   type: ResourceShapeType,
@@ -350,7 +350,7 @@ export type ChatShape = {
 };
 
 export type ChatShapeCreateArgs = {
-  id: string | NamedNode; // the url to match or create the node with e.g. 'https://example.com#this', 'https://example.com/profile/card#me'
+  id?: string | NamedNode; // the url to match or create the node with e.g. 'https://example.com#this', 'https://example.com/profile/card#me'
   type: ChatShapeType.LongChat; // Defines the type of the chat as a LongChat
   author: URL | NamedNode; // The WebId of the entity that created this chat
   created: Date | Literal; // The date and time the chat was created
@@ -358,8 +358,8 @@ export type ChatShapeCreateArgs = {
   participation?:
     | URL
     | NamedNode
-    | ChatParticipationShape
-    | (URL | NamedNode | ChatParticipationShape)[]; // A list of people participating in this chat
+    | ChatParticipationShapeCreateArgs
+    | (URL | NamedNode | ChatParticipationShapeCreateArgs)[]; // A list of people participating in this chat
   sharedPreferences?: URL | NamedNode; // Chat preferences
 };
 
@@ -373,7 +373,7 @@ export type ChatParticipationShape = {
 };
 
 export type ChatParticipationShapeCreateArgs = {
-  id: string | NamedNode; // the url to match or create the node with e.g. 'https://example.com#this', 'https://example.com/profile/card#me'
+  id?: string | NamedNode; // the url to match or create the node with e.g. 'https://example.com#this', 'https://example.com/profile/card#me'
   dtstart: Date | Literal; // The date and time this individual began participating in the chat.
   participant: URL | NamedNode; // The WebId of the participant
   backgroundColor?: string | Literal; // The background color of the participant's chat bubbles
@@ -387,12 +387,12 @@ export type ChatMessageListShape = {
 };
 
 export type ChatMessageListShapeCreateArgs = {
-  id: string | NamedNode; // the url to match or create the node with e.g. 'https://example.com#this', 'https://example.com/profile/card#me'
+  id?: string | NamedNode; // the url to match or create the node with e.g. 'https://example.com#this', 'https://example.com/profile/card#me'
   message?:
     | URL
     | NamedNode
-    | ChatMessageShape
-    | (URL | NamedNode | ChatMessageShape)[]; // A list of messages in the chat
+    | ChatMessageShapeCreateArgs
+    | (URL | NamedNode | ChatMessageShapeCreateArgs)[]; // A list of messages in the chat
 };
 
 export type ChatMessageListShapeUpdateArgs = Partial<ChatMessageListShapeCreateArgs>;
@@ -405,7 +405,7 @@ export type ChatMessageShape = {
 };
 
 export type ChatMessageShapeCreateArgs = {
-  id: string | NamedNode; // the url to match or create the node with e.g. 'https://example.com#this', 'https://example.com/profile/card#me'
+  id?: string | NamedNode; // the url to match or create the node with e.g. 'https://example.com#this', 'https://example.com/profile/card#me'
   created: Date | Literal; // The date and time this message was posted.
   content: string | Literal; // The text content of the message
   maker: URL | NamedNode; // The WebId of the person who sent the message.
@@ -414,33 +414,33 @@ export type ChatMessageShapeCreateArgs = {
 export type ChatMessageShapeUpdateArgs = Partial<ChatMessageShapeCreateArgs>;
 
 export enum ChatShapeType {
-  LongChat = \\"http://www.w3.org/ns/pim/meeting#LongChat\\",
+  LongChat = 'http://www.w3.org/ns/pim/meeting#LongChat',
 }
 
 export enum ChatShapeContext {
-  type = \\"rdf:type\\",
-  author = \\"purl:author\\",
-  created = \\"purl:created\\",
-  title = \\"purl:title\\",
-  participation = \\"flow:participation\\",
-  sharedPreferences = \\"ui:sharedPreferences\\",
+  type = 'rdf:type',
+  author = 'purl:author',
+  created = 'purl:created',
+  title = 'purl:title',
+  participation = 'flow:participation',
+  sharedPreferences = 'ui:sharedPreferences',
 }
 
 export enum ChatParticipationShapeContext {
-  dtstart = \\"ic:dtstart\\",
-  participant = \\"flow:participant\\",
-  backgroundColor = \\"ui:backgroundColor\\",
+  dtstart = 'ic:dtstart',
+  participant = 'flow:participant',
+  backgroundColor = 'ui:backgroundColor',
 }
 
 export enum ChatMessageListShapeContext {
-  name = \\"message\\",
-  value = \\"flow:message\\",
+  name = 'message',
+  value = 'flow:message',
 }
 
 export enum ChatMessageShapeContext {
-  created = \\"terms:created\\",
-  content = \\"ns:content\\",
-  maker = \\"foaf:maker\\",
+  created = 'terms:created',
+  content = 'ns:content',
+  maker = 'foaf:maker',
 }
 
 export const longChatShex = \`
@@ -497,7 +497,7 @@ srs:ChatMessageShape {
 \`;
 
 export const chat = new Shape<ChatShape, ChatShapeCreateArgs>({
-  id: \\"https://shaperepo.com/schemas/longChat#ChatShape\\",
+  id: 'https://shaperepo.com/schemas/longChat#ChatShape',
   shape: longChatShex,
   context: ChatShapeContext,
   type: ChatShapeType,
@@ -508,7 +508,7 @@ export const chatParticipation = new Shape<
   ChatParticipationShape,
   ChatParticipationShapeCreateArgs
 >({
-  id: \\"https://shaperepo.com/schemas/longChat#ChatParticipationShape\\",
+  id: 'https://shaperepo.com/schemas/longChat#ChatParticipationShape',
   shape: longChatShex,
   context: ChatParticipationShapeContext,
 });
@@ -517,7 +517,7 @@ export const chatMessageList = new Shape<
   ChatMessageListShape,
   ChatMessageListShapeCreateArgs
 >({
-  id: \\"https://shaperepo.com/schemas/longChat#ChatMessageListShape\\",
+  id: 'https://shaperepo.com/schemas/longChat#ChatMessageListShape',
   shape: longChatShex,
   context: ChatMessageListShapeContext,
   childContexts: [ChatMessageShapeContext],
@@ -527,7 +527,7 @@ export const chatMessage = new Shape<
   ChatMessageShape,
   ChatMessageShapeCreateArgs
 >({
-  id: \\"https://shaperepo.com/schemas/longChat#ChatMessageShape\\",
+  id: 'https://shaperepo.com/schemas/longChat#ChatMessageShape',
   shape: longChatShex,
   context: ChatMessageShapeContext,
 });
@@ -584,52 +584,52 @@ export type OperatingSystem = {
 };
 
 export type OperatingSystemCreateArgs = {
-  id: string | NamedNode; // the url to match or create the node with e.g. 'https://example.com#this', 'https://example.com/profile/card#me'
+  id?: string | NamedNode; // the url to match or create the node with e.g. 'https://example.com#this', 'https://example.com/profile/card#me'
   p31: {
-    id: string | NamedNode; // the url to match or create the node with e.g. 'https://example.com#this', 'https://example.com/profile/card#me'
+    id?: string | NamedNode; // the url to match or create the node with e.g. 'https://example.com#this', 'https://example.com/profile/card#me'
     p31: {
-      id: string | NamedNode; // the url to match or create the node with e.g. 'https://example.com#this', 'https://example.com/profile/card#me'
+      id?: string | NamedNode; // the url to match or create the node with e.g. 'https://example.com#this', 'https://example.com/profile/card#me'
       p279:
         | {
-            id: string | NamedNode; // the url to match or create the node with e.g. 'https://example.com#this', 'https://example.com/profile/card#me'
+            id?: string | NamedNode; // the url to match or create the node with e.g. 'https://example.com#this', 'https://example.com/profile/card#me'
             p279: P279Type.Q9135;
           }
         | {
-            id: string | NamedNode; // the url to match or create the node with e.g. 'https://example.com#this', 'https://example.com/profile/card#me'
+            id?: string | NamedNode; // the url to match or create the node with e.g. 'https://example.com#this', 'https://example.com/profile/card#me'
             p279: P279Type.Q9135;
           }[];
     };
   };
   p275: {
-    id: string | NamedNode; // the url to match or create the node with e.g. 'https://example.com#this', 'https://example.com/profile/card#me'
+    id?: string | NamedNode; // the url to match or create the node with e.g. 'https://example.com#this', 'https://example.com/profile/card#me'
     p275: URL | NamedNode | (URL | NamedNode)[];
   };
   p178?: {
-    id: string | NamedNode; // the url to match or create the node with e.g. 'https://example.com#this', 'https://example.com/profile/card#me'
+    id?: string | NamedNode; // the url to match or create the node with e.g. 'https://example.com#this', 'https://example.com/profile/card#me'
     p178: URL | NamedNode;
   };
   p176?: {
-    id: string | NamedNode; // the url to match or create the node with e.g. 'https://example.com#this', 'https://example.com/profile/card#me'
+    id?: string | NamedNode; // the url to match or create the node with e.g. 'https://example.com#this', 'https://example.com/profile/card#me'
     p176: URL | NamedNode;
   };
   p910?: {
-    id: string | NamedNode; // the url to match or create the node with e.g. 'https://example.com#this', 'https://example.com/profile/card#me'
+    id?: string | NamedNode; // the url to match or create the node with e.g. 'https://example.com#this', 'https://example.com/profile/card#me'
     p910: URL | NamedNode;
   };
   p373?: {
-    id: string | NamedNode; // the url to match or create the node with e.g. 'https://example.com#this', 'https://example.com/profile/card#me'
+    id?: string | NamedNode; // the url to match or create the node with e.g. 'https://example.com#this', 'https://example.com/profile/card#me'
     p373?: string | Literal | (string | Literal)[];
   };
   p5795?: {
-    id: string | NamedNode; // the url to match or create the node with e.g. 'https://example.com#this', 'https://example.com/profile/card#me'
+    id?: string | NamedNode; // the url to match or create the node with e.g. 'https://example.com#this', 'https://example.com/profile/card#me'
     p5795?: string | Literal | (string | Literal)[];
   };
   p5868?: {
-    id: string | NamedNode; // the url to match or create the node with e.g. 'https://example.com#this', 'https://example.com/profile/card#me'
+    id?: string | NamedNode; // the url to match or create the node with e.g. 'https://example.com#this', 'https://example.com/profile/card#me'
     p5868?: string | Literal | (string | Literal)[];
   };
   p268?: {
-    id: string | NamedNode; // the url to match or create the node with e.g. 'https://example.com#this', 'https://example.com/profile/card#me'
+    id?: string | NamedNode; // the url to match or create the node with e.g. 'https://example.com#this', 'https://example.com/profile/card#me'
     p268?: string | Literal | (string | Literal)[];
   };
 };
@@ -637,19 +637,19 @@ export type OperatingSystemCreateArgs = {
 export type OperatingSystemUpdateArgs = Partial<OperatingSystemCreateArgs>;
 
 export enum P279Type {
-  Q9135 = \\"http://www.wikidata.org/entity/Q9135\\",
+  Q9135 = 'http://www.wikidata.org/entity/Q9135',
 }
 
 export enum OperatingSystemContext {
-  p31 = \\"p:p31\\",
-  p275 = \\"p:p275\\",
-  p178 = \\"p:p178\\",
-  p176 = \\"p:p176\\",
-  p910 = \\"p:p910\\",
-  p373 = \\"p:p373\\",
-  p5795 = \\"p:p5795\\",
-  p5868 = \\"p:p5868\\",
-  p268 = \\"p:p268\\",
+  p31 = 'p:p31',
+  p275 = 'p:p275',
+  p178 = 'p:p178',
+  p176 = 'p:p176',
+  p910 = 'p:p910',
+  p373 = 'p:p373',
+  p5795 = 'p:p5795',
+  p5868 = 'p:p5868',
+  p268 = 'p:p268',
 }
 
 export const operatingSystemShex = \`
@@ -687,7 +687,7 @@ export const operatingSystem = new Shape<
   OperatingSystem,
   OperatingSystemCreateArgs
 >({
-  id: \\"https://www.wikidata.org/wiki/EntitySchema:E102#operating_system\\",
+  id: 'https://www.wikidata.org/wiki/EntitySchema:E102#operating_system',
   shape: operatingSystemShex,
   context: OperatingSystemContext,
 });
@@ -701,27 +701,39 @@ export type Programminglanguage = {
 };
 
 export type ProgramminglanguageCreateArgs = {
-  id: string | NamedNode; // the url to match or create the node with e.g. 'https://example.com#this', 'https://example.com/profile/card#me'
-  p178?: URL | NamedNode | P178Developer | (URL | NamedNode | P178Developer)[];
-  p3966?: URL | NamedNode | P3966Paradigm | (URL | NamedNode | P3966Paradigm)[];
+  id?: string | NamedNode; // the url to match or create the node with e.g. 'https://example.com#this', 'https://example.com/profile/card#me'
+  p178?:
+    | URL
+    | NamedNode
+    | P178DeveloperCreateArgs
+    | (URL | NamedNode | P178DeveloperCreateArgs)[];
+  p3966?:
+    | URL
+    | NamedNode
+    | P3966ParadigmCreateArgs
+    | (URL | NamedNode | P3966ParadigmCreateArgs)[];
   p577?:
     | URL
     | NamedNode
-    | P577PublicationDate
-    | (URL | NamedNode | P577PublicationDate)[];
-  p856?: URL | NamedNode | P856Website | (URL | NamedNode | P856Website)[];
+    | P577PublicationDateCreateArgs
+    | (URL | NamedNode | P577PublicationDateCreateArgs)[];
+  p856?:
+    | URL
+    | NamedNode
+    | P856WebsiteCreateArgs
+    | (URL | NamedNode | P856WebsiteCreateArgs)[];
 };
 
 export type ProgramminglanguageUpdateArgs = Partial<ProgramminglanguageCreateArgs>;
 
 export type P31InstanceOfProgramminglanguage = {
   id: string; // the url of a node of this shape
-  p31: WdProgrammingLanguage;
+  p31: P31Type.Q9143;
 };
 
 export type P31InstanceOfProgramminglanguageCreateArgs = {
-  id: string | NamedNode; // the url to match or create the node with e.g. 'https://example.com#this', 'https://example.com/profile/card#me'
-  p31: URL | NamedNode | WdProgrammingLanguage;
+  id?: string | NamedNode; // the url to match or create the node with e.g. 'https://example.com#this', 'https://example.com/profile/card#me'
+  p31: P31Type.Q9143;
 };
 
 export type P31InstanceOfProgramminglanguageUpdateArgs = Partial<P31InstanceOfProgramminglanguageCreateArgs>;
@@ -735,14 +747,10 @@ export type P279SubclassOfProgramminglanguage = {
 export type P279SubclassOfProgramminglanguageCreateArgs = {
   id: string; // the url of a node of this shape
 } & {
-  p279: URL | NamedNode | P279SubclassOfProgramminglanguage;
+  p279: URL | NamedNode | P279SubclassOfProgramminglanguageCreateArgs;
 };
 
 export type P279SubclassOfProgramminglanguageUpdateArgs = Partial<P279SubclassOfProgramminglanguageCreateArgs>;
-
-export enum WdProgrammingLanguage {
-  Q9143 = \\"http://www.wikidata.org/entity/Q9143\\",
-}
 
 export type P178Developer = {
   id: string; // the url of a node of this shape
@@ -752,7 +760,7 @@ export type P178Developer = {
 };
 
 export type P178DeveloperCreateArgs = {
-  id: string | NamedNode; // the url to match or create the node with e.g. 'https://example.com#this', 'https://example.com/profile/card#me'
+  id?: string | NamedNode; // the url to match or create the node with e.g. 'https://example.com#this', 'https://example.com/profile/card#me'
   p178: URL | NamedNode;
   p580?: Date | Literal;
   p582?: Date | Literal;
@@ -775,15 +783,15 @@ export type P3966Paradigm = {
 };
 
 export type P3966ParadigmCreateArgs = {
-  id: string | NamedNode; // the url to match or create the node with e.g. 'https://example.com#this', 'https://example.com/profile/card#me'
+  id?: string | NamedNode; // the url to match or create the node with e.g. 'https://example.com#this', 'https://example.com/profile/card#me'
   p3966: {
     id: string; // the url of a node of this shape
   } & (
     | {
-        p31: URL | NamedNode | ProgrammingParadigm;
+        p31: URL | NamedNode | ProgrammingParadigmCreateArgs;
       }
     | {
-        p279: URL | NamedNode | ProgrammingParadigm;
+        p279: URL | NamedNode | ProgrammingParadigmCreateArgs;
       }
   );
 };
@@ -796,7 +804,7 @@ export type ProgrammingParadigm = {
 };
 
 export type ProgrammingParadigmCreateArgs = {
-  id: string | NamedNode; // the url to match or create the node with e.g. 'https://example.com#this', 'https://example.com/profile/card#me'
+  id?: string | NamedNode; // the url to match or create the node with e.g. 'https://example.com#this', 'https://example.com/profile/card#me'
   p31: P31Type.Q188267;
 };
 
@@ -808,7 +816,7 @@ export type P577PublicationDate = {
 };
 
 export type P577PublicationDateCreateArgs = {
-  id: string | NamedNode; // the url to match or create the node with e.g. 'https://example.com#this', 'https://example.com/profile/card#me'
+  id?: string | NamedNode; // the url to match or create the node with e.g. 'https://example.com#this', 'https://example.com/profile/card#me'
   p577: string;
 };
 
@@ -820,59 +828,60 @@ export type P856Website = {
 };
 
 export type P856WebsiteCreateArgs = {
-  id: string | NamedNode; // the url to match or create the node with e.g. 'https://example.com#this', 'https://example.com/profile/card#me'
+  id?: string | NamedNode; // the url to match or create the node with e.g. 'https://example.com#this', 'https://example.com/profile/card#me'
   p856: URL | NamedNode;
 };
 
 export type P856WebsiteUpdateArgs = Partial<P856WebsiteCreateArgs>;
 
 export enum P31Type {
-  Q188267 = \\"http://www.wikidata.org/entity/Q188267\\",
+  Q188267 = 'http://www.wikidata.org/entity/Q188267',
+  Q9143 = 'http://www.wikidata.org/entity/Q9143',
 }
 
 export enum ProgramminglanguageContext {
-  p31 = \\"p:p31\\",
-  p178 = \\"p:p178\\",
-  p3966 = \\"p:p3966\\",
-  p577 = \\"p:p577\\",
-  p856 = \\"p:p856\\",
+  p31 = 'p:p31',
+  p178 = 'p:p178',
+  p3966 = 'p:p3966',
+  p577 = 'p:p577',
+  p856 = 'p:p856',
 }
 
 export enum P31InstanceOfProgramminglanguageContext {
-  name = \\"p31\\",
-  value = \\"p:p31\\",
+  name = 'p31',
+  value = 'p:p31',
 }
 
 export enum P279SubclassOfProgramminglanguageContext {
-  p279 = \\"p:p279\\",
+  p279 = 'p:p279',
 }
 
 export enum P178DeveloperContext {
-  p178 = \\"p:p178\\",
-  p580 = \\"p:p580\\",
-  p582 = \\"p:p582\\",
+  p178 = 'p:p178',
+  p580 = 'p:p580',
+  p582 = 'p:p582',
 }
 
 export enum P3966ParadigmContext {
-  p31 = \\"p:p31\\",
-  p279 = \\"p:p279\\",
-  name = \\"p3966\\",
-  value = \\"p:p3966\\",
+  p31 = 'p:p31',
+  p279 = 'p:p279',
+  name = 'p3966',
+  value = 'p:p3966',
 }
 
 export enum ProgrammingParadigmContext {
-  name = \\"p31\\",
-  value = \\"p:p31\\",
+  name = 'p31',
+  value = 'p:p31',
 }
 
 export enum P577PublicationDateContext {
-  name = \\"p577\\",
-  value = \\"p:p577\\",
+  name = 'p577',
+  value = 'p:p577',
 }
 
 export enum P856WebsiteContext {
-  name = \\"p856\\",
-  value = \\"p:p856\\",
+  name = 'p856',
+  value = 'p:p856',
 }
 
 export const programmingLanguageShex = \`
@@ -900,17 +909,13 @@ pgl:programminglanguage EXTRA p:P31 {
 }
 
 pgl:P31_instance_of_programminglanguage {
-    ps:P31 @pgl:wd_programming_language ;
+    ps:P31 [ wd:Q9143 ] ;
 }
 
 pgl:P279_subclass_of_programminglanguage {
-    ps:P279 @pgl:wd_programming_language |
+    ps:P279 [ wd:Q9143 ] |
       ps:P279 @pgl:P279_subclass_of_programminglanguage;
 }
-
-pgl:wd_programming_language [
-  wd:Q9143  # Q9143 = programming language
-]
 
 pgl:P178_developer {
   ps:P178 IRI;
@@ -943,7 +948,7 @@ export const programminglanguage = new Shape<
   Programminglanguage,
   ProgramminglanguageCreateArgs
 >({
-  id: \\"https://www.wikidata.org/wiki/EntitySchema:E55#programminglanguage\\",
+  id: 'https://www.wikidata.org/wiki/EntitySchema:E55#programminglanguage',
   shape: programmingLanguageShex,
   context: ProgramminglanguageContext,
   childContexts: [
@@ -961,7 +966,7 @@ export const p31InstanceOfProgramminglanguage = new Shape<
   P31InstanceOfProgramminglanguageCreateArgs
 >({
   id:
-    \\"https://www.wikidata.org/wiki/EntitySchema:E55#P31_instance_of_programminglanguage\\",
+    'https://www.wikidata.org/wiki/EntitySchema:E55#P31_instance_of_programminglanguage',
   shape: programmingLanguageShex,
   context: P31InstanceOfProgramminglanguageContext,
 });
@@ -971,20 +976,20 @@ export const p279SubclassOfProgramminglanguage = new Shape<
   P279SubclassOfProgramminglanguageCreateArgs
 >({
   id:
-    \\"https://www.wikidata.org/wiki/EntitySchema:E55#P279_subclass_of_programminglanguage\\",
+    'https://www.wikidata.org/wiki/EntitySchema:E55#P279_subclass_of_programminglanguage',
   shape: programmingLanguageShex,
   context: P279SubclassOfProgramminglanguageContext,
   childContexts: [P279SubclassOfProgramminglanguageContext],
 });
 
 export const p178Developer = new Shape<P178Developer, P178DeveloperCreateArgs>({
-  id: \\"https://www.wikidata.org/wiki/EntitySchema:E55#P178_developer\\",
+  id: 'https://www.wikidata.org/wiki/EntitySchema:E55#P178_developer',
   shape: programmingLanguageShex,
   context: P178DeveloperContext,
 });
 
 export const p3966Paradigm = new Shape<P3966Paradigm, P3966ParadigmCreateArgs>({
-  id: \\"https://www.wikidata.org/wiki/EntitySchema:E55#P3966_paradigm\\",
+  id: 'https://www.wikidata.org/wiki/EntitySchema:E55#P3966_paradigm',
   shape: programmingLanguageShex,
   context: P3966ParadigmContext,
 });
@@ -993,7 +998,7 @@ export const programmingParadigm = new Shape<
   ProgrammingParadigm,
   ProgrammingParadigmCreateArgs
 >({
-  id: \\"https://www.wikidata.org/wiki/EntitySchema:E55#Programming_paradigm\\",
+  id: 'https://www.wikidata.org/wiki/EntitySchema:E55#Programming_paradigm',
   shape: programmingLanguageShex,
   context: ProgrammingParadigmContext,
 });
@@ -1002,13 +1007,13 @@ export const p577PublicationDate = new Shape<
   P577PublicationDate,
   P577PublicationDateCreateArgs
 >({
-  id: \\"https://www.wikidata.org/wiki/EntitySchema:E55#P577_publication_date\\",
+  id: 'https://www.wikidata.org/wiki/EntitySchema:E55#P577_publication_date',
   shape: programmingLanguageShex,
   context: P577PublicationDateContext,
 });
 
 export const p856Website = new Shape<P856Website, P856WebsiteCreateArgs>({
-  id: \\"https://www.wikidata.org/wiki/EntitySchema:E55#P856_website\\",
+  id: 'https://www.wikidata.org/wiki/EntitySchema:E55#P856_website',
   shape: programmingLanguageShex,
   context: P856WebsiteContext,
 });
@@ -1042,35 +1047,39 @@ export type SolidProfileShape = {
 };
 
 export type SolidProfileShapeCreateArgs = {
-  id: string | NamedNode; // the url to match or create the node with e.g. 'https://example.com#this', 'https://example.com/profile/card#me'
+  id?: string | NamedNode; // the url to match or create the node with e.g. 'https://example.com#this', 'https://example.com/profile/card#me'
   fn?: string | Literal; // The formatted name of a person. Example: John Smith
   name?: string | Literal; // An alternate way to define a person's name.
   hasAddress?:
     | URL
     | NamedNode
-    | AddressShape
-    | (URL | NamedNode | AddressShape)[]; // The person's street address.
-  hasEmail?: URL | NamedNode | EmailShape | (URL | NamedNode | EmailShape)[]; // The person's email.
+    | AddressShapeCreateArgs
+    | (URL | NamedNode | AddressShapeCreateArgs)[]; // The person's street address.
+  hasEmail?:
+    | URL
+    | NamedNode
+    | EmailShapeCreateArgs
+    | (URL | NamedNode | EmailShapeCreateArgs)[]; // The person's email.
   hasPhoto?: URL | NamedNode; // A link to the person's photo
   img?: string | Literal; // Photo link but in string form
   hasTelephone?:
     | URL
     | NamedNode
-    | PhoneNumberShape
-    | (URL | NamedNode | PhoneNumberShape)[]; // Person's telephone number
+    | PhoneNumberShapeCreateArgs
+    | (URL | NamedNode | PhoneNumberShapeCreateArgs)[]; // Person's telephone number
   phone?: string | Literal; // An alternative way to define a person's telephone number using a string
   organizationName?: string | Literal; // The name of the organization with which the person is affiliated
   role?: string | Literal; // The name of the person's role in their organization
   trustedApp?:
     | URL
     | NamedNode
-    | TrustedAppShape
-    | (URL | NamedNode | TrustedAppShape)[]; // A list of app origins that are trusted by this user
+    | TrustedAppShapeCreateArgs
+    | (URL | NamedNode | TrustedAppShapeCreateArgs)[]; // A list of app origins that are trusted by this user
   key?:
     | URL
     | NamedNode
-    | RsaPublicKeyShape
-    | (URL | NamedNode | RsaPublicKeyShape)[]; // A list of RSA public keys that are associated with private keys the user holds.
+    | RsaPublicKeyShapeCreateArgs
+    | (URL | NamedNode | RsaPublicKeyShapeCreateArgs)[]; // A list of RSA public keys that are associated with private keys the user holds.
   inbox: URL | NamedNode; // The user's LDP inbox to which apps can post notifications
   preferencesFile?: URL | NamedNode; // The user's preferences
   storage?: URL | NamedNode | (URL | NamedNode)[]; // The location of a Solid storage server related to this WebId
@@ -1097,7 +1106,7 @@ export type AddressShape = {
 };
 
 export type AddressShapeCreateArgs = {
-  id: string | NamedNode; // the url to match or create the node with e.g. 'https://example.com#this', 'https://example.com/profile/card#me'
+  id?: string | NamedNode; // the url to match or create the node with e.g. 'https://example.com#this', 'https://example.com/profile/card#me'
   countryName?: string | Literal; // The name of the user's country of residence
   locality?: string | Literal; // The name of the user's locality (City, Town etc.) of residence
   postalCode?: string | Literal; // The user's postal code
@@ -1127,7 +1136,7 @@ export type EmailShape = {
 };
 
 export type EmailShapeCreateArgs = {
-  id: string | NamedNode; // the url to match or create the node with e.g. 'https://example.com#this', 'https://example.com/profile/card#me'
+  id?: string | NamedNode; // the url to match or create the node with e.g. 'https://example.com#this', 'https://example.com/profile/card#me'
   value: URL | NamedNode; // The value of an email as a mailto link (Example <mailto:jane@example.com>)
 } & {
   type?: (
@@ -1167,7 +1176,7 @@ export type PhoneNumberShape = {
 };
 
 export type PhoneNumberShapeCreateArgs = {
-  id: string | NamedNode; // the url to match or create the node with e.g. 'https://example.com#this', 'https://example.com/profile/card#me'
+  id?: string | NamedNode; // the url to match or create the node with e.g. 'https://example.com#this', 'https://example.com/profile/card#me'
   value: URL | NamedNode; // The value of a phone number as a tel link (Example <tel:555-555-5555>)
 } & {
   type?: (
@@ -1196,7 +1205,7 @@ export type TrustedAppShape = {
 };
 
 export type TrustedAppShapeCreateArgs = {
-  id: string | NamedNode; // the url to match or create the node with e.g. 'https://example.com#this', 'https://example.com/profile/card#me'
+  id?: string | NamedNode; // the url to match or create the node with e.g. 'https://example.com#this', 'https://example.com/profile/card#me'
   mode:
     | (ModeType.Append | ModeType.Control | ModeType.Read | ModeType.Write)[]
     | (ModeType.Append | ModeType.Control | ModeType.Read | ModeType.Write)[][]; // The level of access provided to this origin
@@ -1212,7 +1221,7 @@ export type RsaPublicKeyShape = {
 };
 
 export type RsaPublicKeyShapeCreateArgs = {
-  id: string | NamedNode; // the url to match or create the node with e.g. 'https://example.com#this', 'https://example.com/profile/card#me'
+  id?: string | NamedNode; // the url to match or create the node with e.g. 'https://example.com#this', 'https://example.com/profile/card#me'
   modulus: string | Literal; // RSA Modulus
   exponent: number | Literal; // RSA Exponent
 };
@@ -1220,94 +1229,94 @@ export type RsaPublicKeyShapeCreateArgs = {
 export type RsaPublicKeyShapeUpdateArgs = Partial<RsaPublicKeyShapeCreateArgs>;
 
 export enum SolidProfileShapeType {
-  SchemPerson = \\"http://schema.org/Person\\",
-  FoafPerson = \\"http://xmlns.com/foaf/0.1/Person\\",
+  SchemPerson = 'http://schema.org/Person',
+  FoafPerson = 'http://xmlns.com/foaf/0.1/Person',
 }
 
 export enum EmailShapeType {
-  Dom = \\"http://www.w3.org/2006/vcard/ns#Dom\\",
-  Home = \\"http://www.w3.org/2006/vcard/ns#Home\\",
-  Isdn = \\"http://www.w3.org/2006/vcard/ns#ISDN\\",
-  Internet = \\"http://www.w3.org/2006/vcard/ns#Internet\\",
-  Intl = \\"http://www.w3.org/2006/vcard/ns#Intl\\",
-  Label = \\"http://www.w3.org/2006/vcard/ns#Label\\",
-  Parcel = \\"http://www.w3.org/2006/vcard/ns#Parcel\\",
-  Postal = \\"http://www.w3.org/2006/vcard/ns#Postal\\",
-  Pref = \\"http://www.w3.org/2006/vcard/ns#Pref\\",
-  Work = \\"http://www.w3.org/2006/vcard/ns#Work\\",
-  X400 = \\"http://www.w3.org/2006/vcard/ns#X400\\",
+  Dom = 'http://www.w3.org/2006/vcard/ns#Dom',
+  Home = 'http://www.w3.org/2006/vcard/ns#Home',
+  Isdn = 'http://www.w3.org/2006/vcard/ns#ISDN',
+  Internet = 'http://www.w3.org/2006/vcard/ns#Internet',
+  Intl = 'http://www.w3.org/2006/vcard/ns#Intl',
+  Label = 'http://www.w3.org/2006/vcard/ns#Label',
+  Parcel = 'http://www.w3.org/2006/vcard/ns#Parcel',
+  Postal = 'http://www.w3.org/2006/vcard/ns#Postal',
+  Pref = 'http://www.w3.org/2006/vcard/ns#Pref',
+  Work = 'http://www.w3.org/2006/vcard/ns#Work',
+  X400 = 'http://www.w3.org/2006/vcard/ns#X400',
 }
 
 export enum PhoneNumberShapeType {
-  Dom = \\"http://www.w3.org/2006/vcard/ns#Dom\\",
-  Home = \\"http://www.w3.org/2006/vcard/ns#Home\\",
-  Isdn = \\"http://www.w3.org/2006/vcard/ns#ISDN\\",
-  Internet = \\"http://www.w3.org/2006/vcard/ns#Internet\\",
-  Intl = \\"http://www.w3.org/2006/vcard/ns#Intl\\",
-  Label = \\"http://www.w3.org/2006/vcard/ns#Label\\",
-  Parcel = \\"http://www.w3.org/2006/vcard/ns#Parcel\\",
-  Postal = \\"http://www.w3.org/2006/vcard/ns#Postal\\",
-  Pref = \\"http://www.w3.org/2006/vcard/ns#Pref\\",
-  Work = \\"http://www.w3.org/2006/vcard/ns#Work\\",
-  X400 = \\"http://www.w3.org/2006/vcard/ns#X400\\",
+  Dom = 'http://www.w3.org/2006/vcard/ns#Dom',
+  Home = 'http://www.w3.org/2006/vcard/ns#Home',
+  Isdn = 'http://www.w3.org/2006/vcard/ns#ISDN',
+  Internet = 'http://www.w3.org/2006/vcard/ns#Internet',
+  Intl = 'http://www.w3.org/2006/vcard/ns#Intl',
+  Label = 'http://www.w3.org/2006/vcard/ns#Label',
+  Parcel = 'http://www.w3.org/2006/vcard/ns#Parcel',
+  Postal = 'http://www.w3.org/2006/vcard/ns#Postal',
+  Pref = 'http://www.w3.org/2006/vcard/ns#Pref',
+  Work = 'http://www.w3.org/2006/vcard/ns#Work',
+  X400 = 'http://www.w3.org/2006/vcard/ns#X400',
 }
 
 export enum ModeType {
-  Append = \\"http://www.w3.org/ns/auth/acl#Append\\",
-  Control = \\"http://www.w3.org/ns/auth/acl#Control\\",
-  Read = \\"http://www.w3.org/ns/auth/acl#Read\\",
-  Write = \\"http://www.w3.org/ns/auth/acl#Write\\",
+  Append = 'http://www.w3.org/ns/auth/acl#Append',
+  Control = 'http://www.w3.org/ns/auth/acl#Control',
+  Read = 'http://www.w3.org/ns/auth/acl#Read',
+  Write = 'http://www.w3.org/ns/auth/acl#Write',
 }
 
 export enum SolidProfileShapeContext {
-  type = \\"rdf:type\\",
-  fn = \\"vcard:fn\\",
-  name = \\"foaf:name\\",
-  hasAddress = \\"vcard:hasAddress\\",
-  hasEmail = \\"vcard:hasEmail\\",
-  hasPhoto = \\"vcard:hasPhoto\\",
-  img = \\"foaf:img\\",
-  hasTelephone = \\"vcard:hasTelephone\\",
-  phone = \\"vcard:phone\\",
-  organizationName = \\"vcard:organizationName\\",
-  role = \\"vcard:role\\",
-  trustedApp = \\"acl:trustedApp\\",
-  key = \\"cert:key\\",
-  inbox = \\"ldp:inbox\\",
-  preferencesFile = \\"sp:preferencesFile\\",
-  storage = \\"sp:storage\\",
-  account = \\"solid:account\\",
-  privateTypeIndex = \\"solid:privateTypeIndex\\",
-  publicTypeIndex = \\"solid:publicTypeIndex\\",
-  knows = \\"foaf:knows\\",
+  type = 'rdf:type',
+  fn = 'vcard:fn',
+  name = 'foaf:name',
+  hasAddress = 'vcard:hasAddress',
+  hasEmail = 'vcard:hasEmail',
+  hasPhoto = 'vcard:hasPhoto',
+  img = 'foaf:img',
+  hasTelephone = 'vcard:hasTelephone',
+  phone = 'vcard:phone',
+  organizationName = 'vcard:organizationName',
+  role = 'vcard:role',
+  trustedApp = 'acl:trustedApp',
+  key = 'cert:key',
+  inbox = 'ldp:inbox',
+  preferencesFile = 'sp:preferencesFile',
+  storage = 'sp:storage',
+  account = 'solid:account',
+  privateTypeIndex = 'solid:privateTypeIndex',
+  publicTypeIndex = 'solid:publicTypeIndex',
+  knows = 'foaf:knows',
 }
 
 export enum AddressShapeContext {
-  countryName = \\"vcard:countryName\\",
-  locality = \\"vcard:locality\\",
-  postalCode = \\"vcard:postalCode\\",
-  region = \\"vcard:region\\",
-  streetAddress = \\"vcard:streetAddress\\",
+  countryName = 'vcard:countryName',
+  locality = 'vcard:locality',
+  postalCode = 'vcard:postalCode',
+  region = 'vcard:region',
+  streetAddress = 'vcard:streetAddress',
 }
 
 export enum EmailShapeContext {
-  type = \\"rdf:type\\",
-  value = \\"vcard:value\\",
+  type = 'rdf:type',
+  value = 'vcard:value',
 }
 
 export enum PhoneNumberShapeContext {
-  type = \\"rdf:type\\",
-  value = \\"vcard:value\\",
+  type = 'rdf:type',
+  value = 'vcard:value',
 }
 
 export enum TrustedAppShapeContext {
-  mode = \\"acl:mode\\",
-  origin = \\"acl:origin\\",
+  mode = 'acl:mode',
+  origin = 'acl:origin',
 }
 
 export enum RsaPublicKeyShapeContext {
-  modulus = \\"cert:modulus\\",
-  exponent = \\"cert:exponent\\",
+  modulus = 'cert:modulus',
+  exponent = 'cert:exponent',
 }
 
 export const solidProfileShex = \`
@@ -1438,7 +1447,7 @@ export const solidProfile = new Shape<
   SolidProfileShape,
   SolidProfileShapeCreateArgs
 >({
-  id: \\"https://shaperepo.com/schemas/solidProfile#SolidProfileShape\\",
+  id: 'https://shaperepo.com/schemas/solidProfile#SolidProfileShape',
   shape: solidProfileShex,
   context: SolidProfileShapeContext,
   type: SolidProfileShapeType,
@@ -1452,13 +1461,13 @@ export const solidProfile = new Shape<
 });
 
 export const address = new Shape<AddressShape, AddressShapeCreateArgs>({
-  id: \\"https://shaperepo.com/schemas/solidProfile#AddressShape\\",
+  id: 'https://shaperepo.com/schemas/solidProfile#AddressShape',
   shape: solidProfileShex,
   context: AddressShapeContext,
 });
 
 export const email = new Shape<EmailShape, EmailShapeCreateArgs>({
-  id: \\"https://shaperepo.com/schemas/solidProfile#EmailShape\\",
+  id: 'https://shaperepo.com/schemas/solidProfile#EmailShape',
   shape: solidProfileShex,
   context: EmailShapeContext,
   type: EmailShapeType,
@@ -1468,7 +1477,7 @@ export const phoneNumber = new Shape<
   PhoneNumberShape,
   PhoneNumberShapeCreateArgs
 >({
-  id: \\"https://shaperepo.com/schemas/solidProfile#PhoneNumberShape\\",
+  id: 'https://shaperepo.com/schemas/solidProfile#PhoneNumberShape',
   shape: solidProfileShex,
   context: PhoneNumberShapeContext,
   type: PhoneNumberShapeType,
@@ -1476,17 +1485,17 @@ export const phoneNumber = new Shape<
 
 export const trustedApp = new Shape<TrustedAppShape, TrustedAppShapeCreateArgs>(
   {
-    id: \\"https://shaperepo.com/schemas/solidProfile#TrustedAppShape\\",
+    id: 'https://shaperepo.com/schemas/solidProfile#TrustedAppShape',
     shape: solidProfileShex,
     context: TrustedAppShapeContext,
-  }
+  },
 );
 
 export const rsaPublicKey = new Shape<
   RsaPublicKeyShape,
   RsaPublicKeyShapeCreateArgs
 >({
-  id: \\"https://shaperepo.com/schemas/solidProfile#RSAPublicKeyShape\\",
+  id: 'https://shaperepo.com/schemas/solidProfile#RSAPublicKeyShape',
   shape: solidProfileShex,
   context: RsaPublicKeyShapeContext,
 });
@@ -1554,7 +1563,7 @@ export type State = {
 };
 
 export type StateCreateArgs = {
-  id: string | NamedNode; // the url to match or create the node with e.g. 'https://example.com#this', 'https://example.com/profile/card#me'
+  id?: string | NamedNode; // the url to match or create the node with e.g. 'https://example.com#this', 'https://example.com/profile/card#me'
   p1448: string | string[];
   p1705: string | string[];
   p487: string;
@@ -1618,46 +1627,46 @@ export type StateCreateArgs = {
 export type StateUpdateArgs = Partial<StateCreateArgs>;
 
 export enum P31Type {
-  Q1307214 = \\"http://www.wikidata.org/entity/Q1307214\\",
-  Q5119 = \\"http://www.wikidata.org/entity/Q5119\\",
-  Q645466 = \\"http://www.wikidata.org/entity/Q645466\\",
-  Q186516 = \\"http://www.wikidata.org/entity/Q186516\\",
-  Q23691 = \\"http://www.wikidata.org/entity/Q23691\\",
-  Q17544377 = \\"http://www.wikidata.org/entity/Q17544377\\",
-  Q46865913 = \\"http://www.wikidata.org/entity/Q46865913\\",
-  Q4167836 = \\"http://www.wikidata.org/entity/Q4167836\\",
-  Q4663903 = \\"http://www.wikidata.org/entity/Q4663903\\",
-  Q26884324 = \\"http://www.wikidata.org/entity/Q26884324\\",
-  Q5107 = \\"http://www.wikidata.org/entity/Q5107\\",
-  Q3624078 = \\"http://www.wikidata.org/entity/Q3624078\\",
+  Q1307214 = 'http://www.wikidata.org/entity/Q1307214',
+  Q5119 = 'http://www.wikidata.org/entity/Q5119',
+  Q645466 = 'http://www.wikidata.org/entity/Q645466',
+  Q186516 = 'http://www.wikidata.org/entity/Q186516',
+  Q23691 = 'http://www.wikidata.org/entity/Q23691',
+  Q17544377 = 'http://www.wikidata.org/entity/Q17544377',
+  Q46865913 = 'http://www.wikidata.org/entity/Q46865913',
+  Q4167836 = 'http://www.wikidata.org/entity/Q4167836',
+  Q4663903 = 'http://www.wikidata.org/entity/Q4663903',
+  Q26884324 = 'http://www.wikidata.org/entity/Q26884324',
+  Q5107 = 'http://www.wikidata.org/entity/Q5107',
+  Q3624078 = 'http://www.wikidata.org/entity/Q3624078',
 }
 
 export enum StateContext {
-  p31 = \\"wdt:p31\\",
-  p1448 = \\"wdt:p1448\\",
-  p1705 = \\"wdt:p1705\\",
-  p487 = \\"wdt:p487\\",
-  p30 = \\"wdt:p30\\",
-  p3896 = \\"wdt:p3896\\",
-  p935 = \\"wdt:p935\\",
-  p373 = \\"wdt:p373\\",
-  p3722 = \\"wdt:p3722\\",
-  p910 = \\"wdt:p910\\",
-  p5125 = \\"wdt:p5125\\",
-  p1151 = \\"wdt:p1151\\",
-  p1792 = \\"wdt:p1792\\",
-  p1464 = \\"wdt:p1464\\",
-  p1465 = \\"wdt:p1465\\",
-  p1791 = \\"wdt:p1791\\",
-  p1740 = \\"wdt:p1740\\",
-  p2633 = \\"wdt:p2633\\",
-  p2184 = \\"wdt:p2184\\",
-  p948 = \\"wdt:p948\\",
-  p85 = \\"wdt:p85\\",
-  p163 = \\"wdt:p163\\",
-  p237 = \\"wdt:p237\\",
-  p36 = \\"wdt:p36\\",
-  p122 = \\"wdt:p122\\",
+  p31 = 'wdt:p31',
+  p1448 = 'wdt:p1448',
+  p1705 = 'wdt:p1705',
+  p487 = 'wdt:p487',
+  p30 = 'wdt:p30',
+  p3896 = 'wdt:p3896',
+  p935 = 'wdt:p935',
+  p373 = 'wdt:p373',
+  p3722 = 'wdt:p3722',
+  p910 = 'wdt:p910',
+  p5125 = 'wdt:p5125',
+  p1151 = 'wdt:p1151',
+  p1792 = 'wdt:p1792',
+  p1464 = 'wdt:p1464',
+  p1465 = 'wdt:p1465',
+  p1791 = 'wdt:p1791',
+  p1740 = 'wdt:p1740',
+  p2633 = 'wdt:p2633',
+  p2184 = 'wdt:p2184',
+  p948 = 'wdt:p948',
+  p85 = 'wdt:p85',
+  p163 = 'wdt:p163',
+  p237 = 'wdt:p237',
+  p36 = 'wdt:p36',
+  p122 = 'wdt:p122',
 }
 
 export const sovereignStateShex = \`
@@ -1700,7 +1709,7 @@ sst:state EXTRA wdt:P31 {
 \`;
 
 export const state = new Shape<State, StateCreateArgs>({
-  id: \\"https://www.wikidata.org/wiki/EntitySchema:E32#state\\",
+  id: 'https://www.wikidata.org/wiki/EntitySchema:E32#state',
   shape: sovereignStateShex,
   context: StateContext,
 });
@@ -1710,9 +1719,9 @@ export const state = new Shape<State, StateCreateArgs>({
 
 exports[`matches snapshots without config file 1`] = `
 Array [
-  "import { NamedNode, Literal } from \\"rdflib\\";
+  "import { NamedNode, Literal } from 'rdflib';
 
-import { Shape } from \\"shex-methods\\";
+import { Shape } from 'shex-methods';
 
 export type SolidProfileShape = {
   id: string; // the url of a node of this shape
@@ -1743,35 +1752,39 @@ export type SolidProfileShape = {
 };
 
 export type SolidProfileShapeCreateArgs = {
-  id: string | NamedNode; // the url to match or create the node with e.g. 'https://example.com#this', 'https://example.com/profile/card#me'
+  id?: string | NamedNode; // the url to match or create the node with e.g. 'https://example.com#this', 'https://example.com/profile/card#me'
   fn?: string | Literal; // The formatted name of a person. Example: John Smith
   name?: string | Literal; // An alternate way to define a person's name.
   hasAddress?:
     | URL
     | NamedNode
-    | AddressShape
-    | (URL | NamedNode | AddressShape)[]; // The person's street address.
-  hasEmail?: URL | NamedNode | EmailShape | (URL | NamedNode | EmailShape)[]; // The person's email.
+    | AddressShapeCreateArgs
+    | (URL | NamedNode | AddressShapeCreateArgs)[]; // The person's street address.
+  hasEmail?:
+    | URL
+    | NamedNode
+    | EmailShapeCreateArgs
+    | (URL | NamedNode | EmailShapeCreateArgs)[]; // The person's email.
   hasPhoto?: URL | NamedNode; // A link to the person's photo
   img?: string | Literal; // Photo link but in string form
   hasTelephone?:
     | URL
     | NamedNode
-    | PhoneNumberShape
-    | (URL | NamedNode | PhoneNumberShape)[]; // Person's telephone number
+    | PhoneNumberShapeCreateArgs
+    | (URL | NamedNode | PhoneNumberShapeCreateArgs)[]; // Person's telephone number
   phone?: string | Literal; // An alternative way to define a person's telephone number using a string
   organizationName?: string | Literal; // The name of the organization with which the person is affiliated
   role?: string | Literal; // The name of the person's role in their organization
   trustedApp?:
     | URL
     | NamedNode
-    | TrustedAppShape
-    | (URL | NamedNode | TrustedAppShape)[]; // A list of app origins that are trusted by this user
+    | TrustedAppShapeCreateArgs
+    | (URL | NamedNode | TrustedAppShapeCreateArgs)[]; // A list of app origins that are trusted by this user
   key?:
     | URL
     | NamedNode
-    | RsaPublicKeyShape
-    | (URL | NamedNode | RsaPublicKeyShape)[]; // A list of RSA public keys that are associated with private keys the user holds.
+    | RsaPublicKeyShapeCreateArgs
+    | (URL | NamedNode | RsaPublicKeyShapeCreateArgs)[]; // A list of RSA public keys that are associated with private keys the user holds.
   inbox: URL | NamedNode; // The user's LDP inbox to which apps can post notifications
   preferencesFile?: URL | NamedNode; // The user's preferences
   storage?: URL | NamedNode | (URL | NamedNode)[]; // The location of a Solid storage server related to this WebId
@@ -1798,7 +1811,7 @@ export type AddressShape = {
 };
 
 export type AddressShapeCreateArgs = {
-  id: string | NamedNode; // the url to match or create the node with e.g. 'https://example.com#this', 'https://example.com/profile/card#me'
+  id?: string | NamedNode; // the url to match or create the node with e.g. 'https://example.com#this', 'https://example.com/profile/card#me'
   countryName?: string | Literal; // The name of the user's country of residence
   locality?: string | Literal; // The name of the user's locality (City, Town etc.) of residence
   postalCode?: string | Literal; // The user's postal code
@@ -1828,7 +1841,7 @@ export type EmailShape = {
 };
 
 export type EmailShapeCreateArgs = {
-  id: string | NamedNode; // the url to match or create the node with e.g. 'https://example.com#this', 'https://example.com/profile/card#me'
+  id?: string | NamedNode; // the url to match or create the node with e.g. 'https://example.com#this', 'https://example.com/profile/card#me'
   value: URL | NamedNode; // The value of an email as a mailto link (Example <mailto:jane@example.com>)
 } & {
   type?: (
@@ -1868,7 +1881,7 @@ export type PhoneNumberShape = {
 };
 
 export type PhoneNumberShapeCreateArgs = {
-  id: string | NamedNode; // the url to match or create the node with e.g. 'https://example.com#this', 'https://example.com/profile/card#me'
+  id?: string | NamedNode; // the url to match or create the node with e.g. 'https://example.com#this', 'https://example.com/profile/card#me'
   value: URL | NamedNode; // The value of a phone number as a tel link (Example <tel:555-555-5555>)
 } & {
   type?: (
@@ -1897,7 +1910,7 @@ export type TrustedAppShape = {
 };
 
 export type TrustedAppShapeCreateArgs = {
-  id: string | NamedNode; // the url to match or create the node with e.g. 'https://example.com#this', 'https://example.com/profile/card#me'
+  id?: string | NamedNode; // the url to match or create the node with e.g. 'https://example.com#this', 'https://example.com/profile/card#me'
   mode:
     | (ModeType.Append | ModeType.Control | ModeType.Read | ModeType.Write)[]
     | (ModeType.Append | ModeType.Control | ModeType.Read | ModeType.Write)[][]; // The level of access provided to this origin
@@ -1913,7 +1926,7 @@ export type RsaPublicKeyShape = {
 };
 
 export type RsaPublicKeyShapeCreateArgs = {
-  id: string | NamedNode; // the url to match or create the node with e.g. 'https://example.com#this', 'https://example.com/profile/card#me'
+  id?: string | NamedNode; // the url to match or create the node with e.g. 'https://example.com#this', 'https://example.com/profile/card#me'
   modulus: string | Literal; // RSA Modulus
   exponent: number | Literal; // RSA Exponent
 };
@@ -1921,94 +1934,94 @@ export type RsaPublicKeyShapeCreateArgs = {
 export type RsaPublicKeyShapeUpdateArgs = Partial<RsaPublicKeyShapeCreateArgs>;
 
 export enum SolidProfileShapeType {
-  SchemPerson = \\"http://schema.org/Person\\",
-  FoafPerson = \\"http://xmlns.com/foaf/0.1/Person\\",
+  SchemPerson = 'http://schema.org/Person',
+  FoafPerson = 'http://xmlns.com/foaf/0.1/Person',
 }
 
 export enum EmailShapeType {
-  Dom = \\"http://www.w3.org/2006/vcard/ns#Dom\\",
-  Home = \\"http://www.w3.org/2006/vcard/ns#Home\\",
-  Isdn = \\"http://www.w3.org/2006/vcard/ns#ISDN\\",
-  Internet = \\"http://www.w3.org/2006/vcard/ns#Internet\\",
-  Intl = \\"http://www.w3.org/2006/vcard/ns#Intl\\",
-  Label = \\"http://www.w3.org/2006/vcard/ns#Label\\",
-  Parcel = \\"http://www.w3.org/2006/vcard/ns#Parcel\\",
-  Postal = \\"http://www.w3.org/2006/vcard/ns#Postal\\",
-  Pref = \\"http://www.w3.org/2006/vcard/ns#Pref\\",
-  Work = \\"http://www.w3.org/2006/vcard/ns#Work\\",
-  X400 = \\"http://www.w3.org/2006/vcard/ns#X400\\",
+  Dom = 'http://www.w3.org/2006/vcard/ns#Dom',
+  Home = 'http://www.w3.org/2006/vcard/ns#Home',
+  Isdn = 'http://www.w3.org/2006/vcard/ns#ISDN',
+  Internet = 'http://www.w3.org/2006/vcard/ns#Internet',
+  Intl = 'http://www.w3.org/2006/vcard/ns#Intl',
+  Label = 'http://www.w3.org/2006/vcard/ns#Label',
+  Parcel = 'http://www.w3.org/2006/vcard/ns#Parcel',
+  Postal = 'http://www.w3.org/2006/vcard/ns#Postal',
+  Pref = 'http://www.w3.org/2006/vcard/ns#Pref',
+  Work = 'http://www.w3.org/2006/vcard/ns#Work',
+  X400 = 'http://www.w3.org/2006/vcard/ns#X400',
 }
 
 export enum PhoneNumberShapeType {
-  Dom = \\"http://www.w3.org/2006/vcard/ns#Dom\\",
-  Home = \\"http://www.w3.org/2006/vcard/ns#Home\\",
-  Isdn = \\"http://www.w3.org/2006/vcard/ns#ISDN\\",
-  Internet = \\"http://www.w3.org/2006/vcard/ns#Internet\\",
-  Intl = \\"http://www.w3.org/2006/vcard/ns#Intl\\",
-  Label = \\"http://www.w3.org/2006/vcard/ns#Label\\",
-  Parcel = \\"http://www.w3.org/2006/vcard/ns#Parcel\\",
-  Postal = \\"http://www.w3.org/2006/vcard/ns#Postal\\",
-  Pref = \\"http://www.w3.org/2006/vcard/ns#Pref\\",
-  Work = \\"http://www.w3.org/2006/vcard/ns#Work\\",
-  X400 = \\"http://www.w3.org/2006/vcard/ns#X400\\",
+  Dom = 'http://www.w3.org/2006/vcard/ns#Dom',
+  Home = 'http://www.w3.org/2006/vcard/ns#Home',
+  Isdn = 'http://www.w3.org/2006/vcard/ns#ISDN',
+  Internet = 'http://www.w3.org/2006/vcard/ns#Internet',
+  Intl = 'http://www.w3.org/2006/vcard/ns#Intl',
+  Label = 'http://www.w3.org/2006/vcard/ns#Label',
+  Parcel = 'http://www.w3.org/2006/vcard/ns#Parcel',
+  Postal = 'http://www.w3.org/2006/vcard/ns#Postal',
+  Pref = 'http://www.w3.org/2006/vcard/ns#Pref',
+  Work = 'http://www.w3.org/2006/vcard/ns#Work',
+  X400 = 'http://www.w3.org/2006/vcard/ns#X400',
 }
 
 export enum ModeType {
-  Append = \\"http://www.w3.org/ns/auth/acl#Append\\",
-  Control = \\"http://www.w3.org/ns/auth/acl#Control\\",
-  Read = \\"http://www.w3.org/ns/auth/acl#Read\\",
-  Write = \\"http://www.w3.org/ns/auth/acl#Write\\",
+  Append = 'http://www.w3.org/ns/auth/acl#Append',
+  Control = 'http://www.w3.org/ns/auth/acl#Control',
+  Read = 'http://www.w3.org/ns/auth/acl#Read',
+  Write = 'http://www.w3.org/ns/auth/acl#Write',
 }
 
 export enum SolidProfileShapeContext {
-  type = \\"rdf:type\\",
-  fn = \\"vcard:fn\\",
-  name = \\"foaf:name\\",
-  hasAddress = \\"vcard:hasAddress\\",
-  hasEmail = \\"vcard:hasEmail\\",
-  hasPhoto = \\"vcard:hasPhoto\\",
-  img = \\"foaf:img\\",
-  hasTelephone = \\"vcard:hasTelephone\\",
-  phone = \\"vcard:phone\\",
-  organizationName = \\"vcard:organizationName\\",
-  role = \\"vcard:role\\",
-  trustedApp = \\"acl:trustedApp\\",
-  key = \\"cert:key\\",
-  inbox = \\"ldp:inbox\\",
-  preferencesFile = \\"sp:preferencesFile\\",
-  storage = \\"sp:storage\\",
-  account = \\"solid:account\\",
-  privateTypeIndex = \\"solid:privateTypeIndex\\",
-  publicTypeIndex = \\"solid:publicTypeIndex\\",
-  knows = \\"foaf:knows\\",
+  type = 'rdf:type',
+  fn = 'vcard:fn',
+  name = 'foaf:name',
+  hasAddress = 'vcard:hasAddress',
+  hasEmail = 'vcard:hasEmail',
+  hasPhoto = 'vcard:hasPhoto',
+  img = 'foaf:img',
+  hasTelephone = 'vcard:hasTelephone',
+  phone = 'vcard:phone',
+  organizationName = 'vcard:organizationName',
+  role = 'vcard:role',
+  trustedApp = 'acl:trustedApp',
+  key = 'cert:key',
+  inbox = 'ldp:inbox',
+  preferencesFile = 'sp:preferencesFile',
+  storage = 'sp:storage',
+  account = 'solid:account',
+  privateTypeIndex = 'solid:privateTypeIndex',
+  publicTypeIndex = 'solid:publicTypeIndex',
+  knows = 'foaf:knows',
 }
 
 export enum AddressShapeContext {
-  countryName = \\"vcard:countryName\\",
-  locality = \\"vcard:locality\\",
-  postalCode = \\"vcard:postalCode\\",
-  region = \\"vcard:region\\",
-  streetAddress = \\"vcard:streetAddress\\",
+  countryName = 'vcard:countryName',
+  locality = 'vcard:locality',
+  postalCode = 'vcard:postalCode',
+  region = 'vcard:region',
+  streetAddress = 'vcard:streetAddress',
 }
 
 export enum EmailShapeContext {
-  type = \\"rdf:type\\",
-  value = \\"vcard:value\\",
+  type = 'rdf:type',
+  value = 'vcard:value',
 }
 
 export enum PhoneNumberShapeContext {
-  type = \\"rdf:type\\",
-  value = \\"vcard:value\\",
+  type = 'rdf:type',
+  value = 'vcard:value',
 }
 
 export enum TrustedAppShapeContext {
-  mode = \\"acl:mode\\",
-  origin = \\"acl:origin\\",
+  mode = 'acl:mode',
+  origin = 'acl:origin',
 }
 
 export enum RsaPublicKeyShapeContext {
-  modulus = \\"cert:modulus\\",
-  exponent = \\"cert:exponent\\",
+  modulus = 'cert:modulus',
+  exponent = 'cert:exponent',
 }
 
 export const solidProfileShex = \`
@@ -2139,7 +2152,7 @@ export const solidProfile = new Shape<
   SolidProfileShape,
   SolidProfileShapeCreateArgs
 >({
-  id: \\"https://shaperepo.com/schemas/solidProfile#SolidProfileShape\\",
+  id: 'https://shaperepo.com/schemas/solidProfile#SolidProfileShape',
   shape: solidProfileShex,
   context: SolidProfileShapeContext,
   type: SolidProfileShapeType,
@@ -2153,13 +2166,13 @@ export const solidProfile = new Shape<
 });
 
 export const address = new Shape<AddressShape, AddressShapeCreateArgs>({
-  id: \\"https://shaperepo.com/schemas/solidProfile#AddressShape\\",
+  id: 'https://shaperepo.com/schemas/solidProfile#AddressShape',
   shape: solidProfileShex,
   context: AddressShapeContext,
 });
 
 export const email = new Shape<EmailShape, EmailShapeCreateArgs>({
-  id: \\"https://shaperepo.com/schemas/solidProfile#EmailShape\\",
+  id: 'https://shaperepo.com/schemas/solidProfile#EmailShape',
   shape: solidProfileShex,
   context: EmailShapeContext,
   type: EmailShapeType,
@@ -2169,7 +2182,7 @@ export const phoneNumber = new Shape<
   PhoneNumberShape,
   PhoneNumberShapeCreateArgs
 >({
-  id: \\"https://shaperepo.com/schemas/solidProfile#PhoneNumberShape\\",
+  id: 'https://shaperepo.com/schemas/solidProfile#PhoneNumberShape',
   shape: solidProfileShex,
   context: PhoneNumberShapeContext,
   type: PhoneNumberShapeType,
@@ -2177,17 +2190,17 @@ export const phoneNumber = new Shape<
 
 export const trustedApp = new Shape<TrustedAppShape, TrustedAppShapeCreateArgs>(
   {
-    id: \\"https://shaperepo.com/schemas/solidProfile#TrustedAppShape\\",
+    id: 'https://shaperepo.com/schemas/solidProfile#TrustedAppShape',
     shape: solidProfileShex,
     context: TrustedAppShapeContext,
-  }
+  },
 );
 
 export const rsaPublicKey = new Shape<
   RsaPublicKeyShape,
   RsaPublicKeyShapeCreateArgs
 >({
-  id: \\"https://shaperepo.com/schemas/solidProfile#RSAPublicKeyShape\\",
+  id: 'https://shaperepo.com/schemas/solidProfile#RSAPublicKeyShape',
   shape: solidProfileShex,
   context: RsaPublicKeyShapeContext,
 });

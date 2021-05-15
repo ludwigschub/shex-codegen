@@ -1,12 +1,13 @@
-import ShExParser from "@shexjs/parser";
-import { readFileSync, rmSync, statSync } from "fs";
-import { outputFile } from "fs-extra";
-import prettier from "prettier";
-import find from "findit";
-import path from "path";
+import { readFileSync, rmSync, statSync } from 'fs';
+import path from 'path';
 
-import { readConfig } from "./config";
-import { generateShexExport } from "./visitors";
+import ShExParser from '@shexjs/parser';
+import { outputFile } from 'fs-extra';
+import prettier from 'prettier';
+import find from 'findit';
+
+import { readConfig } from './config';
+import { generateShexExport } from './visitors';
 
 interface CodegenConfig {
   schema: string;
@@ -17,7 +18,7 @@ interface CodegenConfig {
 export const generate = (
   schema?: string,
   generates?: Record<string, string[]>,
-  config?: CodegenConfig
+  config?: CodegenConfig,
 ) =>
   new Promise(async (resolve, reject) => {
     // Prioritise function args over config file
@@ -26,7 +27,7 @@ export const generate = (
     generates = generates ?? config.generates;
     if (!schema || !generates || !config) {
       reject(
-        `No valid config found at ${process.cwd()}shex-codegen.yml or passed as an argument`
+        `No valid config found at ${process.cwd()}shex-codegen.yml or passed as an argument`,
       );
     }
 
@@ -37,7 +38,9 @@ export const generate = (
     generatesFiles.forEach((file: string) => {
       try {
         rmSync(file);
-      } catch {}
+      } catch (err) {
+        console.log('No previously generated file found for path ' + file);
+      }
     });
 
     const workPath = schema ?? process.cwd();
@@ -50,27 +53,27 @@ export const generate = (
           (visitor: string) => {
             const visitorPath = `./visitors/${visitor}/${visitor}.js`;
             return require(visitorPath).default;
-          }
+          },
         ),
-      }))
+      })),
     );
 
     const visitFile = (generates: string, schemaFile: string) => {
       if (
         !path.parse(generates).ext ||
-        (path.parse(generates).ext !== ".ts" &&
-          path.parse(generates).ext !== ".tsx")
+        (path.parse(generates).ext !== '.ts' &&
+          path.parse(generates).ext !== '.tsx')
       ) {
         throw Error(
-          "Unsupported file extension: " +
+          'Unsupported file extension: ' +
             path.parse(generates).ext +
-            ". Supported types are .ts & .tsx."
+            '. Supported types are .ts & .tsx.',
         );
       }
       visitors[generates].forEach((visitor: any, visitorIndex: number) => {
         if ((generated[generates] as Promise<string>[] | undefined)?.push)
           generated[generates]?.push(
-            readShexAndGenerate(visitor, schemaFile, visitorIndex === 0)
+            readShexAndGenerate(visitor, schemaFile, visitorIndex === 0),
           );
         else
           generated[generates] = [
@@ -87,19 +90,19 @@ export const generate = (
               (allImports: string[], visitor: any) => {
                 const visitorImport =
                   visitor?.generateImports &&
-                  visitor?.generateImports().join("\n");
+                  visitor?.generateImports().join('\n');
                 return visitorImport
                   ? [...allImports, visitorImport]
                   : allImports;
               },
-              []
+              [],
             );
             const generatedContent = [...imports, ...generated].join(
-              "\n"
+              '\n',
             ) as string;
             return writeShapesFile(file, generatedContent);
           });
-        })
+        }),
       );
     };
 
@@ -112,15 +115,15 @@ export const generate = (
       const finder = find(workPath);
 
       // The listeners for files found
-      finder.on("file", async function (file: string) {
-        if (file.endsWith(config?.matchSuffix ?? "shex")) {
+      finder.on('file', async function (file: string) {
+        if (file.endsWith(config?.matchSuffix ?? 'shex')) {
           generatesFiles.forEach((generatesFile: string) => {
             visitFile(generatesFile, file);
           });
         }
       });
 
-      finder.on("end", async function () {
+      finder.on('end', async function () {
         resolve(await writeGenerated());
       });
     }
@@ -129,13 +132,13 @@ export const generate = (
 const readShexAndGenerate = async (
   visitor: any,
   file: string,
-  generateShex?: boolean
+  generateShex?: boolean,
 ) => {
   // Read shape file
-  const shapeFile = readFileSync(file, { encoding: "utf8" });
+  const shapeFile = readFileSync(file, { encoding: 'utf8' });
 
   // Parse and visit shape
-  const parser = ShExParser.construct("http://example.com/", null, {
+  const parser = ShExParser.construct('http://example.com/', null, {
     index: true,
   });
   const shapeSchema = parser.parse(shapeFile);
@@ -143,9 +146,9 @@ const readShexAndGenerate = async (
   const generated = visitor.visitSchema(shapeSchema, fileName);
 
   if (generateShex) {
-    return [...generated, generateShexExport(fileName, shapeFile)].join("\n");
+    return [...generated, generateShexExport(fileName, shapeFile)].join('\n');
   } else {
-    return generated.join("\n");
+    return generated.join('\n');
   }
 };
 
@@ -158,7 +161,7 @@ const writeShapesFile = (generates: string, content: string) => {
       filepath: generates,
     });
 
-    outputFile(generates, formatted, "utf-8", (err) => {
+    outputFile(generates, formatted, 'utf-8', (err) => {
       err ? reject(err) : resolve(formatted);
     });
   });

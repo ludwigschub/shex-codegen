@@ -1,5 +1,6 @@
-import camelcase from "camelcase";
 import path from "path";
+
+import camelcase from "camelcase";
 
 export function normalizeUrl(
   url: string,
