@@ -3,6 +3,7 @@
   "version": "0.3.10",
   "description": "",
   "main": "lib/index.js",
+  "browser": "lib/browser.js",
   "scripts": {
     "build": "rimraf ./lib && tsc",
     "develop": "concurrently \"yarn build -w\" \"nodemon --watch ./lib --watch shex-codegen.yml ./node_modules/.bin/jest test\"",
