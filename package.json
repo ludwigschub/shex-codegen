@@ -3,8 +3,9 @@
   "version": "0.3.12",
   "description": "",
   "main": "lib/index.js",
-  "browser": "lib/browser.js",
+  "browser": "browser/browser.js",
   "scripts": {
+    "build:browser": "rimraf ./browser && tsc --outDir browser --module esnext",
     "build": "rimraf ./lib && tsc",
     "develop": "concurrently \"yarn build -w\" \"nodemon --watch ./lib --watch shex-codegen.yml ./node_modules/.bin/jest test\"",
     "test": "rimraf ./test/generated && mkdir ./test/generated && jest test",

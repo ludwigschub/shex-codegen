@@ -5,16 +5,12 @@ import { generateShexExport } from './visitors/typescript/generates';
 
 export type BrowserConfig = {
   schema: string;
-  visitors: string[];
+  visitors: any[];
   name: string;
 };
 
 export const generate = ({ schema, visitors, name }: BrowserConfig) => {
-  const visitorsClasses = visitors.map((visitor: string) => {
-    const visitorPath = `./visitors/${visitor}/${visitor}.js`;
-    return require(visitorPath).default;
-  });
-  const generated = visitorsClasses.map((visitor: any, index: number) => {
+  const generated = visitors.map((visitor: any, index: number) => {
     // Parse and visit shape
     const parser = ShExParser.construct('http://example.com/', null, {
       index: true,
@@ -28,7 +24,7 @@ export const generate = ({ schema, visitors, name }: BrowserConfig) => {
     }
   });
 
-  const imports = visitorsClasses.reduce(
+  const imports = visitors.reduce(
     (allImports: string[], visitor: any) => {
       const visitorImport =
         visitor?.generateImports && visitor?.generateImports().join('\n');
