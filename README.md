@@ -1,6 +1,6 @@
 # shex-codegen
 
-A library to generate typescript from Shape Expressions.
+A library to generate TypeScript code from Shape Expressions.
 
 [Usage](#usage) | [Visitors](#visitors) | [Features](#features) | [Contributing](#contributing)
 
@@ -37,7 +37,7 @@ or
 
 ## Visitors
 
-### Typescript
+### TypeScript
 
 An example Shape Expression like:
 ```
@@ -102,7 +102,7 @@ export enum SolidProfileShapeContext {
 }
 ```
 
-### Typescript methods
+### TypeScript methods
 For this visitor you will need to additionaly install `shex-methods`
 
 With a config like this:
@@ -133,12 +133,12 @@ You can then use the Shape object's methods to read, create, update or delete no
 
 Existing capabilities:
 * Configure codegen with config file
-* Generate Typescript types and enums from shex
-* Typescript operations generator
+* Generate TypeScript types and enums from shex
+* TypeScript operations generator
 
 Some planned features include:
-* Typescript publisher/subscriber generator (in planning)
-* Typescript react hooks (in planning)
+* TypeScript publisher/subscriber generator (in planning)
+* TypeScript react hooks (in planning)
 
 ## Contributing
 
