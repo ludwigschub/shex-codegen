@@ -18,7 +18,7 @@ it('matches snapshots without config file', async () => {
   expect(generated).toMatchSnapshot();
 });
 
-it('matches snapshots when invoked programmatically', async () => {
+it('matches snapshots when invoked from a browser env', async () => {
   const schemaFile = readFileSync('test/shapes/solidProfile.shex', {
     encoding: 'utf-8',
   });

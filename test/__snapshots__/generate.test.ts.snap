@@ -1,6 +1,6 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
-exports[`matches snapshots when invoked programmatically 1`] = `
+exports[`matches snapshots when invoked from a browser env 1`] = `
 "import { NamedNode, Literal } from 'rdflib';
 
 import { Shape } from 'shex-methods';
@@ -495,135 +495,6 @@ Array [
 
 import { Shape } from 'shex-methods';
 
-export type BasicContainerShape = {
-  id: string; // the url of a node of this shape
-  contains?: ResourceShape | ResourceShape[]; // Contains these Resources
-  size: number; // Size of Container
-  mtime: number; // Time of Container creation created
-  modified: Date; // Time the Container was modified
-} & {
-  type: (
-    | BasicContainerShapeType.BasicContainer
-    | BasicContainerShapeType.Container
-  )[]; // Defines the node as a Container
-};
-
-export type BasicContainerShapeCreateArgs = {
-  id?: string | NamedNode; // the url to match or create the node with e.g. 'https://example.com#this', 'https://example.com/profile/card#me'
-  contains?:
-    | URL
-    | NamedNode
-    | ResourceShapeCreateArgs
-    | (URL | NamedNode | ResourceShapeCreateArgs)[]; // Contains these Resources
-  size: number | Literal; // Size of Container
-  mtime: number | Literal; // Time of Container creation created
-  modified: Date | Literal; // Time the Container was modified
-} & {
-  type: (
-    | BasicContainerShapeType.BasicContainer
-    | BasicContainerShapeType.Container
-  )[]; // Defines the node as a Container
-};
-
-export type BasicContainerShapeUpdateArgs = Partial<BasicContainerShapeCreateArgs>;
-
-export type ResourceShape = {
-  id: string; // the url of a node of this shape
-  size: number; // Size of Container
-  mtime: number; // Time of Container creation created
-  modified: Date; // Time the Container was modified
-} & {
-  type: ResourceShapeType.Resource; // Defines the node as a Resource
-};
-
-export type ResourceShapeCreateArgs = {
-  id?: string | NamedNode; // the url to match or create the node with e.g. 'https://example.com#this', 'https://example.com/profile/card#me'
-  size: number | Literal; // Size of Container
-  mtime: number | Literal; // Time of Container creation created
-  modified: Date | Literal; // Time the Container was modified
-} & {
-  type: ResourceShapeType.Resource; // Defines the node as a Resource
-};
-
-export type ResourceShapeUpdateArgs = Partial<ResourceShapeCreateArgs>;
-
-export enum BasicContainerShapeType {
-  BasicContainer = 'http://www.w3.org/ns/ldp#BasicContainer',
-  Container = 'http://www.w3.org/ns/ldp#Container',
-}
-
-export enum ResourceShapeType {
-  Resource = 'http://www.w3.org/ns/ldp#Resource',
-}
-
-export enum BasicContainerShapeContext {
-  type = 'rdf:type',
-  contains = 'ldp:contains',
-  size = 'st:size',
-  mtime = 'st:mtime',
-  modified = 'terms:modified',
-}
-
-export enum ResourceShapeContext {
-  type = 'rdf:type',
-  size = 'st:size',
-  mtime = 'st:mtime',
-  modified = 'terms:modified',
-}
-
-export const ldpShapesShex = \`
-PREFIX ldp: <http://www.w3.org/ns/ldp#>
-PREFIX st: <http://www.w3.org/ns/posix/stat#>
-PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
-PREFIX terms: <http://purl.org/dc/terms/>
-PREFIX xsd: <http://www.w3.org/2001/XMLSchema#>
-PREFIX tur: <http://www.w3.org/ns/iana/media-types/text/turtle#>
-
-ldp:BasicContainerShape EXTRA a {
-  a [ ldp:BasicContainer ]
-    // rdfs:comment  \\"Defines the node as a Container\\" ;
-  a [ ldp:Container ]
-    // rdfs:comment  \\"Defines the node as a Container\\" ;
-  ldp:contains @ldp:ResourceShape *
-    // rdfs:comment  \\"Contains these Resources\\" ;
-  st:size xsd:integer
-    // rdfs:comment  \\"Size of Container\\" ;
-  st:mtime xsd:decimal 
-    // rdfs:comment  \\"Time of Container creation created\\" ;
-  terms:modified xsd:dateTime 
-    // rdfs:comment  \\"Time the Container was modified\\" ;
-}
-
-ldp:ResourceShape EXTRA a {
-  a [ ldp:Resource ]
-    // rdfs:comment  \\"Defines the node as a Resource\\" ;
-  st:size xsd:integer
-    // rdfs:comment  \\"Size of Container\\" ;
-  st:mtime xsd:decimal
-    // rdfs:comment  \\"Time of Container creation created\\" ;
-  terms:modified xsd:dateTime
-    // rdfs:comment  \\"Time the Container was modified\\" ;
-}
-\`;
-
-export const basicContainer = new Shape<
-  BasicContainerShape,
-  BasicContainerShapeCreateArgs
->({
-  id: 'http://www.w3.org/ns/ldp#BasicContainerShape',
-  shape: ldpShapesShex,
-  context: BasicContainerShapeContext,
-  type: BasicContainerShapeType,
-  childContexts: [ResourceShapeContext],
-});
-
-export const resource = new Shape<ResourceShape, ResourceShapeCreateArgs>({
-  id: 'http://www.w3.org/ns/ldp#ResourceShape',
-  shape: ldpShapesShex,
-  context: ResourceShapeContext,
-  type: ResourceShapeType,
-});
-
 export type Cryptocurrency = {
   id: string; // the url of a node of this shape
   p279?: {
@@ -826,6 +697,135 @@ export const cryptocurrency = new Shape<
   id: 'https://www.wikidata.org/wiki/EntitySchema:E82#cryptocurrency',
   shape: cryptocurrencyShex,
   context: CryptocurrencyContext,
+});
+
+export type BasicContainerShape = {
+  id: string; // the url of a node of this shape
+  contains?: ResourceShape | ResourceShape[]; // Contains these Resources
+  size: number; // Size of Container
+  mtime: number; // Time of Container creation created
+  modified: Date; // Time the Container was modified
+} & {
+  type: (
+    | BasicContainerShapeType.BasicContainer
+    | BasicContainerShapeType.Container
+  )[]; // Defines the node as a Container
+};
+
+export type BasicContainerShapeCreateArgs = {
+  id?: string | NamedNode; // the url to match or create the node with e.g. 'https://example.com#this', 'https://example.com/profile/card#me'
+  contains?:
+    | URL
+    | NamedNode
+    | ResourceShapeCreateArgs
+    | (URL | NamedNode | ResourceShapeCreateArgs)[]; // Contains these Resources
+  size: number | Literal; // Size of Container
+  mtime: number | Literal; // Time of Container creation created
+  modified: Date | Literal; // Time the Container was modified
+} & {
+  type: (
+    | BasicContainerShapeType.BasicContainer
+    | BasicContainerShapeType.Container
+  )[]; // Defines the node as a Container
+};
+
+export type BasicContainerShapeUpdateArgs = Partial<BasicContainerShapeCreateArgs>;
+
+export type ResourceShape = {
+  id: string; // the url of a node of this shape
+  size: number; // Size of Container
+  mtime: number; // Time of Container creation created
+  modified: Date; // Time the Container was modified
+} & {
+  type: ResourceShapeType.Resource; // Defines the node as a Resource
+};
+
+export type ResourceShapeCreateArgs = {
+  id?: string | NamedNode; // the url to match or create the node with e.g. 'https://example.com#this', 'https://example.com/profile/card#me'
+  size: number | Literal; // Size of Container
+  mtime: number | Literal; // Time of Container creation created
+  modified: Date | Literal; // Time the Container was modified
+} & {
+  type: ResourceShapeType.Resource; // Defines the node as a Resource
+};
+
+export type ResourceShapeUpdateArgs = Partial<ResourceShapeCreateArgs>;
+
+export enum BasicContainerShapeType {
+  BasicContainer = 'http://www.w3.org/ns/ldp#BasicContainer',
+  Container = 'http://www.w3.org/ns/ldp#Container',
+}
+
+export enum ResourceShapeType {
+  Resource = 'http://www.w3.org/ns/ldp#Resource',
+}
+
+export enum BasicContainerShapeContext {
+  type = 'rdf:type',
+  contains = 'ldp:contains',
+  size = 'st:size',
+  mtime = 'st:mtime',
+  modified = 'terms:modified',
+}
+
+export enum ResourceShapeContext {
+  type = 'rdf:type',
+  size = 'st:size',
+  mtime = 'st:mtime',
+  modified = 'terms:modified',
+}
+
+export const ldpShapesShex = \`
+PREFIX ldp: <http://www.w3.org/ns/ldp#>
+PREFIX st: <http://www.w3.org/ns/posix/stat#>
+PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+PREFIX terms: <http://purl.org/dc/terms/>
+PREFIX xsd: <http://www.w3.org/2001/XMLSchema#>
+PREFIX tur: <http://www.w3.org/ns/iana/media-types/text/turtle#>
+
+ldp:BasicContainerShape EXTRA a {
+  a [ ldp:BasicContainer ]
+    // rdfs:comment  \\"Defines the node as a Container\\" ;
+  a [ ldp:Container ]
+    // rdfs:comment  \\"Defines the node as a Container\\" ;
+  ldp:contains @ldp:ResourceShape *
+    // rdfs:comment  \\"Contains these Resources\\" ;
+  st:size xsd:integer
+    // rdfs:comment  \\"Size of Container\\" ;
+  st:mtime xsd:decimal 
+    // rdfs:comment  \\"Time of Container creation created\\" ;
+  terms:modified xsd:dateTime 
+    // rdfs:comment  \\"Time the Container was modified\\" ;
+}
+
+ldp:ResourceShape EXTRA a {
+  a [ ldp:Resource ]
+    // rdfs:comment  \\"Defines the node as a Resource\\" ;
+  st:size xsd:integer
+    // rdfs:comment  \\"Size of Container\\" ;
+  st:mtime xsd:decimal
+    // rdfs:comment  \\"Time of Container creation created\\" ;
+  terms:modified xsd:dateTime
+    // rdfs:comment  \\"Time the Container was modified\\" ;
+}
+\`;
+
+export const basicContainer = new Shape<
+  BasicContainerShape,
+  BasicContainerShapeCreateArgs
+>({
+  id: 'http://www.w3.org/ns/ldp#BasicContainerShape',
+  shape: ldpShapesShex,
+  context: BasicContainerShapeContext,
+  type: BasicContainerShapeType,
+  childContexts: [ResourceShapeContext],
+});
+
+export const resource = new Shape<ResourceShape, ResourceShapeCreateArgs>({
+  id: 'http://www.w3.org/ns/ldp#ResourceShape',
+  shape: ldpShapesShex,
+  context: ResourceShapeContext,
+  type: ResourceShapeType,
 });
 
 export type ChatShape = {
