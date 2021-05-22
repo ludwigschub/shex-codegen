@@ -1,10 +1,628 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
+exports[`matches snapshots when invoked programmatically 1`] = `
+"import { NamedNode, Literal } from 'rdflib';
+
+import { Shape } from 'shex-methods';
+
+export type SolidProfileShape = {
+  id: string; // the url of a node of this shape
+  fn?: string; // The formatted name of a person. Example: John Smith
+  name?: string; // An alternate way to define a person's name.
+  hasAddress?: AddressShape | AddressShape[]; // The person's street address.
+  hasEmail?: EmailShape | EmailShape[]; // The person's email.
+  hasPhoto?: string; // A link to the person's photo
+  img?: string; // Photo link but in string form
+  hasTelephone?: PhoneNumberShape | PhoneNumberShape[]; // Person's telephone number
+  phone?: string; // An alternative way to define a person's telephone number using a string
+  organizationName?: string; // The name of the organization with which the person is affiliated
+  role?: string; // The name of the person's role in their organization
+  trustedApp?: TrustedAppShape | TrustedAppShape[]; // A list of app origins that are trusted by this user
+  key?: RsaPublicKeyShape | RsaPublicKeyShape[]; // A list of RSA public keys that are associated with private keys the user holds.
+  inbox: string; // The user's LDP inbox to which apps can post notifications
+  preferencesFile?: string; // The user's preferences
+  storage?: string | string[]; // The location of a Solid storage server related to this WebId
+  account?: string; // The user's account
+  privateTypeIndex?: string | string[]; // A registry of all types used on the user's Pod (for private access only)
+  publicTypeIndex?: string | string[]; // A registry of all types used on the user's Pod (for public access)
+  knows?: string | string[]; // A list of WebIds for all the people this user knows.
+} & {
+  type: (
+    | SolidProfileShapeType.SchemPerson
+    | SolidProfileShapeType.FoafPerson
+  )[]; // Defines the node as a Person (from foaf)
+};
+
+export type SolidProfileShapeCreateArgs = {
+  id?: string | NamedNode; // the url to match or create the node with e.g. 'https://example.com#this', 'https://example.com/profile/card#me'
+  fn?: string | Literal; // The formatted name of a person. Example: John Smith
+  name?: string | Literal; // An alternate way to define a person's name.
+  hasAddress?:
+    | URL
+    | NamedNode
+    | AddressShapeCreateArgs
+    | (URL | NamedNode | AddressShapeCreateArgs)[]; // The person's street address.
+  hasEmail?:
+    | URL
+    | NamedNode
+    | EmailShapeCreateArgs
+    | (URL | NamedNode | EmailShapeCreateArgs)[]; // The person's email.
+  hasPhoto?: URL | NamedNode; // A link to the person's photo
+  img?: string | Literal; // Photo link but in string form
+  hasTelephone?:
+    | URL
+    | NamedNode
+    | PhoneNumberShapeCreateArgs
+    | (URL | NamedNode | PhoneNumberShapeCreateArgs)[]; // Person's telephone number
+  phone?: string | Literal; // An alternative way to define a person's telephone number using a string
+  organizationName?: string | Literal; // The name of the organization with which the person is affiliated
+  role?: string | Literal; // The name of the person's role in their organization
+  trustedApp?:
+    | URL
+    | NamedNode
+    | TrustedAppShapeCreateArgs
+    | (URL | NamedNode | TrustedAppShapeCreateArgs)[]; // A list of app origins that are trusted by this user
+  key?:
+    | URL
+    | NamedNode
+    | RsaPublicKeyShapeCreateArgs
+    | (URL | NamedNode | RsaPublicKeyShapeCreateArgs)[]; // A list of RSA public keys that are associated with private keys the user holds.
+  inbox: URL | NamedNode; // The user's LDP inbox to which apps can post notifications
+  preferencesFile?: URL | NamedNode; // The user's preferences
+  storage?: URL | NamedNode | (URL | NamedNode)[]; // The location of a Solid storage server related to this WebId
+  account?: URL | NamedNode; // The user's account
+  privateTypeIndex?: URL | NamedNode | (URL | NamedNode)[]; // A registry of all types used on the user's Pod (for private access only)
+  publicTypeIndex?: URL | NamedNode | (URL | NamedNode)[]; // A registry of all types used on the user's Pod (for public access)
+  knows?: URL | NamedNode | (URL | NamedNode)[]; // A list of WebIds for all the people this user knows.
+} & {
+  type: (
+    | SolidProfileShapeType.SchemPerson
+    | SolidProfileShapeType.FoafPerson
+  )[]; // Defines the node as a Person (from foaf)
+};
+
+export type SolidProfileShapeUpdateArgs = Partial<SolidProfileShapeCreateArgs>;
+
+export type AddressShape = {
+  id: string; // the url of a node of this shape
+  countryName?: string; // The name of the user's country of residence
+  locality?: string; // The name of the user's locality (City, Town etc.) of residence
+  postalCode?: string; // The user's postal code
+  region?: string; // The name of the user's region (State, Province etc.) of residence
+  streetAddress?: string; // The user's street address
+};
+
+export type AddressShapeCreateArgs = {
+  id?: string | NamedNode; // the url to match or create the node with e.g. 'https://example.com#this', 'https://example.com/profile/card#me'
+  countryName?: string | Literal; // The name of the user's country of residence
+  locality?: string | Literal; // The name of the user's locality (City, Town etc.) of residence
+  postalCode?: string | Literal; // The user's postal code
+  region?: string | Literal; // The name of the user's region (State, Province etc.) of residence
+  streetAddress?: string | Literal; // The user's street address
+};
+
+export type AddressShapeUpdateArgs = Partial<AddressShapeCreateArgs>;
+
+export type EmailShape = {
+  id: string; // the url of a node of this shape
+  value: string; // The value of an email as a mailto link (Example <mailto:jane@example.com>)
+} & {
+  type?: (
+    | EmailShapeType.Dom
+    | EmailShapeType.Home
+    | EmailShapeType.Isdn
+    | EmailShapeType.Internet
+    | EmailShapeType.Intl
+    | EmailShapeType.Label
+    | EmailShapeType.Parcel
+    | EmailShapeType.Postal
+    | EmailShapeType.Pref
+    | EmailShapeType.Work
+    | EmailShapeType.X400
+  )[]; // The type of email.
+};
+
+export type EmailShapeCreateArgs = {
+  id?: string | NamedNode; // the url to match or create the node with e.g. 'https://example.com#this', 'https://example.com/profile/card#me'
+  value: URL | NamedNode; // The value of an email as a mailto link (Example <mailto:jane@example.com>)
+} & {
+  type?: (
+    | EmailShapeType.Dom
+    | EmailShapeType.Home
+    | EmailShapeType.Isdn
+    | EmailShapeType.Internet
+    | EmailShapeType.Intl
+    | EmailShapeType.Label
+    | EmailShapeType.Parcel
+    | EmailShapeType.Postal
+    | EmailShapeType.Pref
+    | EmailShapeType.Work
+    | EmailShapeType.X400
+  )[]; // The type of email.
+};
+
+export type EmailShapeUpdateArgs = Partial<EmailShapeCreateArgs>;
+
+export type PhoneNumberShape = {
+  id: string; // the url of a node of this shape
+  value: string; // The value of a phone number as a tel link (Example <tel:555-555-5555>)
+} & {
+  type?: (
+    | PhoneNumberShapeType.Dom
+    | PhoneNumberShapeType.Home
+    | PhoneNumberShapeType.Isdn
+    | PhoneNumberShapeType.Internet
+    | PhoneNumberShapeType.Intl
+    | PhoneNumberShapeType.Label
+    | PhoneNumberShapeType.Parcel
+    | PhoneNumberShapeType.Postal
+    | PhoneNumberShapeType.Pref
+    | PhoneNumberShapeType.Work
+    | PhoneNumberShapeType.X400
+  )[]; // They type of Phone Number
+};
+
+export type PhoneNumberShapeCreateArgs = {
+  id?: string | NamedNode; // the url to match or create the node with e.g. 'https://example.com#this', 'https://example.com/profile/card#me'
+  value: URL | NamedNode; // The value of a phone number as a tel link (Example <tel:555-555-5555>)
+} & {
+  type?: (
+    | PhoneNumberShapeType.Dom
+    | PhoneNumberShapeType.Home
+    | PhoneNumberShapeType.Isdn
+    | PhoneNumberShapeType.Internet
+    | PhoneNumberShapeType.Intl
+    | PhoneNumberShapeType.Label
+    | PhoneNumberShapeType.Parcel
+    | PhoneNumberShapeType.Postal
+    | PhoneNumberShapeType.Pref
+    | PhoneNumberShapeType.Work
+    | PhoneNumberShapeType.X400
+  )[]; // They type of Phone Number
+};
+
+export type PhoneNumberShapeUpdateArgs = Partial<PhoneNumberShapeCreateArgs>;
+
+export type TrustedAppShape = {
+  id: string; // the url of a node of this shape
+  mode:
+    | (ModeType.Append | ModeType.Control | ModeType.Read | ModeType.Write)[]
+    | (ModeType.Append | ModeType.Control | ModeType.Read | ModeType.Write)[][]; // The level of access provided to this origin
+  origin: string; // The app origin the user trusts
+};
+
+export type TrustedAppShapeCreateArgs = {
+  id?: string | NamedNode; // the url to match or create the node with e.g. 'https://example.com#this', 'https://example.com/profile/card#me'
+  mode:
+    | (ModeType.Append | ModeType.Control | ModeType.Read | ModeType.Write)[]
+    | (ModeType.Append | ModeType.Control | ModeType.Read | ModeType.Write)[][]; // The level of access provided to this origin
+  origin: URL | NamedNode; // The app origin the user trusts
+};
+
+export type TrustedAppShapeUpdateArgs = Partial<TrustedAppShapeCreateArgs>;
+
+export type RsaPublicKeyShape = {
+  id: string; // the url of a node of this shape
+  modulus: string; // RSA Modulus
+  exponent: number; // RSA Exponent
+};
+
+export type RsaPublicKeyShapeCreateArgs = {
+  id?: string | NamedNode; // the url to match or create the node with e.g. 'https://example.com#this', 'https://example.com/profile/card#me'
+  modulus: string | Literal; // RSA Modulus
+  exponent: number | Literal; // RSA Exponent
+};
+
+export type RsaPublicKeyShapeUpdateArgs = Partial<RsaPublicKeyShapeCreateArgs>;
+
+export enum SolidProfileShapeType {
+  SchemPerson = 'http://schema.org/Person',
+  FoafPerson = 'http://xmlns.com/foaf/0.1/Person',
+}
+
+export enum EmailShapeType {
+  Dom = 'http://www.w3.org/2006/vcard/ns#Dom',
+  Home = 'http://www.w3.org/2006/vcard/ns#Home',
+  Isdn = 'http://www.w3.org/2006/vcard/ns#ISDN',
+  Internet = 'http://www.w3.org/2006/vcard/ns#Internet',
+  Intl = 'http://www.w3.org/2006/vcard/ns#Intl',
+  Label = 'http://www.w3.org/2006/vcard/ns#Label',
+  Parcel = 'http://www.w3.org/2006/vcard/ns#Parcel',
+  Postal = 'http://www.w3.org/2006/vcard/ns#Postal',
+  Pref = 'http://www.w3.org/2006/vcard/ns#Pref',
+  Work = 'http://www.w3.org/2006/vcard/ns#Work',
+  X400 = 'http://www.w3.org/2006/vcard/ns#X400',
+}
+
+export enum PhoneNumberShapeType {
+  Dom = 'http://www.w3.org/2006/vcard/ns#Dom',
+  Home = 'http://www.w3.org/2006/vcard/ns#Home',
+  Isdn = 'http://www.w3.org/2006/vcard/ns#ISDN',
+  Internet = 'http://www.w3.org/2006/vcard/ns#Internet',
+  Intl = 'http://www.w3.org/2006/vcard/ns#Intl',
+  Label = 'http://www.w3.org/2006/vcard/ns#Label',
+  Parcel = 'http://www.w3.org/2006/vcard/ns#Parcel',
+  Postal = 'http://www.w3.org/2006/vcard/ns#Postal',
+  Pref = 'http://www.w3.org/2006/vcard/ns#Pref',
+  Work = 'http://www.w3.org/2006/vcard/ns#Work',
+  X400 = 'http://www.w3.org/2006/vcard/ns#X400',
+}
+
+export enum ModeType {
+  Append = 'http://www.w3.org/ns/auth/acl#Append',
+  Control = 'http://www.w3.org/ns/auth/acl#Control',
+  Read = 'http://www.w3.org/ns/auth/acl#Read',
+  Write = 'http://www.w3.org/ns/auth/acl#Write',
+}
+
+export enum SolidProfileShapeContext {
+  type = 'rdf:type',
+  fn = 'vcard:fn',
+  name = 'foaf:name',
+  hasAddress = 'vcard:hasAddress',
+  hasEmail = 'vcard:hasEmail',
+  hasPhoto = 'vcard:hasPhoto',
+  img = 'foaf:img',
+  hasTelephone = 'vcard:hasTelephone',
+  phone = 'vcard:phone',
+  organizationName = 'vcard:organizationName',
+  role = 'vcard:role',
+  trustedApp = 'acl:trustedApp',
+  key = 'cert:key',
+  inbox = 'ldp:inbox',
+  preferencesFile = 'sp:preferencesFile',
+  storage = 'sp:storage',
+  account = 'solid:account',
+  privateTypeIndex = 'solid:privateTypeIndex',
+  publicTypeIndex = 'solid:publicTypeIndex',
+  knows = 'foaf:knows',
+}
+
+export enum AddressShapeContext {
+  countryName = 'vcard:countryName',
+  locality = 'vcard:locality',
+  postalCode = 'vcard:postalCode',
+  region = 'vcard:region',
+  streetAddress = 'vcard:streetAddress',
+}
+
+export enum EmailShapeContext {
+  type = 'rdf:type',
+  value = 'vcard:value',
+}
+
+export enum PhoneNumberShapeContext {
+  type = 'rdf:type',
+  value = 'vcard:value',
+}
+
+export enum TrustedAppShapeContext {
+  mode = 'acl:mode',
+  origin = 'acl:origin',
+}
+
+export enum RsaPublicKeyShapeContext {
+  modulus = 'cert:modulus',
+  exponent = 'cert:exponent',
+}
+
+export const solidProfileShex = \`
+PREFIX srs: <https://shaperepo.com/schemas/solidProfile#>
+PREFIX foaf: <http://xmlns.com/foaf/0.1/>
+PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+PREFIX schem: <http://schema.org/>
+PREFIX vcard: <http://www.w3.org/2006/vcard/ns#>
+PREFIX xsd: <http://www.w3.org/2001/XMLSchema#>
+PREFIX acl: <http://www.w3.org/ns/auth/acl#>
+PREFIX cert:  <http://www.w3.org/ns/auth/cert#>
+PREFIX ldp: <http://www.w3.org/ns/ldp#>
+PREFIX sp: <http://www.w3.org/ns/pim/space#>
+PREFIX solid: <http://www.w3.org/ns/solid/terms#>
+
+srs:SolidProfileShape EXTRA a {
+  a [ schem:Person ]
+    // rdfs:comment  \\"Defines the node as a Person (from Schema.org)\\" ;
+  a [ foaf:Person ]
+    // rdfs:comment  \\"Defines the node as a Person (from foaf)\\" ;
+  vcard:fn xsd:string ?
+    // rdfs:comment  \\"The formatted name of a person. Example: John Smith\\" ;
+  foaf:name xsd:string ?
+    // rdfs:comment  \\"An alternate way to define a person's name.\\" ;
+  vcard:hasAddress @srs:AddressShape *
+    // rdfs:comment  \\"The person's street address.\\" ;
+  vcard:hasEmail @srs:EmailShape *
+    // rdfs:comment  \\"The person's email.\\" ;
+  vcard:hasPhoto IRI ?
+    // rdfs:comment  \\"A link to the person's photo\\" ;
+  foaf:img xsd:string ?
+    // rdfs:comment  \\"Photo link but in string form\\" ;
+  vcard:hasTelephone @srs:PhoneNumberShape *
+    // rdfs:comment  \\"Person's telephone number\\" ;
+  vcard:phone xsd:string ?
+    // rdfs:comment  \\"An alternative way to define a person's telephone number using a string\\" ;
+  vcard:organization-name xsd:string ?
+    // rdfs:comment  \\"The name of the organization with which the person is affiliated\\" ;
+  vcard:role xsd:string ?
+    // rdfs:comment  \\"The name of the person's role in their organization\\" ;
+  acl:trustedApp @srs:TrustedAppShape *
+    // rdfs:comment  \\"A list of app origins that are trusted by this user\\" ;
+  cert:key @srs:RSAPublicKeyShape *
+    // rdfs:comment  \\"A list of RSA public keys that are associated with private keys the user holds.\\" ;
+  ldp:inbox IRI
+    // rdfs:comment  \\"The user's LDP inbox to which apps can post notifications\\" ;
+  sp:preferencesFile IRI ?
+    // rdfs:comment  \\"The user's preferences\\" ;
+  sp:storage IRI *
+    // rdfs:comment  \\"The location of a Solid storage server related to this WebId\\" ;
+  solid:account IRI ?
+    // rdfs:comment  \\"The user's account\\" ;
+  solid:privateTypeIndex IRI *
+    // rdfs:comment  \\"A registry of all types used on the user's Pod (for private access only)\\" ;
+  solid:publicTypeIndex IRI *
+    // rdfs:comment  \\"A registry of all types used on the user's Pod (for public access)\\" ;
+  foaf:knows IRI *
+    // rdfs:comment  \\"A list of WebIds for all the people this user knows.\\" ;
+}
+
+srs:AddressShape {
+  vcard:country-name xsd:string ?
+    // rdfs:comment  \\"The name of the user's country of residence\\" ;
+  vcard:locality xsd:string ?
+    // rdfs:comment  \\"The name of the user's locality (City, Town etc.) of residence\\" ;
+  vcard:postal-code xsd:string ?
+    // rdfs:comment  \\"The user's postal code\\" ;
+  vcard:region xsd:string ?
+    // rdfs:comment  \\"The name of the user's region (State, Province etc.) of residence\\" ;
+  vcard:street-address xsd:string ?
+    // rdfs:comment  \\"The user's street address\\" ;
+}
+
+srs:EmailShape EXTRA a {
+  a [
+    vcard:Dom
+    vcard:Home
+    vcard:ISDN
+    vcard:Internet
+    vcard:Intl
+    vcard:Label
+    vcard:Parcel
+    vcard:Postal
+    vcard:Pref
+    vcard:Work
+    vcard:X400
+  ] ?
+    // rdfs:comment  \\"The type of email.\\" ;
+  vcard:value IRI
+    // rdfs:comment  \\"The value of an email as a mailto link (Example <mailto:jane@example.com>)\\" ;
+}
+
+srs:PhoneNumberShape EXTRA a {
+  a [
+    vcard:Dom
+    vcard:Home
+    vcard:ISDN
+    vcard:Internet
+    vcard:Intl
+    vcard:Label
+    vcard:Parcel
+    vcard:Postal
+    vcard:Pref
+    vcard:Work
+    vcard:X400
+  ] ?
+    // rdfs:comment  \\"They type of Phone Number\\" ;
+  vcard:value IRI
+    // rdfs:comment  \\"The value of a phone number as a tel link (Example <tel:555-555-5555>)\\" ;
+}
+
+srs:TrustedAppShape {
+  acl:mode [acl:Append acl:Control acl:Read acl:Write] +
+    // rdfs:comment  \\"The level of access provided to this origin\\" ;
+  acl:origin IRI
+    // rdfs:comment \\"The app origin the user trusts\\"
+}
+
+srs:RSAPublicKeyShape {
+  cert:modulus xsd:string
+    // rdfs:comment  \\"RSA Modulus\\" ;
+  cert:exponent xsd:integer
+    // rdfs:comment  \\"RSA Exponent\\" ;
+}
+\`;
+
+export const solidProfile = new Shape<
+  SolidProfileShape,
+  SolidProfileShapeCreateArgs
+>({
+  id: 'https://shaperepo.com/schemas/solidProfile#SolidProfileShape',
+  shape: solidProfileShex,
+  context: SolidProfileShapeContext,
+  type: SolidProfileShapeType,
+  childContexts: [
+    AddressShapeContext,
+    EmailShapeContext,
+    PhoneNumberShapeContext,
+    TrustedAppShapeContext,
+    RsaPublicKeyShapeContext,
+  ],
+});
+
+export const address = new Shape<AddressShape, AddressShapeCreateArgs>({
+  id: 'https://shaperepo.com/schemas/solidProfile#AddressShape',
+  shape: solidProfileShex,
+  context: AddressShapeContext,
+});
+
+export const email = new Shape<EmailShape, EmailShapeCreateArgs>({
+  id: 'https://shaperepo.com/schemas/solidProfile#EmailShape',
+  shape: solidProfileShex,
+  context: EmailShapeContext,
+  type: EmailShapeType,
+});
+
+export const phoneNumber = new Shape<
+  PhoneNumberShape,
+  PhoneNumberShapeCreateArgs
+>({
+  id: 'https://shaperepo.com/schemas/solidProfile#PhoneNumberShape',
+  shape: solidProfileShex,
+  context: PhoneNumberShapeContext,
+  type: PhoneNumberShapeType,
+});
+
+export const trustedApp = new Shape<TrustedAppShape, TrustedAppShapeCreateArgs>(
+  {
+    id: 'https://shaperepo.com/schemas/solidProfile#TrustedAppShape',
+    shape: solidProfileShex,
+    context: TrustedAppShapeContext,
+  }
+);
+
+export const rsaPublicKey = new Shape<
+  RsaPublicKeyShape,
+  RsaPublicKeyShapeCreateArgs
+>({
+  id: 'https://shaperepo.com/schemas/solidProfile#RSAPublicKeyShape',
+  shape: solidProfileShex,
+  context: RsaPublicKeyShapeContext,
+});
+"
+`;
+
 exports[`matches snapshots with config file 1`] = `
 Array [
   "import { NamedNode, Literal } from 'rdflib';
 
 import { Shape } from 'shex-methods';
+
+export type BasicContainerShape = {
+  id: string; // the url of a node of this shape
+  contains?: ResourceShape | ResourceShape[]; // Contains these Resources
+  size: number; // Size of Container
+  mtime: number; // Time of Container creation created
+  modified: Date; // Time the Container was modified
+} & {
+  type: (
+    | BasicContainerShapeType.BasicContainer
+    | BasicContainerShapeType.Container
+  )[]; // Defines the node as a Container
+};
+
+export type BasicContainerShapeCreateArgs = {
+  id?: string | NamedNode; // the url to match or create the node with e.g. 'https://example.com#this', 'https://example.com/profile/card#me'
+  contains?:
+    | URL
+    | NamedNode
+    | ResourceShapeCreateArgs
+    | (URL | NamedNode | ResourceShapeCreateArgs)[]; // Contains these Resources
+  size: number | Literal; // Size of Container
+  mtime: number | Literal; // Time of Container creation created
+  modified: Date | Literal; // Time the Container was modified
+} & {
+  type: (
+    | BasicContainerShapeType.BasicContainer
+    | BasicContainerShapeType.Container
+  )[]; // Defines the node as a Container
+};
+
+export type BasicContainerShapeUpdateArgs = Partial<BasicContainerShapeCreateArgs>;
+
+export type ResourceShape = {
+  id: string; // the url of a node of this shape
+  size: number; // Size of Container
+  mtime: number; // Time of Container creation created
+  modified: Date; // Time the Container was modified
+} & {
+  type: ResourceShapeType.Resource; // Defines the node as a Resource
+};
+
+export type ResourceShapeCreateArgs = {
+  id?: string | NamedNode; // the url to match or create the node with e.g. 'https://example.com#this', 'https://example.com/profile/card#me'
+  size: number | Literal; // Size of Container
+  mtime: number | Literal; // Time of Container creation created
+  modified: Date | Literal; // Time the Container was modified
+} & {
+  type: ResourceShapeType.Resource; // Defines the node as a Resource
+};
+
+export type ResourceShapeUpdateArgs = Partial<ResourceShapeCreateArgs>;
+
+export enum BasicContainerShapeType {
+  BasicContainer = 'http://www.w3.org/ns/ldp#BasicContainer',
+  Container = 'http://www.w3.org/ns/ldp#Container',
+}
+
+export enum ResourceShapeType {
+  Resource = 'http://www.w3.org/ns/ldp#Resource',
+}
+
+export enum BasicContainerShapeContext {
+  type = 'rdf:type',
+  contains = 'ldp:contains',
+  size = 'st:size',
+  mtime = 'st:mtime',
+  modified = 'terms:modified',
+}
+
+export enum ResourceShapeContext {
+  type = 'rdf:type',
+  size = 'st:size',
+  mtime = 'st:mtime',
+  modified = 'terms:modified',
+}
+
+export const ldpShapesShex = \`
+PREFIX ldp: <http://www.w3.org/ns/ldp#>
+PREFIX st: <http://www.w3.org/ns/posix/stat#>
+PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+PREFIX terms: <http://purl.org/dc/terms/>
+PREFIX xsd: <http://www.w3.org/2001/XMLSchema#>
+PREFIX tur: <http://www.w3.org/ns/iana/media-types/text/turtle#>
+
+ldp:BasicContainerShape EXTRA a {
+  a [ ldp:BasicContainer ]
+    // rdfs:comment  \\"Defines the node as a Container\\" ;
+  a [ ldp:Container ]
+    // rdfs:comment  \\"Defines the node as a Container\\" ;
+  ldp:contains @ldp:ResourceShape *
+    // rdfs:comment  \\"Contains these Resources\\" ;
+  st:size xsd:integer
+    // rdfs:comment  \\"Size of Container\\" ;
+  st:mtime xsd:decimal 
+    // rdfs:comment  \\"Time of Container creation created\\" ;
+  terms:modified xsd:dateTime 
+    // rdfs:comment  \\"Time the Container was modified\\" ;
+}
+
+ldp:ResourceShape EXTRA a {
+  a [ ldp:Resource ]
+    // rdfs:comment  \\"Defines the node as a Resource\\" ;
+  st:size xsd:integer
+    // rdfs:comment  \\"Size of Container\\" ;
+  st:mtime xsd:decimal
+    // rdfs:comment  \\"Time of Container creation created\\" ;
+  terms:modified xsd:dateTime
+    // rdfs:comment  \\"Time the Container was modified\\" ;
+}
+\`;
+
+export const basicContainer = new Shape<
+  BasicContainerShape,
+  BasicContainerShapeCreateArgs
+>({
+  id: 'http://www.w3.org/ns/ldp#BasicContainerShape',
+  shape: ldpShapesShex,
+  context: BasicContainerShapeContext,
+  type: BasicContainerShapeType,
+  childContexts: [ResourceShapeContext],
+});
+
+export const resource = new Shape<ResourceShape, ResourceShapeCreateArgs>({
+  id: 'http://www.w3.org/ns/ldp#ResourceShape',
+  shape: ldpShapesShex,
+  context: ResourceShapeContext,
+  type: ResourceShapeType,
+});
 
 export type Cryptocurrency = {
   id: string; // the url of a node of this shape
@@ -208,135 +826,6 @@ export const cryptocurrency = new Shape<
   id: 'https://www.wikidata.org/wiki/EntitySchema:E82#cryptocurrency',
   shape: cryptocurrencyShex,
   context: CryptocurrencyContext,
-});
-
-export type BasicContainerShape = {
-  id: string; // the url of a node of this shape
-  contains?: ResourceShape | ResourceShape[]; // Contains these Resources
-  size: number; // Size of Container
-  mtime: number; // Time of Container creation created
-  modified: Date; // Time the Container was modified
-} & {
-  type: (
-    | BasicContainerShapeType.BasicContainer
-    | BasicContainerShapeType.Container
-  )[]; // Defines the node as a Container
-};
-
-export type BasicContainerShapeCreateArgs = {
-  id?: string | NamedNode; // the url to match or create the node with e.g. 'https://example.com#this', 'https://example.com/profile/card#me'
-  contains?:
-    | URL
-    | NamedNode
-    | ResourceShapeCreateArgs
-    | (URL | NamedNode | ResourceShapeCreateArgs)[]; // Contains these Resources
-  size: number | Literal; // Size of Container
-  mtime: number | Literal; // Time of Container creation created
-  modified: Date | Literal; // Time the Container was modified
-} & {
-  type: (
-    | BasicContainerShapeType.BasicContainer
-    | BasicContainerShapeType.Container
-  )[]; // Defines the node as a Container
-};
-
-export type BasicContainerShapeUpdateArgs = Partial<BasicContainerShapeCreateArgs>;
-
-export type ResourceShape = {
-  id: string; // the url of a node of this shape
-  size: number; // Size of Container
-  mtime: number; // Time of Container creation created
-  modified: Date; // Time the Container was modified
-} & {
-  type: ResourceShapeType.Resource; // Defines the node as a Resource
-};
-
-export type ResourceShapeCreateArgs = {
-  id?: string | NamedNode; // the url to match or create the node with e.g. 'https://example.com#this', 'https://example.com/profile/card#me'
-  size: number | Literal; // Size of Container
-  mtime: number | Literal; // Time of Container creation created
-  modified: Date | Literal; // Time the Container was modified
-} & {
-  type: ResourceShapeType.Resource; // Defines the node as a Resource
-};
-
-export type ResourceShapeUpdateArgs = Partial<ResourceShapeCreateArgs>;
-
-export enum BasicContainerShapeType {
-  BasicContainer = 'http://www.w3.org/ns/ldp#BasicContainer',
-  Container = 'http://www.w3.org/ns/ldp#Container',
-}
-
-export enum ResourceShapeType {
-  Resource = 'http://www.w3.org/ns/ldp#Resource',
-}
-
-export enum BasicContainerShapeContext {
-  type = 'rdf:type',
-  contains = 'ldp:contains',
-  size = 'st:size',
-  mtime = 'st:mtime',
-  modified = 'terms:modified',
-}
-
-export enum ResourceShapeContext {
-  type = 'rdf:type',
-  size = 'st:size',
-  mtime = 'st:mtime',
-  modified = 'terms:modified',
-}
-
-export const ldpShapesShex = \`
-PREFIX ldp: <http://www.w3.org/ns/ldp#>
-PREFIX st: <http://www.w3.org/ns/posix/stat#>
-PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
-PREFIX terms: <http://purl.org/dc/terms/>
-PREFIX xsd: <http://www.w3.org/2001/XMLSchema#>
-PREFIX tur: <http://www.w3.org/ns/iana/media-types/text/turtle#>
-
-ldp:BasicContainerShape EXTRA a {
-  a [ ldp:BasicContainer ]
-    // rdfs:comment  \\"Defines the node as a Container\\" ;
-  a [ ldp:Container ]
-    // rdfs:comment  \\"Defines the node as a Container\\" ;
-  ldp:contains @ldp:ResourceShape *
-    // rdfs:comment  \\"Contains these Resources\\" ;
-  st:size xsd:integer
-    // rdfs:comment  \\"Size of Container\\" ;
-  st:mtime xsd:decimal 
-    // rdfs:comment  \\"Time of Container creation created\\" ;
-  terms:modified xsd:dateTime 
-    // rdfs:comment  \\"Time the Container was modified\\" ;
-}
-
-ldp:ResourceShape EXTRA a {
-  a [ ldp:Resource ]
-    // rdfs:comment  \\"Defines the node as a Resource\\" ;
-  st:size xsd:integer
-    // rdfs:comment  \\"Size of Container\\" ;
-  st:mtime xsd:decimal
-    // rdfs:comment  \\"Time of Container creation created\\" ;
-  terms:modified xsd:dateTime
-    // rdfs:comment  \\"Time the Container was modified\\" ;
-}
-\`;
-
-export const basicContainer = new Shape<
-  BasicContainerShape,
-  BasicContainerShapeCreateArgs
->({
-  id: 'http://www.w3.org/ns/ldp#BasicContainerShape',
-  shape: ldpShapesShex,
-  context: BasicContainerShapeContext,
-  type: BasicContainerShapeType,
-  childContexts: [ResourceShapeContext],
-});
-
-export const resource = new Shape<ResourceShape, ResourceShapeCreateArgs>({
-  id: 'http://www.w3.org/ns/ldp#ResourceShape',
-  shape: ldpShapesShex,
-  context: ResourceShapeContext,
-  type: ResourceShapeType,
 });
 
 export type ChatShape = {

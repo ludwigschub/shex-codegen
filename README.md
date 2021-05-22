@@ -1,6 +1,6 @@
 # shex-codegen
 
-A library to generate typescript from Shape Expressions.
+A library to generate TypeScript code from Shape Expressions.
 
 [Usage](#usage) | [Visitors](#visitors) | [Features](#features) | [Contributing](#contributing)
 
@@ -18,7 +18,6 @@ generates:
   node_modules/@generated/shex.ts:
     # the visitors to visit the schema with
     - typescript
-    - typescript-methods
 
 ```
 Then you can use the package in one of your scripts e.g.:
@@ -38,7 +37,7 @@ or
 
 ## Visitors
 
-### Typescript
+### TypeScript
 
 An example Shape Expression like:
 ```
@@ -101,7 +100,25 @@ export enum SolidProfileShapeContext {
   "name" = "foaf:name",
   "hasPhoto" = "vcard:hasPhoto",
 }
+```
 
+### TypeScript methods
+For this visitor you will need to additionaly install `shex-methods`
+
+With a config like this:
+```yaml
+# path to the folder or file with shape expressions
+schema: "src"
+generates:
+  # this will be the path of the generated file. It has to end with .ts
+  node_modules/@generated/shex.ts:
+    # the visitors to visit the schema with
+    - typescript
+    - typescript-methods
+```
+
+When using the above mentioned Shape Expression, this will be added to the generated code:
+```typescript
 export const solidProfile = new Shape<SolidProfileShape>({
   id: "https://shaperepo.com/schemas/solidProfile#SolidProfileShape",
   shape: solidProfileShex,
@@ -110,16 +127,18 @@ export const solidProfile = new Shape<SolidProfileShape>({
 });
 ```
 
+You can then use the Shape object's methods to read, create, update or delete nodes of this shape. See [shex-methods](https://github.com/ludwigschubi/shex-methods) or [shex-codegen-demo](https://github.com/ludwigschubi/shex-codegen-demo)
+
 ## Features
 
 Existing capabilities:
 * Configure codegen with config file
-* Generate Typescript types and enums from shex
-* Typescript operations generator
+* Generate TypeScript types and enums from shex
+* TypeScript operations generator
 
 Some planned features include:
-* Typescript publisher/subscriber generator (in planning)
-* Typescript react hooks (in planning)
+* TypeScript publisher/subscriber generator (in planning)
+* TypeScript react hooks (in planning)
 
 ## Contributing
 
