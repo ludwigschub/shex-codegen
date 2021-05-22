@@ -53,7 +53,7 @@
     "husky": "6.0.0",
     "jest": "26.6.3",
     "lint-staged": "10.5.4",
-    "rdflib": "2.2.0",
+    "rdflib": "2.2.2",
     "rimraf": "3.0.2",
     "shex-methods": "0.1.21",
     "ts-node": "9.1.1",
