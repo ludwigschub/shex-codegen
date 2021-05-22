@@ -1761,11 +1761,6 @@ asynckit@^0.4.0:
   resolved "https://registry.yarnpkg.com/asynckit/-/asynckit-0.4.0.tgz#c79ed97f7f34cb8f2ba1bc9790bcc366474b4b79"
   integrity sha1-x57Zf380y48robyXkLzDZkdLS3k=
 
-at-least-node@^1.0.0:
-  version "1.0.0"
-  resolved "https://registry.yarnpkg.com/at-least-node/-/at-least-node-1.0.0.tgz#602cd4b46e844ad4effc92a8011a3c46e0238dc2"
-  integrity sha512-+q/t7Ekv1EDY2l6Gda6LLiX14rU9TV20Wa3ofeQmwPFZbOMo9DXrLbOjFaaclkXKWidIaopwAObQDqwWtGUjqg==
-
 atob@^2.1.2:
   version "2.1.2"
   resolved "https://registry.yarnpkg.com/atob/-/atob-2.1.2.tgz#6d9517eb9e030d2436666651e86bd9f6f13533c9"
@@ -3334,12 +3329,11 @@ fresh@^0.5.2:
   resolved "https://registry.yarnpkg.com/fresh/-/fresh-0.5.2.tgz#3d8cadd90d976569fa835ab1f8e4b23a105605a7"
   integrity sha1-PYyt2Q2XZWn6g1qx+OSyOhBWBac=
 
-fs-extra@^9.1.0:
-  version "9.1.0"
-  resolved "https://registry.yarnpkg.com/fs-extra/-/fs-extra-9.1.0.tgz#5954460c764a8da2094ba3554bf839e6b9a7c86d"
-  integrity sha512-hcg3ZmepS30/7BSFqRvoo3DOMQu7IjqxO5nCDt+zM9XWjb33Wg7ziNT+Qvqbuc3+gWpzO02JubVyk2G4Zvo1OQ==
+fs-extra@^10.0.0:
+  version "10.0.0"
+  resolved "https://registry.yarnpkg.com/fs-extra/-/fs-extra-10.0.0.tgz#9ff61b655dde53fb34a82df84bb214ce802e17c1"
+  integrity sha512-C5owb14u9eJwizKGdchcDUQeFtlSHHthBk8pbX9Vc1PFZrLombudjDnNns88aYslCyF6IY5SUw3Roz6xShcEIQ==
   dependencies:
-    at-least-node "^1.0.0"
     graceful-fs "^4.2.0"
     jsonfile "^6.0.1"
     universalify "^2.0.0"
@@ -5294,9 +5288,6 @@ optionator@^0.8.1:
     type-check "~0.3.2"
     word-wrap "~1.2.3"
 
-<<<<<<< HEAD
-own-namespace@^0.4.5:
-=======
 optionator@^0.9.1:
   version "0.9.1"
   resolved "https://registry.yarnpkg.com/optionator/-/optionator-0.9.1.tgz#4f236a6373dae0566a6d43e1326674f50c291499"
@@ -5309,8 +5300,7 @@ optionator@^0.9.1:
     type-check "^0.4.0"
     word-wrap "^1.2.3"
 
-own-namespace@0.4.5, own-namespace@^0.4.5:
->>>>>>> d24e60a8b796a45c40195603322657e2907c3da3
+own-namespace@^0.4.5:
   version "0.4.5"
   resolved "https://registry.yarnpkg.com/own-namespace/-/own-namespace-0.4.5.tgz#a7273bb796fb853e15554f6dae87f942621f2b67"
   integrity sha512-Z356j0LExwg9K4a6cYyfVysRa6/dNsSqoBIBvGYAStlINP1DePjOTiFICxj8x+X+I1K6lMObq1aTn8xNdZfewQ==
@@ -6107,17 +6097,10 @@ shellwords@^0.1.1:
   resolved "https://registry.yarnpkg.com/shellwords/-/shellwords-0.1.1.tgz#d6b9181c1a48d397324c84871efbcfc73fc0654b"
   integrity sha512-vFwSUfQvqybiICwZY5+DAWIPLKsWO31Q91JSKl3UYv+K5c2QRPzn0qzec6QPu1Qc9eHYItiP3NdJqNVqetYAww==
 
-<<<<<<< HEAD
-shex-methods@0.1.20:
-  version "0.1.20"
-  resolved "https://registry.yarnpkg.com/shex-methods/-/shex-methods-0.1.20.tgz#8848c14677c130cfa7735bfd40733c6f695ebc96"
-  integrity sha512-2Y2T7A1CbU2Qshq+Xx2WlO7iXRnm55IwEdealMeCDKIO/LVRlI5HGe/wDOOoluBbdzj5U84Mwk9uTKQP7fvLNA==
-=======
 shex-methods@0.1.21:
   version "0.1.21"
   resolved "https://registry.yarnpkg.com/shex-methods/-/shex-methods-0.1.21.tgz#a8065f12046f9a9e3f0d8c40140fe6557a844299"
   integrity sha512-ZAATiJU2vvLlRI/S1FKnb33WMvmXOEg0N/eYeApges4L8LcTc5yGvPLuBs67oyqIHoML5BYXx351qxl05JGSEw==
->>>>>>> d24e60a8b796a45c40195603322657e2907c3da3
   dependencies:
     camelcase "^6.2.0"
     n3 "0.11.3"
