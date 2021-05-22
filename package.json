@@ -46,7 +46,7 @@
     "@types/prettier": "2.2.3",
     "@typescript-eslint/eslint-plugin": "4.24.0",
     "@typescript-eslint/parser": "4.24.0",
-    "concurrently": "6.0.0",
+    "concurrently": "6.1.0",
     "eslint": "7.25.0",
     "eslint-plugin-import": "2.23.3",
     "eslint-plugin-prettier": "3.4.0",
