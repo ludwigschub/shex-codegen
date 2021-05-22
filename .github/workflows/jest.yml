@@ -17,6 +17,8 @@ jobs:
           path: ~/.npm
           key: ${{ runner.os }}-build-${{ env.cache-name }}-${{ hashFiles('package-lock.json') }}
       - name: Install modules
-        run: npm install
+        run: yarn
+      - name: Build
+        run: yarn build
       - name: Run tests
-        run: npm test
+        run: yarn test
