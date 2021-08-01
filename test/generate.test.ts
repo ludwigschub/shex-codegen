@@ -7,6 +7,13 @@ import TypescriptMethodsVisitor from '../lib/visitors/typescript-methods/typescr
 
 jest.useFakeTimers();
 
+it('should not generate anything for an empty or missing schema', async () => {
+  const generated = await generate("test/shapes/blabla", {
+    'test/generated/empty.ts': ['typescript', 'typescript-methods'],
+  });
+  expect(generated).toBe([]);
+});
+
 it('matches snapshots with config file', async () => {
   const generated = await generate();
   expect(generated).toMatchSnapshot();

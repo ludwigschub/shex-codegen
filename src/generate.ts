@@ -1,4 +1,4 @@
-import { readFileSync, rmSync, statSync } from 'fs';
+import { existsSync, readFileSync, rmSync, statSync } from 'fs';
 import path from 'path';
 
 import ShExParser from '@shexjs/parser';
@@ -19,7 +19,7 @@ export const generate = (
   schema?: string,
   generates?: Record<string, string[]>,
   config?: CodegenConfig,
-) =>
+): Promise<string[]> =>
   new Promise(async (resolve, reject) => {
     // Prioritise function args over config file
     config = config ?? readConfig() ?? ({ schema, generates } as CodegenConfig);
@@ -44,6 +44,10 @@ export const generate = (
     });
 
     const workPath = schema ?? process.cwd();
+    if (!existsSync(workPath)) {
+      resolve([]);
+      return
+    }
     const stats = statSync(workPath);
 
     const visitors: Record<string, any> = Object.assign(
@@ -100,7 +104,7 @@ export const generate = (
             ],
             [],
           );
-          return Promise.all(sortedGenerated).then((generated): Promise<void | string> => {
+          return Promise.all(sortedGenerated).then((generated): Promise<string> => {
             const imports = visitors[file].reduce(
               (allImports: string[], visitor: any) => {
                 const visitorImport =
@@ -118,7 +122,7 @@ export const generate = (
             if (generated.length > 0) {
               return writeShapesFile(file, generatedContent);
             }
-            return Promise.resolve()
+            return Promise.resolve("")
           });
         }),
       );
