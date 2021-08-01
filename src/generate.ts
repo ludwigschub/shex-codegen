@@ -158,10 +158,10 @@ const readShexAndGenerate = async (
   });
   const shapeSchema = parser.parse(shapeFile);
   const fileName = path.parse(file).name;
-  const generated = visitor.visitSchema(shapeSchema, fileName);
+  const generated = visitor.visitSchema(shapeSchema, fileName) ?? [];
 
   if (generateShex) {
-    return [...(generated ?? []), generateShexExport(fileName, shapeFile)].join('\n');
+    return [...generated, generateShexExport(fileName, shapeFile)].join('\n');
   } else {
     return generated.join('\n');
   }
