@@ -32,7 +32,7 @@ export const generate = (
     }
 
     const generatesFiles = Object.keys(generates as Record<string, any>);
-    const generated: Record<string, Promise<string>[]> = {};
+    const generated: Record<string, Record<string, Promise<string>[]>> = {};
 
     // delete possibly previously generated files
     generatesFiles.forEach((file: string) => {
@@ -70,22 +70,37 @@ export const generate = (
             '. Supported types are .ts & .tsx.',
         );
       }
+      const schemaName = path.parse(schemaFile).name;
+      if (!generated[generates]) generated[generates] = {};
       visitors[generates].forEach((visitor: any, visitorIndex: number) => {
-        if ((generated[generates] as Promise<string>[] | undefined)?.push)
-          generated[generates]?.push(
+        if (
+          schemaName in
+          (generated[generates] as Record<string, Promise<string>[]>)
+        ) {
+          generated[generates][schemaName].push(
             readShexAndGenerate(visitor, schemaFile, visitorIndex === 0),
           );
-        else
-          generated[generates] = [
+        } else {
+          generated[generates][schemaName] = [
             readShexAndGenerate(visitor, schemaFile, visitorIndex === 0),
           ];
+        }
       });
     };
 
     const writeGenerated = async () => {
       return Promise.all(
         generatesFiles.map((file: string) => {
-          return Promise.all(generated[file]).then((generated) => {
+          const sortedGenerated = Object.values(
+            sortObject(generated[file]) as Record<string, Promise<string>[]>,
+          ).reduce(
+            (allGenerating: Promise<string>[], generate: Promise<string>[]) => [
+              ...allGenerating,
+              ...generate,
+            ],
+            [],
+          );
+          return Promise.all(sortedGenerated).then((generated) => {
             const imports = visitors[file].reduce(
               (allImports: string[], visitor: any) => {
                 const visitorImport =
@@ -165,4 +180,13 @@ const writeShapesFile = (generates: string, content: string) => {
       err ? reject(err) : resolve(formatted);
     });
   });
+};
+
+const sortObject = (unordered: Record<string, any>) => {
+  return Object.keys(unordered)
+    .sort()
+    .reduce((obj: Record<string, any>, key: string) => {
+      obj[key] = unordered[key];
+      return obj;
+    }, {});
 };
