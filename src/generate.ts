@@ -66,8 +66,8 @@ export const generate = (
       ) {
         throw Error(
           'Unsupported file extension: ' +
-            path.parse(generates).ext +
-            '. Supported types are .ts & .tsx.',
+          path.parse(generates).ext +
+          '. Supported types are .ts & .tsx.',
         );
       }
       const schemaName = path.parse(schemaFile).name;
@@ -161,7 +161,7 @@ const readShexAndGenerate = async (
   const generated = visitor.visitSchema(shapeSchema, fileName);
 
   if (generateShex) {
-    return [...generated, generateShexExport(fileName, shapeFile)].join('\n');
+    return [...(generated ?? []), generateShexExport(fileName, shapeFile)].join('\n');
   } else {
     return generated.join('\n');
   }
