@@ -100,7 +100,7 @@ export const generate = (
             ],
             [],
           );
-          return Promise.all(sortedGenerated).then((generated) => {
+          return Promise.all(sortedGenerated).then((generated): Promise<void | string> => {
             const imports = visitors[file].reduce(
               (allImports: string[], visitor: any) => {
                 const visitorImport =
@@ -115,7 +115,10 @@ export const generate = (
             const generatedContent = [...imports, ...generated].join(
               '\n',
             ) as string;
-            return writeShapesFile(file, generatedContent);
+            if (generated.length > 0) {
+              return writeShapesFile(file, generatedContent);
+            }
+            return Promise.resolve()
           });
         }),
       );
