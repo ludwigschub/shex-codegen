@@ -1,4 +1,5 @@
 import { readFileSync } from 'fs';
+
 import { generate } from '../lib';
 import { generate as browserGenerate } from '../lib/browser';
 import TypescriptVisitor from '../lib/visitors/typescript/typescript';
