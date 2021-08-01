@@ -12,6 +12,10 @@ it('should not generate anything for an empty or missing schema', async () => {
     'test/generated/empty.ts': ['typescript', 'typescript-methods'],
   });
   expect(generated).toMatchObject([]);
+  const emptyGenerated = await generate("test/shapes/empty.shex", {
+    'test/generated/empty.ts': ['typescript', 'typescript-methods'],
+  });
+  expect(emptyGenerated).toMatchObject([]);
 });
 
 it('matches snapshots with config file', async () => {

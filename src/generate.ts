@@ -77,16 +77,18 @@ export const generate = (
       const schemaName = path.parse(schemaFile).name;
       if (!generated[generates]) generated[generates] = {};
       visitors[generates].forEach((visitor: any, visitorIndex: number) => {
+        const generatedCode = readShexAndGenerate(visitor, schemaFile, visitorIndex === 0)
         if (
+          generatedCode &&
           schemaName in
           (generated[generates] as Record<string, Promise<string>[]>)
         ) {
           generated[generates][schemaName].push(
-            readShexAndGenerate(visitor, schemaFile, visitorIndex === 0),
+            generatedCode,
           );
-        } else {
+        } else if (generatedCode) {
           generated[generates][schemaName] = [
-            readShexAndGenerate(visitor, schemaFile, visitorIndex === 0),
+            generatedCode,
           ];
         }
       });
@@ -116,16 +118,16 @@ export const generate = (
               },
               [],
             );
-            const generatedContent = [...imports, ...generated].join(
+            const generatedCode = [...imports, ...generated].join(
               '\n',
             ) as string;
-            if (generated.length > 0) {
-              return writeShapesFile(file, generatedContent);
+            if ((generated.filter(Boolean)).length > 0) {
+              return writeShapesFile(file, generatedCode);
             }
             return Promise.resolve("")
           });
         }),
-      );
+      ).then((results) => results.filter(Boolean));
     };
 
     if (!stats.isDirectory()) {
@@ -166,6 +168,10 @@ const readShexAndGenerate = async (
   const shapeSchema = parser.parse(shapeFile);
   const fileName = path.parse(file).name;
   const generated = visitor.visitSchema(shapeSchema, fileName) ?? [];
+
+  if (generated.length === 0) {
+    return ""
+  }
 
   if (generateShex) {
     return [...generated, generateShexExport(fileName, shapeFile)].join('\n');
