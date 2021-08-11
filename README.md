@@ -117,7 +117,7 @@ generates:
     - typescript-methods
 ```
 
-When using the above mentioned Shape Expression in a file called `solidProfile.shex`, this will be added to the generated code:
+When using the above mentioned Shape Expression and config, this will be added to the generated code:
 ```typescript
 export const solidProfile = new Shape<SolidProfileShape>({
   id: "https://shaperepo.com/schemas/solidProfile#SolidProfileShape",
