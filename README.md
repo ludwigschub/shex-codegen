@@ -117,7 +117,7 @@ generates:
     - typescript-methods
 ```
 
-When using the above mentioned Shape Expression, this will be added to the generated code:
+When using the above mentioned Shape Expression in a file called `solidProfile.shex`, this will be added to the generated code:
 ```typescript
 export const solidProfile = new Shape<SolidProfileShape>({
   id: "https://shaperepo.com/schemas/solidProfile#SolidProfileShape",
@@ -137,11 +137,11 @@ Existing capabilities:
 * TypeScript operations generator
 
 Some planned features include:
-* TypeScript publisher/subscriber generator (in planning)
-* TypeScript react hooks (in planning)
+* TypeScript publisher/subscriber generator (in development)
+* TypeScript react hooks (in development)
 
 ## Contributing
 
 Use `yarn develop` to start the build process in watch mode and run the tests on file changes.
 
-If you have a use case in which the generated code is incorrect/corrupt please include an example in your pr/issue.
+When you find a case in which the generated code is incorrect/corrupt please include a snippet of the used shape expression in your pr/issue.
