@@ -1,6 +1,7 @@
 import ShExParser from '@shexjs/parser';
 import prettier from 'prettier/standalone';
 import prettierTypescript from 'prettier/parser-typescript';
+
 import { generateShexExport } from './visitors/typescript/generates';
 
 export type BrowserConfig = {
@@ -32,6 +33,8 @@ export const generate = ({ schema, visitors, name }: BrowserConfig) => {
     },
     [],
   );
+
+  if (generated.length === 0) return ""
 
   return prettier.format([...imports, ...generated].join('\n'), {
     singleQuote: true,
