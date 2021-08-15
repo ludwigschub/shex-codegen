@@ -18,6 +18,7 @@ export const generate = ({ schema, visitors, name }: BrowserConfig) => {
     });
     const shapeSchema = parser.parse(schema);
     const generated = visitor.visitSchema(shapeSchema, name) ?? [];
+    if (generated.length === 0) return ""
     if (index === 0) {
       return [...generated, generateShexExport(name, schema)].join('\n');
     } else {
