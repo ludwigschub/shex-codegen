@@ -41,3 +41,12 @@ it('matches snapshots when invoked from a browser env', async () => {
   });
   expect(generated).toMatchSnapshot();
 });
+
+it('should not generate anything for an empty or missing schema in the browser', async () => {
+  const emptyGenerated = await browserGenerate({
+    schema: "",
+    visitors: [TypescriptVisitor, TypescriptMethodsVisitor],
+    name: 'solidProfile',
+  });
+  expect(emptyGenerated).toBe("");
+});

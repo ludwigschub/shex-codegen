@@ -35,7 +35,7 @@ export const generate = ({ schema, visitors, name }: BrowserConfig) => {
     [],
   );
 
-  if (generated.length === 0) return ""
+  if (generated.filter(Boolean).length === 0) return ""
 
   return prettier.format([...imports, ...generated].join('\n'), {
     singleQuote: true,
