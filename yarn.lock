@@ -979,6 +979,13 @@
   dependencies:
     regenerator-runtime "^0.13.4"
 
+"@babel/runtime@^7.14.6":
+  version "7.15.3"
+  resolved "https://registry.yarnpkg.com/@babel/runtime/-/runtime-7.15.3.tgz#2e1c2880ca118e5b2f9988322bd8a7656a32502b"
+  integrity sha512-OvwMLqNXkCXSz1kSm58sEsNuhqOx/fKpnUnKnFB5v8uDda5bLNEHNgKPvhDN6IU0LDcnHQ90LlJ0Q6jnyBSIBA==
+  dependencies:
+    regenerator-runtime "^0.13.4"
+
 "@babel/runtime@^7.8.4":
   version "7.13.10"
   resolved "https://registry.yarnpkg.com/@babel/runtime/-/runtime-7.13.10.tgz#47d42a57b6095f4468da440388fdbad8bebf0d7d"
@@ -5131,6 +5138,14 @@ n3@^1.10.0:
     queue-microtask "^1.1.2"
     readable-stream "^3.6.0"
 
+n3@^1.11.0:
+  version "1.11.1"
+  resolved "https://registry.yarnpkg.com/n3/-/n3-1.11.1.tgz#50015008afcb71e587ff9413f32e4a9bef09bc8b"
+  integrity sha512-yeTeYoatabMs6IMv71dYSIfgf+s+4DpLrnvRv8CKGRLnAt1lfWcnb+mwP67PZKq7Wvh7MCIGXaflayPkn0WzHw==
+  dependencies:
+    queue-microtask "^1.1.2"
+    readable-stream "^3.6.0"
+
 nanomatch@^1.2.9:
   version "1.2.13"
   resolved "https://registry.yarnpkg.com/nanomatch/-/nanomatch-1.2.13.tgz#b87a8aa4fc0de8fe6be88895b38983ff265bd119"
@@ -5754,7 +5769,20 @@ rdf-canonize@^3.0.0:
   dependencies:
     setimmediate "^1.0.5"
 
-rdflib@2.2.2, rdflib@^2.2.0:
+rdflib@2.2.7:
+  version "2.2.7"
+  resolved "https://registry.yarnpkg.com/rdflib/-/rdflib-2.2.7.tgz#36d696dd230814926ad73f0a95a26d7006260048"
+  integrity sha512-LCNbicQZmwmObOG2SFKXTXVgtp3S+Hb9XkzlbJmGE+rcyj3Lorh/VxwCzq2l/03GnL78zDqCNjODIIrNfphCQw==
+  dependencies:
+    "@babel/runtime" "^7.14.6"
+    async "^3.2.0"
+    cross-fetch "^3.1.4"
+    jsonld "^5.2.0"
+    n3 "^1.11.0"
+    solid-namespace "^0.5.1"
+    xmldom "^0.6.0"
+
+rdflib@^2.2.0:
   version "2.2.2"
   resolved "https://registry.yarnpkg.com/rdflib/-/rdflib-2.2.2.tgz#d0c28531f43eb51d6093b20966d253c3cb5d94c0"
   integrity sha512-s5VZLS/4LGNuv4FryXhO+5Za1ov037Uu3IirrI6VVAyh6iChavhRj7HcxSuo0dv4DEYyZzihSl4fSOOlzvnY9A==
@@ -6316,6 +6344,11 @@ solid-namespace@^0.5.0:
   version "0.5.0"
   resolved "https://registry.yarnpkg.com/solid-namespace/-/solid-namespace-0.5.0.tgz#f618abae809dfb7510409e10f00d84112d32dbc6"
   integrity sha512-Q04kFodEJOlRFHLI7HAWpONhi4ZAgXILcLs0F3EsmA90Jlf/Gmh4J7ZysDyiiq3hX/4Nyz4J7iU6NuECiJUewg==
+
+solid-namespace@^0.5.1:
+  version "0.5.1"
+  resolved "https://registry.yarnpkg.com/solid-namespace/-/solid-namespace-0.5.1.tgz#47fd49a7ec6330cb93f5372d8d8c5a317c140557"
+  integrity sha512-t1ArfuO+7C/zoS/WbAecMCwcuNTzVVLP66bgqFyOnWCwCc8pAwUQazlez/8zldRLE5xtkJTNkdldhLdKWk7kUA==
 
 source-map-resolve@^0.5.0:
   version "0.5.3"
