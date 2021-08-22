@@ -15,7 +15,7 @@ srs:SolidProfileShape EXTRA a {
     // rdfs:comment  "Defines the node as a Person (from Schema.org)" ;
   a [ foaf:Person ]
     // rdfs:comment  "Defines the node as a Person (from foaf)" ;
-  vcard:fn xsd:string ?
+  vcard:name xsd:string ?
     // rdfs:comment  "The formatted name of a person. Example: John Smith" ;
   foaf:name xsd:string ?
     // rdfs:comment  "An alternate way to define a person's name." ;

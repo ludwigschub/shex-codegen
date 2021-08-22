@@ -1,17 +1,20 @@
-import { normalizeDuplicateProperties } from "../common";
+import {
+  findDuplicateIdentifier,
+  normalizeDuplicateProperties,
+} from '../common';
 import {
   NodeConstraintMembers,
   ShapeMembers,
   TripleConstraintMembers,
-} from "../common/members";
+} from '../common/members';
 
 import {
   generateShapeMethodsExport,
   generateShapeMethodsImport,
-} from "./generates";
-import { mapExpression } from "./mapExpressions";
+} from './generates';
+import { mapExpression } from './mapExpressions';
 
-const ShExUtil = require("@shexjs/core").Util;
+const ShExUtil = require('@shexjs/core').Util;
 
 const TypescriptVisitor = ShExUtil.Visitor();
 
@@ -20,37 +23,46 @@ TypescriptVisitor.generateImports = () => {
 };
 
 TypescriptVisitor._visitValue = function (v: any[]) {
-  return Array.isArray(v) ? v.join("\n") : v;
+  return Array.isArray(v) ? v.join('\n') : v;
 };
 
 TypescriptVisitor.visitSchema = function (schema: any, fileName: string) {
-  ShExUtil._expect(schema, "type", "Schema");
+  ShExUtil._expect(schema, 'type', 'Schema');
   const shapeDeclarations = this.visitShapes(
-    schema["shapes"],
+    schema['shapes'],
     schema._prefixes,
-    fileName
+    fileName,
   );
   return shapeDeclarations;
 };
 
 TypescriptVisitor.visitExpression = function (expr: any, context?: any) {
-  if (typeof expr === "string") return this.visitInclusion(expr);
+  if (typeof expr === 'string') return this.visitInclusion(expr);
   const visited =
-    expr.type === "TripleConstraint"
+    expr.type === 'TripleConstraint'
       ? this.visitTripleConstraint(expr, context)
-      : expr.type === "OneOf"
+      : expr.type === 'OneOf'
       ? this.visitOneOf(expr, context)
-      : expr.type === "EachOf"
+      : expr.type === 'EachOf'
       ? this.visitEachOf(expr, context)
       : null;
-  if (visited === null) throw Error("unexpected expression type: " + expr.type);
+  if (visited === null) throw Error('unexpected expression type: ' + expr.type);
   else return visited;
 };
 
 TypescriptVisitor.visitOneOf = function (expr: any, context?: any) {
   const visited: Record<string, any> = {
     expressions: expr.expressions.map((expression: any) =>
-      mapExpression(this, expression, context)
+      mapExpression(
+        this,
+        expression,
+        context,
+        expression.predicate &&
+          findDuplicateIdentifier(
+            expr.expressions.map((expr: any) => expr.predicate).filter(Boolean),
+            expression.predicate,
+          ),
+      ),
     ),
   };
 
@@ -60,7 +72,7 @@ TypescriptVisitor.visitOneOf = function (expr: any, context?: any) {
       Array.isArray(expr.childShapes)
         ? [...childShapes, ...expr.childShapes]
         : childShapes,
-    []
+    [],
   );
 
   return visited;
@@ -69,7 +81,7 @@ TypescriptVisitor.visitOneOf = function (expr: any, context?: any) {
 TypescriptVisitor.visitEachOf = function (expr: any, context?: any) {
   const visited: Record<string, any> = {
     expressions: expr.expressions.map((expression: any) =>
-      mapExpression(this, expression, context)
+      mapExpression(this, expression, context),
     ),
   };
 
@@ -79,7 +91,7 @@ TypescriptVisitor.visitEachOf = function (expr: any, context?: any) {
       Array.isArray(expr.childShapes)
         ? [...childShapes, ...expr.childShapes]
         : childShapes,
-    []
+    [],
   );
 
   return visited;
@@ -96,13 +108,13 @@ TypescriptVisitor.visitTripleConstraint = function (expr: any, context?: any) {
   const { valueExpr } = visited.expression;
 
   if (
-    visited.predicate === "http://www.w3.org/1999/02/22-rdf-syntax-ns#type" &&
+    visited.predicate === 'http://www.w3.org/1999/02/22-rdf-syntax-ns#type' &&
     valueExpr.values?.length !== 0
   ) {
     visited.typed = true;
   }
 
-  if (typeof valueExpr === "string") {
+  if (typeof valueExpr === 'string') {
     visited.childShapes = [valueExpr];
   }
 
@@ -110,7 +122,7 @@ TypescriptVisitor.visitTripleConstraint = function (expr: any, context?: any) {
 };
 
 TypescriptVisitor.visitNodeConstraint = function (expr: any, context: any) {
-  ShExUtil._expect(expr, "type", "NodeConstraint");
+  ShExUtil._expect(expr, 'type', 'NodeConstraint');
 
   const visited: Record<string, any> = {
     expression: maybeGenerate(this, expr, NodeConstraintMembers, context),
@@ -120,9 +132,9 @@ TypescriptVisitor.visitNodeConstraint = function (expr: any, context: any) {
 };
 
 TypescriptVisitor.visitShape = function (shape: any, context: any) {
-  ShExUtil._expect(shape, "type", "Shape");
+  ShExUtil._expect(shape, 'type', 'Shape');
   shape.expression.expressions = normalizeDuplicateProperties(
-    shape.expression.expressions
+    shape.expression.expressions,
   );
 
   const visited = maybeGenerate(this, shape, ShapeMembers, context);
@@ -134,7 +146,7 @@ TypescriptVisitor.visitShape = function (shape: any, context: any) {
 TypescriptVisitor.visitShapes = function (
   shapes: any[],
   prefixes: any,
-  fileName: string
+  fileName: string,
 ) {
   const enumShape: string[] = [];
   if (shapes === undefined) return undefined;
@@ -155,14 +167,14 @@ TypescriptVisitor.visitShapes = function (
       });
 
       visitedShape.childShapes = visitedShape.childShapes?.filter(
-        (childShape: string) => !enumShape.includes(childShape)
+        (childShape: string) => !enumShape.includes(childShape),
       );
 
       return { id: shape.id, ...visitedShape };
     });
 
   const generatedShapes = visited.map((shape) =>
-    generateShapeMethodsExport(shape, fileName)
+    generateShapeMethodsExport(shape, fileName),
   );
 
   return generatedShapes;
@@ -172,15 +184,16 @@ function maybeGenerate(
   Visitor: any,
   obj: any,
   members: string[],
-  context?: any
+  context?: any,
 ) {
   const generated: Record<string, any> = {};
   members.forEach(function (member) {
-    const methodName = "visit" + member.charAt(0).toUpperCase() + member.slice(1);
+    const methodName =
+      'visit' + member.charAt(0).toUpperCase() + member.slice(1);
     if (member in obj) {
       const f = Visitor[methodName];
-      if (typeof f !== "function") {
-        throw Error(methodName + " not found in Visitor");
+      if (typeof f !== 'function') {
+        throw Error(methodName + ' not found in Visitor');
       }
       const t = f.call(
         Visitor,
@@ -189,7 +202,7 @@ function maybeGenerate(
           id: obj?.id,
           prefixes: obj?.prefixes,
           extra: obj?.extra,
-        }
+        },
       );
       if (t !== undefined) {
         generated[member] = t;

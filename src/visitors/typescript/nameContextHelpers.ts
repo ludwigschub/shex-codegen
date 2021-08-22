@@ -1,22 +1,35 @@
-import { normalizeUrl } from "../common";
+import { normalizeUrl } from '../common';
 
 export const predicateToNameContext = (
   expression: any,
-  prefixes: Record<string, string>
+  prefixes: Record<string, string>,
+  not?: string,
 ) => {
   if (expression.predicate) {
-    const normalizedValue = normalizeUrl(expression.predicate);
+    const normalizedValue = not
+      ? normalizeUrl(
+          expression.predicate,
+          false,
+          normalizeUrl(not, false),
+          prefixes,
+        )
+      : normalizeUrl(expression.predicate, false);
     const prefix =
       Object.keys(prefixes).find((prefix) =>
-        expression.predicate.includes(prefixes[prefix])
+        expression.predicate.includes(prefixes[prefix]),
       ) ??
-      (normalizedValue === "type" && "rdf");
+      (normalizedValue === 'type' && 'rdf');
     if (!prefix) {
-      throw Error("Unknown prefix found in schema: " + prefix);
+      throw Error('Unknown prefix found in schema: ' + prefix);
     }
-    return { name: normalizedValue, value: `${prefix}:${normalizedValue}` };
+    return {
+      name: normalizedValue,
+      value: `${prefix}:${
+        not ? normalizeUrl(expression.predicate, false) : normalizedValue
+      }`,
+    };
   } else {
-    console.debug("Found expression without Predicate: " + expression);
+    console.debug('Found expression without Predicate: ' + expression);
     return;
   }
 };
@@ -35,6 +48,6 @@ export const reduceNameContexts = (expressions: any[]) => {
         return entireShapeContext;
       }
     },
-    {}
+    {},
   );
 };

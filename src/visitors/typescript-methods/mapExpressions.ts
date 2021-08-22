@@ -3,7 +3,8 @@ import { normalizeUrl } from "../common";
 export function mapExpression(
   visitor: any,
   expression: any,
-  context: any
+  context: any,
+  duplicatePredicate?: string,
 ) {
   if (typeof expression === "string") {
     return { type: "Inclusion", include: [normalizeUrl(expression, true)] };
@@ -12,7 +13,8 @@ export function mapExpression(
   if (expression.type === "TripleConstraint") {
     const visitedExpression = visitor.visitTripleConstraint(
       expression,
-      context
+      context,
+      duplicatePredicate
     );
     return visitedExpression;
   }

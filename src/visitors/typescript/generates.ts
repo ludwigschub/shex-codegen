@@ -1,8 +1,8 @@
-import { normalizeUrl } from "../common";
+import { findDuplicateIdentifier, normalizeUrl } from '../common';
 
-const ns = require("own-namespace")();
+const ns = require('own-namespace')();
 
-const idField = "id: string; // the url of a node of this shape";
+const idField = 'id: string; // the url of a node of this shape';
 const idFieldToCreate =
   "id?: string | NamedNode; // the url to match or create the node with e.g. 'https://example.com#this', 'https://example.com/profile/card#me'";
 
@@ -22,7 +22,7 @@ ${shex}
 }
 
 export function generateShexName(name: string) {
-  return name + "Shex";
+  return name + 'Shex';
 }
 
 export function generateShapeExport(name: string, shape: string) {
@@ -33,11 +33,11 @@ export function generateShape(
   type: string,
   shape: string,
   extras: string,
-  toCreate?: boolean
+  toCreate?: boolean,
 ) {
-  if (type === "TripleConstraint") {
+  if (type === 'TripleConstraint') {
     return shape
-      ? putInBraces([toCreate ? idFieldToCreate : idField, shape].join("\n"))
+      ? putInBraces([toCreate ? idFieldToCreate : idField, shape].join('\n'))
       : extras;
   }
 
@@ -60,21 +60,21 @@ export function generateEnumExport(
   name: string,
   values: string[],
   prefixes: Record<string, string>,
-  id?: string
+  id?: string,
 ) {
   return `export enum ${id ? generateEnumName(id) : name} ${generateEnumValues(
     values,
-    prefixes
+    prefixes,
   )};\n`;
 }
 
 export function generateNameContextsExport(
-  nameContexts: Record<string, string>[]
+  nameContexts: Record<string, string>[],
 ) {
   return nameContexts.map((nameContext) => {
     const { id, ...context } = nameContext;
     return `export enum ${generateNameContextName(
-      id
+      id,
     )} ${generateNameContextValues(context)}\n`;
   });
 }
@@ -82,11 +82,11 @@ export function generateNameContextsExport(
 export function generateExpressions(
   expressions: any[],
   join?: string,
-  toCreate?: boolean
+  toCreate?: boolean,
 ) {
   const generated = [
     {
-      [toCreate ? "generatedToCreate" : "generated"]: join?.includes("|")
+      [toCreate ? 'generatedToCreate' : 'generated']: join?.includes('|')
         ? null
         : toCreate
         ? idFieldToCreate
@@ -95,21 +95,21 @@ export function generateExpressions(
     ...expressions,
   ]
     .filter((expression) =>
-      toCreate ? !!expression.generatedToCreate : !!expression.generated
+      toCreate ? !!expression.generatedToCreate : !!expression.generated,
     )
     .map((expression: any) =>
-      toCreate ? expression.generatedToCreate : expression.generated
+      toCreate ? expression.generatedToCreate : expression.generated,
     );
   if (generated.length === 0) return putInBraces(idField);
-  if (join?.includes("|"))
+  if (join?.includes('|'))
     return `${putInBraces(idField)} & (${generated.join(join)})`;
-  return generated.join(join ?? "\n");
+  return generated.join(join ?? '\n');
 }
 
 export function generateExtras(
   expressions: any[],
   join?: string,
-  toCreate?: boolean
+  toCreate?: boolean,
 ) {
   return expressions
     .reduce((extras: any[], expression: any) => {
@@ -126,62 +126,61 @@ export function generateExtras(
         ? [...extras, expression.extras]
         : extras;
     }, [])
-    .join(join ?? " & ");
+    .join(join ?? ' & ');
 }
 
 export function generateEnumName(url?: string, predicate?: string) {
   if (url && !predicate) {
     return normalizeUrl(url as string, true);
-  } else if (url && predicate && normalizeUrl(predicate) === "type") {
+  } else if (url && predicate && normalizeUrl(predicate) === 'type') {
     return normalizeUrl(url as string, true) + normalizeUrl(predicate, true);
   } else if (predicate) {
-    return normalizeUrl(predicate, true) + "Type";
+    return normalizeUrl(predicate, true) + 'Type';
   } else
     throw Error("Can't generate enum name without a subject or a predicate");
 }
 
 export function generateEnumValues(
   values: any,
-  prefixes: Record<string, string>
+  prefixes: Record<string, string>,
 ) {
   return `{
   ${values
     .map((value: any, _index: number, values: any[]) => {
-      let normalizedValue = normalizeUrl(value, true);
-      if (
-        values.find(
-          (otherValue) =>
-            normalizeUrl(otherValue, true) === normalizedValue &&
-            otherValue !== value
-        )
-      ) {
-        normalizedValue = normalizeUrl(value, true, normalizedValue, prefixes);
+      const duplicate = findDuplicateIdentifier(values, value);
+      if (duplicate) {
+        const normalizedValue = normalizeUrl(
+          value,
+          true,
+          normalizeUrl(duplicate, true),
+          prefixes,
+        );
         return { name: normalizedValue, value: value };
       }
-      return { name: normalizedValue, value: value };
+      return { name: normalizeUrl(value, true), value: value };
     })
     .map((value: any) => `${value.name} = "${value.value}"`)
-    .join(",\n")}
+    .join(',\n')}
   }`;
 }
 
 export function generateNameContextName(id: string) {
-  return normalizeUrl(id, true) + "Context";
+  return normalizeUrl(id, true) + 'Context';
 }
 
 export function generateNameContextValues(nameContext: Record<string, string>) {
   return `{
   ${Object.keys(nameContext)
     .map((key: string) => `${key} = "${nameContext[key]}"`)
-    .join(",\n")}
+    .join(',\n')}
   }`;
 }
 
 export function generateCommentFromAnnotations(annotations: any[]) {
   const comment = annotations?.find(
-    (annotation: any) => annotation.predicate === ns.rdfs("comment")
+    (annotation: any) => annotation.predicate === ns.rdfs('comment'),
   );
-  const commentValue = comment ? "// " + comment.object.value : "";
+  const commentValue = comment ? '// ' + comment.object.value : '';
   return commentValue;
 }
 
@@ -189,27 +188,33 @@ export function generateTripleConstraint(
   valueExpr: any,
   typeValue: string,
   predicate: string,
+  prefixes: string,
   comment: string,
   required: boolean,
-  multiple: boolean
+  multiple: boolean,
+  not?: string,
 ) {
   if (multiple) {
     typeValue += ` | ${
-      valueExpr?.nodeKind === "iri" || !valueExpr?.values
+      valueExpr?.nodeKind === 'iri' || !valueExpr?.values
         ? `(${typeValue})`
         : typeValue
     }[]`;
   }
 
-  return `${normalizeUrl(predicate)}${
-    !required ? "?" : ""
+  const normalizedUrl = not
+    ? normalizeUrl(predicate, false, normalizeUrl(not, true), prefixes)
+    : normalizeUrl(predicate, false);
+
+  return `${normalizedUrl}${
+    !required ? '?' : ''
   }: ${typeValue}; ${comment}`.trim();
 }
 
 export function generateValues(
   values: string[],
   typeValue: string,
-  context: any
+  context: any,
 ) {
   if (values.length > 1) {
     return `(${values
@@ -217,22 +222,22 @@ export function generateValues(
         const otherValue = values.find(
           (otherValue: string, otherIndex: number) =>
             index !== otherIndex &&
-            normalizeUrl(otherValue, true) === normalizeUrl(value, true)
+            normalizeUrl(otherValue, true) === normalizeUrl(value, true),
         );
         return `${typeValue}.${normalizeUrl(
           value,
           true,
-          otherValue ? normalizeUrl(otherValue, true) : "",
-          context?.prefixes
+          otherValue ? normalizeUrl(otherValue, true) : '',
+          context?.prefixes,
         )}`;
       })
-      .join(" | ")})[]`;
+      .join(' | ')})[]`;
   } else {
     return `${typeValue}.${normalizeUrl(
       values[0],
       true,
       undefined,
-      context?.prefixes
+      context?.prefixes,
     )}`;
   }
 }
@@ -240,16 +245,16 @@ export function generateValues(
 export function generateValueExpression(
   valueExpr: any,
   context: any,
-  toCreate?: boolean
+  toCreate?: boolean,
 ) {
-  if (typeof valueExpr === "string") {
+  if (typeof valueExpr === 'string') {
     return generateTsType(valueExpr, toCreate);
   } else if (valueExpr?.typeValue) {
     if (valueExpr.expression.values) {
       return generateValues(
         valueExpr.expression.values,
         valueExpr.typeValue,
-        context
+        context,
       );
     } else {
       return toCreate ? valueExpr.typeValueToCreate : valueExpr.typeValue;
@@ -259,22 +264,22 @@ export function generateValueExpression(
       ? valueExpr.generatedShapeToCreate
       : valueExpr.generatedShape;
   } else {
-    return "string";
+    return 'string';
   }
 }
 
 export function generateTsType(valueExpr: any, toCreate?: boolean) {
-  if (valueExpr?.nodeKind === "iri") {
-    return toCreate ? "URL | NamedNode" : "string";
+  if (valueExpr?.nodeKind === 'iri') {
+    return toCreate ? 'URL | NamedNode' : 'string';
   } else if (numberTypes.includes(valueExpr?.datatype)) {
-    return toCreate ? "number | Literal" : "number";
-  } else if (valueExpr?.datatype === ns.xsd("dateTime")) {
-    return toCreate ? "Date | Literal" : "Date";
-  } else if (valueExpr?.datatype === ns.xsd("string")) {
-    return toCreate ? "string | Literal" : "string";
+    return toCreate ? 'number | Literal' : 'number';
+  } else if (valueExpr?.datatype === ns.xsd('dateTime')) {
+    return toCreate ? 'Date | Literal' : 'Date';
+  } else if (valueExpr?.datatype === ns.xsd('string')) {
+    return toCreate ? 'string | Literal' : 'string';
   } else if (valueExpr?.datatype) {
     return valueExpr?.datatype;
-  } else if (typeof valueExpr === "string") {
+  } else if (typeof valueExpr === 'string') {
     try {
       return toCreate
         ? `URL | NamedNode | ${normalizeUrl(valueExpr, true)}CreateArgs`
@@ -286,18 +291,18 @@ export function generateTsType(valueExpr: any, toCreate?: boolean) {
 }
 
 const numberTypes = [
-  ns.xsd("integer"),
-  ns.xsd("decimal"),
-  ns.xsd("nonPositiveInteger"),
-  ns.xsd("negativeInteger"),
-  ns.xsd("long"),
-  ns.xsd("int"),
-  ns.xsd("short"),
-  ns.xsd("byte"),
-  ns.xsd("nonNegativeInteger"),
-  ns.xsd("unsignedLong"),
-  ns.xsd("unsignedInt"),
-  ns.xsd("unsignedShort"),
-  ns.xsd("unsignedByte"),
-  ns.xsd("positiveInteger"),
+  ns.xsd('integer'),
+  ns.xsd('decimal'),
+  ns.xsd('nonPositiveInteger'),
+  ns.xsd('negativeInteger'),
+  ns.xsd('long'),
+  ns.xsd('int'),
+  ns.xsd('short'),
+  ns.xsd('byte'),
+  ns.xsd('nonNegativeInteger'),
+  ns.xsd('unsignedLong'),
+  ns.xsd('unsignedInt'),
+  ns.xsd('unsignedShort'),
+  ns.xsd('unsignedByte'),
+  ns.xsd('positiveInteger'),
 ];

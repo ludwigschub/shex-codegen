@@ -1,29 +1,28 @@
-import path from "path";
+import path from 'path';
 
-import camelcase from "camelcase";
+import camelcase from 'camelcase';
 
 export function normalizeUrl(
   url: string,
   capitalize?: boolean,
   not?: string,
-  prefixes?: any
+  prefixes?: any,
 ) {
   const urlObject = new URL(url);
   let normalized = camelcase(
-    urlObject.hash === ""
+    urlObject.hash === ''
       ? path.parse(urlObject.pathname).name
-      : urlObject.hash.replace(/#+/, "")
+      : urlObject.hash.replace(/#+/, ''),
   );
-
   if (not && normalized.toLowerCase() === not.toLowerCase()) {
     const namespaceUrl = url.replace(
-      urlObject.hash === ""
+      urlObject.hash === ''
         ? path.parse(urlObject.pathname).name
         : urlObject.hash,
-      ""
+      urlObject.hash ? '#' : '',
     );
     const namespacePrefix = Object.keys(prefixes).find(
-      (key) => prefixes[key] === namespaceUrl
+      (key) => prefixes[key] === namespaceUrl,
     );
     normalized =
       namespacePrefix + normalized.replace(/^\w/, (c) => c.toUpperCase());
@@ -35,3 +34,14 @@ export function normalizeUrl(
 
   return normalized;
 }
+
+export const findDuplicateIdentifier = (
+  values: string[],
+  url: string,
+): string | undefined => {
+  return values.find(
+    (otherUrl) =>
+      normalizeUrl(otherUrl, true) === normalizeUrl(url, true) &&
+      otherUrl !== url,
+  );
+};
