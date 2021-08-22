@@ -58,7 +58,7 @@
     "rimraf": "3.0.2",
     "shex-methods": "0.1.21",
     "ts-node": "9.1.1",
-    "typescript": "4.2.4"
+    "typescript": "4.3.5"
   },
   "bin": "./lib/index.js"
 }
