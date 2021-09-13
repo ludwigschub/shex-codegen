@@ -198,16 +198,25 @@ TypescriptVisitor.visitNodeConstraint = function (shape: any, context: any) {
   };
 
   if (visited.expression.values) {
-    visited.typeValue = generateEnumName(
-      context.id as string,
-      context.predicate,
-    );
-    visited.inlineEnum = {
-      [visited.typeValue]: [
-        ...visited.expression.values,
-        ...(context.inlineEnums ? context.inlineEnums[visited.typeValue] : []),
-      ],
-    };
+    if (visited.expression.values[0].type === 'IriStem') {
+      const stem = visited.expression.values[0].stem;
+      visited.typeValue = `\`${
+        stem + (stem.endsWith('/') ? '' : '/')
+      }\${string}\``;
+    } else {
+      visited.typeValue = generateEnumName(
+        context.id as string,
+        context.predicate,
+      );
+      visited.inlineEnum = {
+        [visited.typeValue]: [
+          ...visited.expression.values,
+          ...(context.inlineEnums
+            ? context.inlineEnums[visited.typeValue]
+            : []),
+        ],
+      };
+    }
   } else {
     visited.typeValue = generateTsType(visited.expression);
     visited.typeValueToCreate = generateTsType(visited.expression, true);
@@ -267,7 +276,7 @@ TypescriptVisitor.visitShapes = function (shapes: any[], prefixes: any) {
 
   const visited = shapes.map((shape: any) => {
     if (shape.values) {
-      return generateEnumExport('', shape.values, prefixes, shape.id);
+      generateEnumExport('', shape.values, prefixes, shape.id);
     }
 
     const visitedShape = this.visitShapeDecl({ ...shape, prefixes: prefixes });

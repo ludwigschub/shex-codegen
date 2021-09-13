@@ -155,9 +155,9 @@ export function generateEnumValues(
           normalizeUrl(duplicate, true),
           prefixes,
         );
-        return { name: normalizedValue, value: value };
+        return { name: normalizedValue, value };
       }
-      return { name: normalizeUrl(value, true), value: value };
+      return { name: normalizeUrl(value, true), value };
     })
     .map((value: any) => `${value.name} = "${value.value}"`)
     .join(',\n')}
@@ -211,6 +211,11 @@ export function generateTripleConstraint(
   }: ${typeValue}; ${comment}`.trim();
 }
 
+export const iriOrIriStem = (value: string) => {
+  const iriStem = (value as unknown) as { type: string; stem: string };
+  return iriStem.type === 'IriStem' ? iriStem.stem : value;
+};
+
 export function generateValues(
   values: string[],
   typeValue: string,
@@ -219,15 +224,18 @@ export function generateValues(
   if (values.length > 1) {
     return `(${values
       .map((value: string, index: number) => {
-        const otherValue = values.find(
-          (otherValue: string, otherIndex: number) =>
-            index !== otherIndex &&
-            normalizeUrl(otherValue, true) === normalizeUrl(value, true),
+        const duplicate = values.find(
+          (otherValue: string, otherIndex: number) => {
+            return (
+              index !== otherIndex &&
+              normalizeUrl(otherValue, true) === normalizeUrl(value, true)
+            );
+          },
         );
         return `${typeValue}.${normalizeUrl(
           value,
           true,
-          otherValue ? normalizeUrl(otherValue, true) : '',
+          duplicate ? normalizeUrl(duplicate, true) : '',
           context?.prefixes,
         )}`;
       })
@@ -251,6 +259,9 @@ export function generateValueExpression(
     return generateTsType(valueExpr, toCreate);
   } else if (valueExpr?.typeValue) {
     if (valueExpr.expression.values) {
+      if(valueExpr.expression.values[0].type === "IriStem") {
+        return valueExpr.typeValue
+      }
       return generateValues(
         valueExpr.expression.values,
         valueExpr.typeValue,

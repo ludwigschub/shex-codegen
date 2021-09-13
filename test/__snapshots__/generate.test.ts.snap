@@ -2202,6 +2202,268 @@ export const state = new Shape<State, StateCreateArgs>({
   shape: sovereignStateShex,
   context: StateContext,
 });
+
+export type WebService = {
+  id: string; // the url of a node of this shape
+  p31: P31Type.Q193424;
+  p856?: string | string[];
+  p571?: Date;
+  p17?: \`http://www.wikidata.org/entity/\${string}\`;
+  p154?:
+    | \`http://commons.wikimedia.org/wiki/Special:FilePath/\${string}\`
+    | \`http://commons.wikimedia.org/wiki/Special:FilePath/\${string}\`[];
+  p178?:
+    | \`http://www.wikidata.org/entity/\${string}\`
+    | \`http://www.wikidata.org/entity/\${string}\`[];
+  p407?:
+    | \`http://www.wikidata.org/entity/\${string}\`
+    | \`http://www.wikidata.org/entity/\${string}\`[];
+  p366?:
+    | \`http://www.wikidata.org/entity/\${string}\`
+    | \`http://www.wikidata.org/entity/\${string}\`[];
+  p127?:
+    | \`http://www.wikidata.org/entity/\${string}\`
+    | \`http://www.wikidata.org/entity/\${string}\`[];
+  p348?: string;
+  p275?:
+    | \`http://www.wikidata.org/entity/\${string}\`
+    | \`http://www.wikidata.org/entity/\${string}\`[];
+  p373?: string;
+  p137?:
+    | \`http://www.wikidata.org/entity/\${string}\`
+    | \`http://www.wikidata.org/entity/\${string}\`[];
+  p159?: \`http://www.wikidata.org/entity/\${string}\`;
+  p112?:
+    | \`http://www.wikidata.org/entity/\${string}\`
+    | \`http://www.wikidata.org/entity/\${string}\`[];
+  p577?: Date;
+  p138?:
+    | \`http://www.wikidata.org/entity/\${string}\`
+    | \`http://www.wikidata.org/entity/\${string}\`[];
+  p1482?: string;
+  p144?:
+    | \`http://www.wikidata.org/entity/\${string}\`
+    | \`http://www.wikidata.org/entity/\${string}\`[];
+  p1581?: \`http://movatwitter.jugem.jp/\${string}\`;
+  p1889?: \`http://www.wikidata.org/entity/\${string}\`;
+  p751?:
+    | \`http://www.wikidata.org/entity/\${string}\`
+    | \`http://www.wikidata.org/entity/\${string}\`[];
+  p4107?: string;
+  p126?:
+    | \`http://www.wikidata.org/entity/\${string}\`
+    | \`http://www.wikidata.org/entity/\${string}\`[];
+  p941?:
+    | \`http://www.wikidata.org/entity/\${string}\`
+    | \`http://www.wikidata.org/entity/\${string}\`[];
+  p2283?:
+    | \`http://www.wikidata.org/entity/\${string}\`
+    | \`http://www.wikidata.org/entity/\${string}\`[];
+  p2397?: string;
+  p3984?: string | string[];
+  p7306?: string;
+  p3417?: string;
+  p2088?: string;
+  p2013?: string;
+  p646?: string;
+  p3393?: string;
+};
+
+export type WebServiceCreateArgs = {
+  id?: string | NamedNode; // the url to match or create the node with e.g. 'https://example.com#this', 'https://example.com/profile/card#me'
+  p31: P31Type.Q193424;
+  p856?: URL | NamedNode | (URL | NamedNode)[];
+  p571?: Date | Literal;
+  p17?: \`http://www.wikidata.org/entity/\${string}\`;
+  p154?:
+    | \`http://commons.wikimedia.org/wiki/Special:FilePath/\${string}\`
+    | \`http://commons.wikimedia.org/wiki/Special:FilePath/\${string}\`[];
+  p178?:
+    | \`http://www.wikidata.org/entity/\${string}\`
+    | \`http://www.wikidata.org/entity/\${string}\`[];
+  p407?:
+    | \`http://www.wikidata.org/entity/\${string}\`
+    | \`http://www.wikidata.org/entity/\${string}\`[];
+  p366?:
+    | \`http://www.wikidata.org/entity/\${string}\`
+    | \`http://www.wikidata.org/entity/\${string}\`[];
+  p127?:
+    | \`http://www.wikidata.org/entity/\${string}\`
+    | \`http://www.wikidata.org/entity/\${string}\`[];
+  p348?: string | Literal;
+  p275?:
+    | \`http://www.wikidata.org/entity/\${string}\`
+    | \`http://www.wikidata.org/entity/\${string}\`[];
+  p373?: string | Literal;
+  p137?:
+    | \`http://www.wikidata.org/entity/\${string}\`
+    | \`http://www.wikidata.org/entity/\${string}\`[];
+  p159?: \`http://www.wikidata.org/entity/\${string}\`;
+  p112?:
+    | \`http://www.wikidata.org/entity/\${string}\`
+    | \`http://www.wikidata.org/entity/\${string}\`[];
+  p577?: Date | Literal;
+  p138?:
+    | \`http://www.wikidata.org/entity/\${string}\`
+    | \`http://www.wikidata.org/entity/\${string}\`[];
+  p1482?: URL | NamedNode;
+  p144?:
+    | \`http://www.wikidata.org/entity/\${string}\`
+    | \`http://www.wikidata.org/entity/\${string}\`[];
+  p1581?: \`http://movatwitter.jugem.jp/\${string}\`;
+  p1889?: \`http://www.wikidata.org/entity/\${string}\`;
+  p751?:
+    | \`http://www.wikidata.org/entity/\${string}\`
+    | \`http://www.wikidata.org/entity/\${string}\`[];
+  p4107?: string | Literal;
+  p126?:
+    | \`http://www.wikidata.org/entity/\${string}\`
+    | \`http://www.wikidata.org/entity/\${string}\`[];
+  p941?:
+    | \`http://www.wikidata.org/entity/\${string}\`
+    | \`http://www.wikidata.org/entity/\${string}\`[];
+  p2283?:
+    | \`http://www.wikidata.org/entity/\${string}\`
+    | \`http://www.wikidata.org/entity/\${string}\`[];
+  p2397?: string | Literal;
+  p3984?: string | Literal | (string | Literal)[];
+  p7306?: string | Literal;
+  p3417?: string | Literal;
+  p2088?: string | Literal;
+  p2013?: string | Literal;
+  p646?: string | Literal;
+  p3393?: string | Literal;
+};
+
+export type WebServiceUpdateArgs = Partial<WebServiceCreateArgs>;
+
+export enum P31Type {
+  Q193424 = 'http://www.wikidata.org/entity/Q193424',
+}
+
+export enum WebServiceContext {
+  p31 = 'p:p31',
+  p856 = 'p:p856',
+  p571 = 'p:p571',
+  p17 = 'p:p17',
+  p154 = 'p:p154',
+  p178 = 'p:p178',
+  p407 = 'p:p407',
+  p366 = 'p:p366',
+  p127 = 'p:p127',
+  p348 = 'p:p348',
+  p275 = 'p:p275',
+  p373 = 'p:p373',
+  p137 = 'p:p137',
+  p159 = 'p:p159',
+  p112 = 'p:p112',
+  p577 = 'p:p577',
+  p138 = 'p:p138',
+  p1482 = 'p:p1482',
+  p144 = 'p:p144',
+  p1581 = 'p:p1581',
+  p1889 = 'p:p1889',
+  p751 = 'p:p751',
+  p4107 = 'p:p4107',
+  p126 = 'p:p126',
+  p941 = 'p:p941',
+  p2283 = 'p:p2283',
+  p2397 = 'p:p2397',
+  p3984 = 'p:p3984',
+  p7306 = 'p:p7306',
+  p3417 = 'p:p3417',
+  p2088 = 'p:p2088',
+  p2013 = 'p:p2013',
+  p646 = 'p:p646',
+  p3393 = 'p:p3393',
+}
+
+export const webServiceShex = \`
+PREFIX wd: <http://www.wikidata.org/entity/>
+PREFIX p: <http://www.wikidata.org/prop/>
+PREFIX wdt: <http://www.wikidata.org/prop/direct/>
+PREFIX xsd: <http://www.w3.org/2001/XMLSchema#>
+PREFIX geo: <http://www.opengis.net/ont/geosparql#>
+PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
+PREFIX wbs: <https://www.wikidata.org/wiki/EntitySchema:E141#>
+
+wbs:web_service {
+    # instance of
+    wdt:P31 [ wd:Q193424 ]  ;
+    # official website
+    wdt:P856 IRI * ;
+    # inception
+    wdt:P571 xsd:dateTime ? ;
+    # country
+    wdt:P17 [ <http://www.wikidata.org/entity>~ ] ? ;
+    # logo image
+    wdt:P154 [ <http://commons.wikimedia.org/wiki/Special:FilePath>~ ] * ;
+    # developer
+    wdt:P178 [ <http://www.wikidata.org/entity>~ ] * ;
+    # language of work or name
+    wdt:P407 [ <http://www.wikidata.org/entity>~ ] * ;
+    # use
+    wdt:P366 [ <http://www.wikidata.org/entity>~ ] * ;
+    # owned by
+    wdt:P127 [ <http://www.wikidata.org/entity>~ ] * ;
+    # software version identifier
+    wdt:P348 xsd:string ? ;
+    # license
+    wdt:P275 [ <http://www.wikidata.org/entity>~ ] * ;
+    # Commons category
+    wdt:P373 xsd:string ? ;
+    # operator
+    wdt:P137 [ <http://www.wikidata.org/entity>~ ] * ;
+    # headquarters location
+    wdt:P159 [ <http://www.wikidata.org/entity>~ ] ? ;
+    # founded by
+    wdt:P112 [ <http://www.wikidata.org/entity>~ ] * ;
+    # publication date
+    wdt:P577 xsd:dateTime ? ;
+    # named after
+    wdt:P138 [ <http://www.wikidata.org/entity>~ ] * ;
+    # Stack Exchange tag
+    wdt:P1482 IRI ? ;
+    # based on
+    wdt:P144 [ <http://www.wikidata.org/entity>~ ] * ;
+    # official blog
+    wdt:P1581 [ <http://movatwitter.jugem.jp>~ ] ? ;
+    # different from
+    wdt:P1889 [ <http://www.wikidata.org/entity>~ ] ? ;
+    # introduced feature
+    wdt:P751 [ <http://www.wikidata.org/entity>~ ] * ;
+    # Framalibre ID
+    wdt:P4107 xsd:string ? ;
+    # maintained by
+    wdt:P126 [ <http://www.wikidata.org/entity>~ ] * ;
+    # inspired by
+    wdt:P941 [ <http://www.wikidata.org/entity>~ ] * ;
+    # uses
+    wdt:P2283 [ <http://www.wikidata.org/entity>~ ] * ;
+    # YouTube channel ID
+    wdt:P2397 xsd:string ? ;
+    # subreddit
+    wdt:P3984 xsd:string * ;   
+    # Downdetector ID
+    wdt:P7306 xsd:string ? ;
+    # Quora topic ID
+    wdt:P3417 xsd:string ? ;
+    # Crunchbase organization ID
+    wdt:P2088 xsd:string ? ;
+    # Facebook ID
+    wdt:P2013 xsd:string ? ;
+    # Freebase ID
+    wdt:P646 xsd:string ? ;
+    # LittleSis organisation ID
+    wdt:P3393 xsd:string ? ;
+}
+\`;
+
+export const webService = new Shape<WebService, WebServiceCreateArgs>({
+  id: 'https://www.wikidata.org/wiki/EntitySchema:E141#web_service',
+  shape: webServiceShex,
+  context: WebServiceContext,
+});
 ",
 ]
 `;

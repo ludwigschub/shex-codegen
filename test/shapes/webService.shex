@@ -1,0 +1,78 @@
+PREFIX wd: <http://www.wikidata.org/entity/>
+PREFIX p: <http://www.wikidata.org/prop/>
+PREFIX wdt: <http://www.wikidata.org/prop/direct/>
+PREFIX xsd: <http://www.w3.org/2001/XMLSchema#>
+PREFIX geo: <http://www.opengis.net/ont/geosparql#>
+PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
+PREFIX wbs: <https://www.wikidata.org/wiki/EntitySchema:E141#>
+
+wbs:web_service {
+    # instance of
+    wdt:P31 [ wd:Q193424 ]  ;
+    # official website
+    wdt:P856 IRI * ;
+    # inception
+    wdt:P571 xsd:dateTime ? ;
+    # country
+    wdt:P17 [ <http://www.wikidata.org/entity>~ ] ? ;
+    # logo image
+    wdt:P154 [ <http://commons.wikimedia.org/wiki/Special:FilePath>~ ] * ;
+    # developer
+    wdt:P178 [ <http://www.wikidata.org/entity>~ ] * ;
+    # language of work or name
+    wdt:P407 [ <http://www.wikidata.org/entity>~ ] * ;
+    # use
+    wdt:P366 [ <http://www.wikidata.org/entity>~ ] * ;
+    # owned by
+    wdt:P127 [ <http://www.wikidata.org/entity>~ ] * ;
+    # software version identifier
+    wdt:P348 xsd:string ? ;
+    # license
+    wdt:P275 [ <http://www.wikidata.org/entity>~ ] * ;
+    # Commons category
+    wdt:P373 xsd:string ? ;
+    # operator
+    wdt:P137 [ <http://www.wikidata.org/entity>~ ] * ;
+    # headquarters location
+    wdt:P159 [ <http://www.wikidata.org/entity>~ ] ? ;
+    # founded by
+    wdt:P112 [ <http://www.wikidata.org/entity>~ ] * ;
+    # publication date
+    wdt:P577 xsd:dateTime ? ;
+    # named after
+    wdt:P138 [ <http://www.wikidata.org/entity>~ ] * ;
+    # Stack Exchange tag
+    wdt:P1482 IRI ? ;
+    # based on
+    wdt:P144 [ <http://www.wikidata.org/entity>~ ] * ;
+    # official blog
+    wdt:P1581 [ <http://movatwitter.jugem.jp>~ ] ? ;
+    # different from
+    wdt:P1889 [ <http://www.wikidata.org/entity>~ ] ? ;
+    # introduced feature
+    wdt:P751 [ <http://www.wikidata.org/entity>~ ] * ;
+    # Framalibre ID
+    wdt:P4107 xsd:string ? ;
+    # maintained by
+    wdt:P126 [ <http://www.wikidata.org/entity>~ ] * ;
+    # inspired by
+    wdt:P941 [ <http://www.wikidata.org/entity>~ ] * ;
+    # uses
+    wdt:P2283 [ <http://www.wikidata.org/entity>~ ] * ;
+    # YouTube channel ID
+    wdt:P2397 xsd:string ? ;
+    # subreddit
+    wdt:P3984 xsd:string * ;   
+    # Downdetector ID
+    wdt:P7306 xsd:string ? ;
+    # Quora topic ID
+    wdt:P3417 xsd:string ? ;
+    # Crunchbase organization ID
+    wdt:P2088 xsd:string ? ;
+    # Facebook ID
+    wdt:P2013 xsd:string ? ;
+    # Freebase ID
+    wdt:P646 xsd:string ? ;
+    # LittleSis organisation ID
+    wdt:P3393 xsd:string ? ;
+}
