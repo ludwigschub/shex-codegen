@@ -6085,10 +6085,10 @@ rdf-canonize@^3.0.0:
   dependencies:
     setimmediate "^1.0.5"
 
-rdflib@2.2.8:
-  version "2.2.8"
-  resolved "https://registry.yarnpkg.com/rdflib/-/rdflib-2.2.8.tgz#c8cb1ee6bb90020b9bf40147ebf6ced84307d9cf"
-  integrity sha512-pnGcY0OaVVi6EkB5JoA6vhkmFe3wgJzS173iLWfXnqyAZEThFxcanTcB8xMk/YiATOczRG4A1DT8znHU69AXow==
+rdflib@2.2.9:
+  version "2.2.9"
+  resolved "https://registry.yarnpkg.com/rdflib/-/rdflib-2.2.9.tgz#60df1ab6fdedb8cb17ad59ebe782e9aafae42381"
+  integrity sha512-zXvr864NDe6OJw3sTY6nUYPI7JmAeoQyk2WAK+kFXFHuD4ZJud48xBc32tVfMUGeIyK3BA3LqPi+w+IhjSZgPA==
   dependencies:
     "@babel/runtime" "^7.15.4"
     async "^3.2.1"
