@@ -1064,10 +1064,10 @@
   dependencies:
     regenerator-runtime "^0.13.4"
 
-"@babel/runtime@^7.15.4":
-  version "7.15.4"
-  resolved "https://registry.yarnpkg.com/@babel/runtime/-/runtime-7.15.4.tgz#fd17d16bfdf878e6dd02d19753a39fa8a8d9c84a"
-  integrity sha512-99catp6bHCaxr4sJ/DbTGgHS4+Rs2RVd2g7iOap6SLGPDknRK9ztKNsE/Fg6QhSeh1FGE5f6gHGQmvvn3I3xhw==
+"@babel/runtime@^7.16.0":
+  version "7.16.0"
+  resolved "https://registry.yarnpkg.com/@babel/runtime/-/runtime-7.16.0.tgz#e27b977f2e2088ba24748bf99b5e1dece64e4f0b"
+  integrity sha512-Nht8L0O8YCktmsDV6FqFue7vQLRx3Hb0B37lS5y0jDRqRxlBG4wIJHnf9/bgSE2UyipKFA01YtS+npRdTWBUyw==
   dependencies:
     regenerator-runtime "^0.13.4"
 
@@ -1932,10 +1932,10 @@ async@^3.2.0:
   resolved "https://registry.yarnpkg.com/async/-/async-3.2.0.tgz#b3a2685c5ebb641d3de02d161002c60fc9f85720"
   integrity sha512-TR2mEZFVOj2pLStYxLht7TyfuRzaydfpxr3k9RpHIzMgw7A64dzsdqCxH1WJyQdoe8T10nDXd9wnEigmiuHIZw==
 
-async@^3.2.1:
-  version "3.2.1"
-  resolved "https://registry.yarnpkg.com/async/-/async-3.2.1.tgz#d3274ec66d107a47476a4c49136aacdb00665fc8"
-  integrity sha512-XdD5lRO/87udXCMC9meWdYiR+Nq6ZjUfXidViUZGu2F1MO4T3XwZ1et0hb2++BgLfhyJwy44BGB/yx80ABx8hg==
+async@^3.2.2:
+  version "3.2.2"
+  resolved "https://registry.yarnpkg.com/async/-/async-3.2.2.tgz#2eb7671034bb2194d45d30e31e24ec7e7f9670cd"
+  integrity sha512-H0E+qZaDEfx/FY4t7iLRv1W2fFI6+pyCeTw1uN20AQPiwqwM6ojPxHxdLv4z8hi2DtnW9BOckSspLucW7pIE5g==
 
 asynckit@^0.4.0:
   version "0.4.0"
@@ -5904,13 +5904,13 @@ rdf-canonize@^3.0.0:
   dependencies:
     setimmediate "^1.0.5"
 
-rdflib@2.2.9:
-  version "2.2.9"
-  resolved "https://registry.yarnpkg.com/rdflib/-/rdflib-2.2.9.tgz#60df1ab6fdedb8cb17ad59ebe782e9aafae42381"
-  integrity sha512-zXvr864NDe6OJw3sTY6nUYPI7JmAeoQyk2WAK+kFXFHuD4ZJud48xBc32tVfMUGeIyK3BA3LqPi+w+IhjSZgPA==
+rdflib@2.2.10:
+  version "2.2.10"
+  resolved "https://registry.yarnpkg.com/rdflib/-/rdflib-2.2.10.tgz#1dc9ffb730c6d71e487d66a2f2eacb738bb5059e"
+  integrity sha512-qP87jqNdI4FeV9gG14ASpqiivlYJaxqOqD3wpS5d0BIOJoEVmad3erLl+3qWcGkLbhcgG5DMl4ynMzqLJDXzWg==
   dependencies:
-    "@babel/runtime" "^7.15.4"
-    async "^3.2.1"
+    "@babel/runtime" "^7.16.0"
+    async "^3.2.2"
     cross-fetch "^3.1.4"
     jsonld "^5.2.0"
     n3 "^1.11.1"
