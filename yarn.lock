@@ -5964,10 +5964,10 @@ rdf-canonize@^3.0.0:
   dependencies:
     setimmediate "^1.0.5"
 
-rdflib@2.2.10:
-  version "2.2.10"
-  resolved "https://registry.yarnpkg.com/rdflib/-/rdflib-2.2.10.tgz#1dc9ffb730c6d71e487d66a2f2eacb738bb5059e"
-  integrity sha512-qP87jqNdI4FeV9gG14ASpqiivlYJaxqOqD3wpS5d0BIOJoEVmad3erLl+3qWcGkLbhcgG5DMl4ynMzqLJDXzWg==
+rdflib@2.2.12:
+  version "2.2.12"
+  resolved "https://registry.yarnpkg.com/rdflib/-/rdflib-2.2.12.tgz#a8af2ce27b5b79a4ee6b688fab54493ddd158791"
+  integrity sha512-/iO1lsTTSQDbipkFhyNSP7lMfqcDm6/snK+0kKESw0MKQPha3cjwD0WuchvucV5FPRQ2XgpAN8PgrBOollEdSw==
   dependencies:
     "@babel/runtime" "^7.16.0"
     async "^3.2.2"
