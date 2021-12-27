@@ -1748,6 +1748,11 @@
     "@typescript-eslint/types" "4.33.0"
     eslint-visitor-keys "^2.0.0"
 
+"@xmldom/xmldom@^0.8.0":
+  version "0.8.0"
+  resolved "https://registry.yarnpkg.com/@xmldom/xmldom/-/xmldom-0.8.0.tgz#9f83fd9b3506c9603baad67e44eb6e6ee8eee0ce"
+  integrity sha512-7wVnF+rKrVDEo1xjzkkidTG0grclaVnX0vKa0z9JSXcEdtftUJjvU33jLGg6SHyvs3eeqEsI7jZ6NxYfRypEEg==
+
 abab@^2.0.3, abab@^2.0.5:
   version "2.0.5"
   resolved "https://registry.yarnpkg.com/abab/-/abab-2.0.5.tgz#c0b678fb32d60fc1219c784d6a826fe385aeb79a"
@@ -5403,10 +5408,10 @@ n3@^1.10.0:
     queue-microtask "^1.1.2"
     readable-stream "^3.6.0"
 
-n3@^1.11.1:
-  version "1.11.1"
-  resolved "https://registry.yarnpkg.com/n3/-/n3-1.11.1.tgz#50015008afcb71e587ff9413f32e4a9bef09bc8b"
-  integrity sha512-yeTeYoatabMs6IMv71dYSIfgf+s+4DpLrnvRv8CKGRLnAt1lfWcnb+mwP67PZKq7Wvh7MCIGXaflayPkn0WzHw==
+n3@^1.12.2:
+  version "1.12.2"
+  resolved "https://registry.yarnpkg.com/n3/-/n3-1.12.2.tgz#3214c895b202ff57ebcaeb3e086c80649209158d"
+  integrity sha512-vY1HBEraMPWQFLEK6sn67DeGMqTuwXnlEYpZ8gTVukKQSz2f44d+t+ZcmwEt8c99FlVAbpmMb/435Q8t0OC+7w==
   dependencies:
     queue-microtask "^1.1.2"
     readable-stream "^3.6.0"
@@ -6021,18 +6026,18 @@ rdf-canonize@^3.0.0:
   dependencies:
     setimmediate "^1.0.5"
 
-rdflib@2.2.12:
-  version "2.2.12"
-  resolved "https://registry.yarnpkg.com/rdflib/-/rdflib-2.2.12.tgz#a8af2ce27b5b79a4ee6b688fab54493ddd158791"
-  integrity sha512-/iO1lsTTSQDbipkFhyNSP7lMfqcDm6/snK+0kKESw0MKQPha3cjwD0WuchvucV5FPRQ2XgpAN8PgrBOollEdSw==
+rdflib@2.2.15:
+  version "2.2.15"
+  resolved "https://registry.yarnpkg.com/rdflib/-/rdflib-2.2.15.tgz#83d8714966759d9f465dcc819f7aaf8c8a4c08c4"
+  integrity sha512-AOkoFf1MPx8jb5CtQnmfvaqlZ0gqzBBQYcANjXxDcC1yESYPwHSgawBq9Nsb7n/ZyWROJqKE+mGXkCUQR0jVaQ==
   dependencies:
     "@babel/runtime" "^7.16.0"
+    "@xmldom/xmldom" "^0.8.0"
     async "^3.2.2"
     cross-fetch "^3.1.4"
     jsonld "^5.2.0"
-    n3 "^1.11.1"
-    solid-namespace "^0.5.1"
-    xmldom "^0.6.0"
+    n3 "^1.12.2"
+    solid-namespace "^0.5.2"
 
 rdflib@^2.2.0:
   version "2.2.2"
@@ -6580,10 +6585,10 @@ solid-namespace@^0.5.0:
   resolved "https://registry.yarnpkg.com/solid-namespace/-/solid-namespace-0.5.0.tgz#f618abae809dfb7510409e10f00d84112d32dbc6"
   integrity sha512-Q04kFodEJOlRFHLI7HAWpONhi4ZAgXILcLs0F3EsmA90Jlf/Gmh4J7ZysDyiiq3hX/4Nyz4J7iU6NuECiJUewg==
 
-solid-namespace@^0.5.1:
-  version "0.5.1"
-  resolved "https://registry.yarnpkg.com/solid-namespace/-/solid-namespace-0.5.1.tgz#47fd49a7ec6330cb93f5372d8d8c5a317c140557"
-  integrity sha512-t1ArfuO+7C/zoS/WbAecMCwcuNTzVVLP66bgqFyOnWCwCc8pAwUQazlez/8zldRLE5xtkJTNkdldhLdKWk7kUA==
+solid-namespace@^0.5.2:
+  version "0.5.2"
+  resolved "https://registry.yarnpkg.com/solid-namespace/-/solid-namespace-0.5.2.tgz#b53c853da28b687c30f8d5cdd741d83da90ae06b"
+  integrity sha512-pmsKt9rsAOIxnmlgPFgSmWcof8ngv2Q8sx80Qq0OUA05KEtZ3iW4EYM2Ww18aMfPQZK5RdC/4KejNsDUJGrQiw==
 
 source-map-resolve@^0.5.0:
   version "0.5.3"
