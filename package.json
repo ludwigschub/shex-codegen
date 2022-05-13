@@ -2,6 +2,11 @@
   "name": "shex-codegen",
   "version": "0.3.26",
   "description": "",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/ludwigschubi/shex-codegen.git"
+  },
+  "homepage": "https://github.com/ludwigschubi/shex-codegen#readme",
   "main": "lib/index.js",
   "browser": "browser/browser.js",
   "scripts": {
