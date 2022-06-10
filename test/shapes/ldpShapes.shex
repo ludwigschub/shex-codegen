@@ -10,6 +10,8 @@ ldp:BasicContainerShape EXTRA a {
     // rdfs:comment  "Defines the node as a Container" ;
   a [ ldp:Container ]
     // rdfs:comment  "Defines the node as a Container" ;
+  terms:description xsd:language
+    // rdfs:comment  "Gives a description for the resource" ;
   ldp:contains @ldp:ResourceShape *
     // rdfs:comment  "Contains these Resources" ;
   st:size xsd:integer
