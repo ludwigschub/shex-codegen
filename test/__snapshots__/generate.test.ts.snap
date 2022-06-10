@@ -733,6 +733,7 @@ export type BasicContainerShapeUpdateArgs = Partial<BasicContainerShapeCreateArg
 
 export type ResourceShape = {
   id: string; // the url of a node of this shape
+  description: string; // Gives a description for the resource
   size: number; // Size of Container
   mtime: number; // Time of Container creation created
   modified: Date; // Time the Container was modified
@@ -742,6 +743,7 @@ export type ResourceShape = {
 
 export type ResourceShapeCreateArgs = {
   id?: string | NamedNode; // the url to match or create the node with e.g. 'https://example.com#this', 'https://example.com/profile/card#me'
+  description: string | Literal; // Gives a description for the resource
   size: number | Literal; // Size of Container
   mtime: number | Literal; // Time of Container creation created
   modified: Date | Literal; // Time the Container was modified
@@ -770,6 +772,7 @@ export enum BasicContainerShapeContext {
 
 export enum ResourceShapeContext {
   type = 'rdf:type',
+  description = 'terms:description',
   size = 'st:size',
   mtime = 'st:mtime',
   modified = 'terms:modified',
@@ -801,6 +804,8 @@ ldp:BasicContainerShape EXTRA a {
 ldp:ResourceShape EXTRA a {
   a [ ldp:Resource ]
     // rdfs:comment  \\"Defines the node as a Resource\\" ;
+  terms:description rdfs:langString
+    // rdfs:comment  \\"Gives a description for the resource\\" ;
   st:size xsd:integer
     // rdfs:comment  \\"Size of Container\\" ;
   st:mtime xsd:decimal

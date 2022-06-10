@@ -23,6 +23,8 @@ ldp:BasicContainerShape EXTRA a {
 ldp:ResourceShape EXTRA a {
   a [ ldp:Resource ]
     // rdfs:comment  "Defines the node as a Resource" ;
+  terms:description rdfs:langString
+    // rdfs:comment  "Gives a description for the resource" ;
   st:size xsd:integer
     // rdfs:comment  "Size of Container" ;
   st:mtime xsd:decimal
