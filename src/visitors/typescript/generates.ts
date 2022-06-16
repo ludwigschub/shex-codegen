@@ -231,7 +231,7 @@ export function generateValues(
           context?.prefixes,
         )}`;
       })
-      .join(' | ')})[]`;
+      .join(' | ')})`;
   } else {
     return `${typeValue}.${normalizeUrl(
       values[0],
