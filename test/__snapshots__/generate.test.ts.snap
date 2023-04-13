@@ -27,10 +27,7 @@ export type SolidProfileShape = {
   publicTypeIndex?: string | string[]; // A registry of all types used on the user's Pod (for public access)
   knows?: string | string[]; // A list of WebIds for all the people this user knows.
 } & {
-  type: (
-    | SolidProfileShapeType.SchemPerson
-    | SolidProfileShapeType.FoafPerson
-  )[]; // Defines the node as a Person (from foaf)
+  type: SolidProfileShapeType.SchemPerson | SolidProfileShapeType.FoafPerson; // Defines the node as a Person (from foaf)
 };
 
 export type SolidProfileShapeCreateArgs = {
@@ -75,10 +72,7 @@ export type SolidProfileShapeCreateArgs = {
   publicTypeIndex?: URL | NamedNode | (URL | NamedNode)[]; // A registry of all types used on the user's Pod (for public access)
   knows?: URL | NamedNode | (URL | NamedNode)[]; // A list of WebIds for all the people this user knows.
 } & {
-  type: (
-    | SolidProfileShapeType.SchemPerson
-    | SolidProfileShapeType.FoafPerson
-  )[]; // Defines the node as a Person (from foaf)
+  type: SolidProfileShapeType.SchemPerson | SolidProfileShapeType.FoafPerson; // Defines the node as a Person (from foaf)
 };
 
 export type SolidProfileShapeUpdateArgs = Partial<SolidProfileShapeCreateArgs>;
@@ -107,7 +101,7 @@ export type EmailShape = {
   id: string; // the url of a node of this shape
   value: string; // The value of an email as a mailto link (Example <mailto:jane@example.com>)
 } & {
-  type?: (
+  type?:
     | EmailShapeType.Dom
     | EmailShapeType.Home
     | EmailShapeType.Isdn
@@ -118,15 +112,14 @@ export type EmailShape = {
     | EmailShapeType.Postal
     | EmailShapeType.Pref
     | EmailShapeType.Work
-    | EmailShapeType.X400
-  )[]; // The type of email.
+    | EmailShapeType.X400; // The type of email.
 };
 
 export type EmailShapeCreateArgs = {
   id?: string | NamedNode; // the url to match or create the node with e.g. 'https://example.com#this', 'https://example.com/profile/card#me'
   value: URL | NamedNode; // The value of an email as a mailto link (Example <mailto:jane@example.com>)
 } & {
-  type?: (
+  type?:
     | EmailShapeType.Dom
     | EmailShapeType.Home
     | EmailShapeType.Isdn
@@ -137,8 +130,7 @@ export type EmailShapeCreateArgs = {
     | EmailShapeType.Postal
     | EmailShapeType.Pref
     | EmailShapeType.Work
-    | EmailShapeType.X400
-  )[]; // The type of email.
+    | EmailShapeType.X400; // The type of email.
 };
 
 export type EmailShapeUpdateArgs = Partial<EmailShapeCreateArgs>;
@@ -147,7 +139,7 @@ export type PhoneNumberShape = {
   id: string; // the url of a node of this shape
   value: string; // The value of a phone number as a tel link (Example <tel:555-555-5555>)
 } & {
-  type?: (
+  type?:
     | PhoneNumberShapeType.Dom
     | PhoneNumberShapeType.Home
     | PhoneNumberShapeType.Isdn
@@ -158,15 +150,14 @@ export type PhoneNumberShape = {
     | PhoneNumberShapeType.Postal
     | PhoneNumberShapeType.Pref
     | PhoneNumberShapeType.Work
-    | PhoneNumberShapeType.X400
-  )[]; // They type of Phone Number
+    | PhoneNumberShapeType.X400; // They type of Phone Number
 };
 
 export type PhoneNumberShapeCreateArgs = {
   id?: string | NamedNode; // the url to match or create the node with e.g. 'https://example.com#this', 'https://example.com/profile/card#me'
   value: URL | NamedNode; // The value of a phone number as a tel link (Example <tel:555-555-5555>)
 } & {
-  type?: (
+  type?:
     | PhoneNumberShapeType.Dom
     | PhoneNumberShapeType.Home
     | PhoneNumberShapeType.Isdn
@@ -177,8 +168,7 @@ export type PhoneNumberShapeCreateArgs = {
     | PhoneNumberShapeType.Postal
     | PhoneNumberShapeType.Pref
     | PhoneNumberShapeType.Work
-    | PhoneNumberShapeType.X400
-  )[]; // They type of Phone Number
+    | PhoneNumberShapeType.X400; // They type of Phone Number
 };
 
 export type PhoneNumberShapeUpdateArgs = Partial<PhoneNumberShapeCreateArgs>;
@@ -186,16 +176,16 @@ export type PhoneNumberShapeUpdateArgs = Partial<PhoneNumberShapeCreateArgs>;
 export type TrustedAppShape = {
   id: string; // the url of a node of this shape
   mode:
-    | (ModeType.Append | ModeType.Control | ModeType.Read | ModeType.Write)[]
-    | (ModeType.Append | ModeType.Control | ModeType.Read | ModeType.Write)[][]; // The level of access provided to this origin
+    | (ModeType.Append | ModeType.Control | ModeType.Read | ModeType.Write)
+    | (ModeType.Append | ModeType.Control | ModeType.Read | ModeType.Write)[]; // The level of access provided to this origin
   origin: string; // The app origin the user trusts
 };
 
 export type TrustedAppShapeCreateArgs = {
   id?: string | NamedNode; // the url to match or create the node with e.g. 'https://example.com#this', 'https://example.com/profile/card#me'
   mode:
-    | (ModeType.Append | ModeType.Control | ModeType.Read | ModeType.Write)[]
-    | (ModeType.Append | ModeType.Control | ModeType.Read | ModeType.Write)[][]; // The level of access provided to this origin
+    | (ModeType.Append | ModeType.Control | ModeType.Read | ModeType.Write)
+    | (ModeType.Append | ModeType.Control | ModeType.Read | ModeType.Write)[]; // The level of access provided to this origin
   origin: URL | NamedNode; // The app origin the user trusts
 };
 
@@ -512,19 +502,11 @@ export type Cryptocurrency = {
   p2283:
     | {
         id: string; // the url of a node of this shape
-        p2283: (
-          | P2283Type.Q17083510
-          | P2283Type.Q7249984
-          | P2283Type.Q48834328
-        )[];
+        p2283: P2283Type.Q17083510 | P2283Type.Q7249984 | P2283Type.Q48834328;
       }
     | {
         id: string; // the url of a node of this shape
-        p2283: (
-          | P2283Type.Q17083510
-          | P2283Type.Q7249984
-          | P2283Type.Q48834328
-        )[];
+        p2283: P2283Type.Q17083510 | P2283Type.Q7249984 | P2283Type.Q48834328;
       }[];
   p5777?: string | string[];
   p6363?: string | string[];
@@ -577,19 +559,11 @@ export type CryptocurrencyCreateArgs = {
   p2283:
     | {
         id?: string | NamedNode; // the url to match or create the node with e.g. 'https://example.com#this', 'https://example.com/profile/card#me'
-        p2283: (
-          | P2283Type.Q17083510
-          | P2283Type.Q7249984
-          | P2283Type.Q48834328
-        )[];
+        p2283: P2283Type.Q17083510 | P2283Type.Q7249984 | P2283Type.Q48834328;
       }
     | {
         id?: string | NamedNode; // the url to match or create the node with e.g. 'https://example.com#this', 'https://example.com/profile/card#me'
-        p2283: (
-          | P2283Type.Q17083510
-          | P2283Type.Q7249984
-          | P2283Type.Q48834328
-        )[];
+        p2283: P2283Type.Q17083510 | P2283Type.Q7249984 | P2283Type.Q48834328;
       }[];
   p5777?: string | string[];
   p6363?: string | string[];
@@ -706,10 +680,9 @@ export type BasicContainerShape = {
   mtime: number; // Time of Container creation created
   modified: Date; // Time the Container was modified
 } & {
-  type: (
+  type:
     | BasicContainerShapeType.BasicContainer
-    | BasicContainerShapeType.Container
-  )[]; // Defines the node as a Container
+    | BasicContainerShapeType.Container; // Defines the node as a Container
 };
 
 export type BasicContainerShapeCreateArgs = {
@@ -723,10 +696,9 @@ export type BasicContainerShapeCreateArgs = {
   mtime: number | Literal; // Time of Container creation created
   modified: Date | Literal; // Time the Container was modified
 } & {
-  type: (
+  type:
     | BasicContainerShapeType.BasicContainer
-    | BasicContainerShapeType.Container
-  )[]; // Defines the node as a Container
+    | BasicContainerShapeType.Container; // Defines the node as a Container
 };
 
 export type BasicContainerShapeUpdateArgs = Partial<BasicContainerShapeCreateArgs>;
@@ -1529,10 +1501,7 @@ export type SolidProfileShape = {
   publicTypeIndex?: string | string[]; // A registry of all types used on the user's Pod (for public access)
   knows?: string | string[]; // A list of WebIds for all the people this user knows.
 } & {
-  type: (
-    | SolidProfileShapeType.SchemPerson
-    | SolidProfileShapeType.FoafPerson
-  )[]; // Defines the node as a Person (from foaf)
+  type: SolidProfileShapeType.SchemPerson | SolidProfileShapeType.FoafPerson; // Defines the node as a Person (from foaf)
 };
 
 export type SolidProfileShapeCreateArgs = {
@@ -1577,10 +1546,7 @@ export type SolidProfileShapeCreateArgs = {
   publicTypeIndex?: URL | NamedNode | (URL | NamedNode)[]; // A registry of all types used on the user's Pod (for public access)
   knows?: URL | NamedNode | (URL | NamedNode)[]; // A list of WebIds for all the people this user knows.
 } & {
-  type: (
-    | SolidProfileShapeType.SchemPerson
-    | SolidProfileShapeType.FoafPerson
-  )[]; // Defines the node as a Person (from foaf)
+  type: SolidProfileShapeType.SchemPerson | SolidProfileShapeType.FoafPerson; // Defines the node as a Person (from foaf)
 };
 
 export type SolidProfileShapeUpdateArgs = Partial<SolidProfileShapeCreateArgs>;
@@ -1609,7 +1575,7 @@ export type EmailShape = {
   id: string; // the url of a node of this shape
   value: string; // The value of an email as a mailto link (Example <mailto:jane@example.com>)
 } & {
-  type?: (
+  type?:
     | EmailShapeType.Dom
     | EmailShapeType.Home
     | EmailShapeType.Isdn
@@ -1620,15 +1586,14 @@ export type EmailShape = {
     | EmailShapeType.Postal
     | EmailShapeType.Pref
     | EmailShapeType.Work
-    | EmailShapeType.X400
-  )[]; // The type of email.
+    | EmailShapeType.X400; // The type of email.
 };
 
 export type EmailShapeCreateArgs = {
   id?: string | NamedNode; // the url to match or create the node with e.g. 'https://example.com#this', 'https://example.com/profile/card#me'
   value: URL | NamedNode; // The value of an email as a mailto link (Example <mailto:jane@example.com>)
 } & {
-  type?: (
+  type?:
     | EmailShapeType.Dom
     | EmailShapeType.Home
     | EmailShapeType.Isdn
@@ -1639,8 +1604,7 @@ export type EmailShapeCreateArgs = {
     | EmailShapeType.Postal
     | EmailShapeType.Pref
     | EmailShapeType.Work
-    | EmailShapeType.X400
-  )[]; // The type of email.
+    | EmailShapeType.X400; // The type of email.
 };
 
 export type EmailShapeUpdateArgs = Partial<EmailShapeCreateArgs>;
@@ -1649,7 +1613,7 @@ export type PhoneNumberShape = {
   id: string; // the url of a node of this shape
   value: string; // The value of a phone number as a tel link (Example <tel:555-555-5555>)
 } & {
-  type?: (
+  type?:
     | PhoneNumberShapeType.Dom
     | PhoneNumberShapeType.Home
     | PhoneNumberShapeType.Isdn
@@ -1660,15 +1624,14 @@ export type PhoneNumberShape = {
     | PhoneNumberShapeType.Postal
     | PhoneNumberShapeType.Pref
     | PhoneNumberShapeType.Work
-    | PhoneNumberShapeType.X400
-  )[]; // They type of Phone Number
+    | PhoneNumberShapeType.X400; // They type of Phone Number
 };
 
 export type PhoneNumberShapeCreateArgs = {
   id?: string | NamedNode; // the url to match or create the node with e.g. 'https://example.com#this', 'https://example.com/profile/card#me'
   value: URL | NamedNode; // The value of a phone number as a tel link (Example <tel:555-555-5555>)
 } & {
-  type?: (
+  type?:
     | PhoneNumberShapeType.Dom
     | PhoneNumberShapeType.Home
     | PhoneNumberShapeType.Isdn
@@ -1679,8 +1642,7 @@ export type PhoneNumberShapeCreateArgs = {
     | PhoneNumberShapeType.Postal
     | PhoneNumberShapeType.Pref
     | PhoneNumberShapeType.Work
-    | PhoneNumberShapeType.X400
-  )[]; // They type of Phone Number
+    | PhoneNumberShapeType.X400; // They type of Phone Number
 };
 
 export type PhoneNumberShapeUpdateArgs = Partial<PhoneNumberShapeCreateArgs>;
@@ -1688,16 +1650,16 @@ export type PhoneNumberShapeUpdateArgs = Partial<PhoneNumberShapeCreateArgs>;
 export type TrustedAppShape = {
   id: string; // the url of a node of this shape
   mode:
-    | (ModeType.Append | ModeType.Control | ModeType.Read | ModeType.Write)[]
-    | (ModeType.Append | ModeType.Control | ModeType.Read | ModeType.Write)[][]; // The level of access provided to this origin
+    | (ModeType.Append | ModeType.Control | ModeType.Read | ModeType.Write)
+    | (ModeType.Append | ModeType.Control | ModeType.Read | ModeType.Write)[]; // The level of access provided to this origin
   origin: string; // The app origin the user trusts
 };
 
 export type TrustedAppShapeCreateArgs = {
   id?: string | NamedNode; // the url to match or create the node with e.g. 'https://example.com#this', 'https://example.com/profile/card#me'
   mode:
-    | (ModeType.Append | ModeType.Control | ModeType.Read | ModeType.Write)[]
-    | (ModeType.Append | ModeType.Control | ModeType.Read | ModeType.Write)[][]; // The level of access provided to this origin
+    | (ModeType.Append | ModeType.Control | ModeType.Read | ModeType.Write)
+    | (ModeType.Append | ModeType.Control | ModeType.Read | ModeType.Write)[]; // The level of access provided to this origin
   origin: URL | NamedNode; // The app origin the user trusts
 };
 
@@ -2496,10 +2458,7 @@ export type SolidProfileShape = {
   publicTypeIndex?: string | string[]; // A registry of all types used on the user's Pod (for public access)
   knows?: string | string[]; // A list of WebIds for all the people this user knows.
 } & {
-  type: (
-    | SolidProfileShapeType.SchemPerson
-    | SolidProfileShapeType.FoafPerson
-  )[]; // Defines the node as a Person (from foaf)
+  type: SolidProfileShapeType.SchemPerson | SolidProfileShapeType.FoafPerson; // Defines the node as a Person (from foaf)
 };
 
 export type SolidProfileShapeCreateArgs = {
@@ -2544,10 +2503,7 @@ export type SolidProfileShapeCreateArgs = {
   publicTypeIndex?: URL | NamedNode | (URL | NamedNode)[]; // A registry of all types used on the user's Pod (for public access)
   knows?: URL | NamedNode | (URL | NamedNode)[]; // A list of WebIds for all the people this user knows.
 } & {
-  type: (
-    | SolidProfileShapeType.SchemPerson
-    | SolidProfileShapeType.FoafPerson
-  )[]; // Defines the node as a Person (from foaf)
+  type: SolidProfileShapeType.SchemPerson | SolidProfileShapeType.FoafPerson; // Defines the node as a Person (from foaf)
 };
 
 export type SolidProfileShapeUpdateArgs = Partial<SolidProfileShapeCreateArgs>;
@@ -2576,7 +2532,7 @@ export type EmailShape = {
   id: string; // the url of a node of this shape
   value: string; // The value of an email as a mailto link (Example <mailto:jane@example.com>)
 } & {
-  type?: (
+  type?:
     | EmailShapeType.Dom
     | EmailShapeType.Home
     | EmailShapeType.Isdn
@@ -2587,15 +2543,14 @@ export type EmailShape = {
     | EmailShapeType.Postal
     | EmailShapeType.Pref
     | EmailShapeType.Work
-    | EmailShapeType.X400
-  )[]; // The type of email.
+    | EmailShapeType.X400; // The type of email.
 };
 
 export type EmailShapeCreateArgs = {
   id?: string | NamedNode; // the url to match or create the node with e.g. 'https://example.com#this', 'https://example.com/profile/card#me'
   value: URL | NamedNode; // The value of an email as a mailto link (Example <mailto:jane@example.com>)
 } & {
-  type?: (
+  type?:
     | EmailShapeType.Dom
     | EmailShapeType.Home
     | EmailShapeType.Isdn
@@ -2606,8 +2561,7 @@ export type EmailShapeCreateArgs = {
     | EmailShapeType.Postal
     | EmailShapeType.Pref
     | EmailShapeType.Work
-    | EmailShapeType.X400
-  )[]; // The type of email.
+    | EmailShapeType.X400; // The type of email.
 };
 
 export type EmailShapeUpdateArgs = Partial<EmailShapeCreateArgs>;
@@ -2616,7 +2570,7 @@ export type PhoneNumberShape = {
   id: string; // the url of a node of this shape
   value: string; // The value of a phone number as a tel link (Example <tel:555-555-5555>)
 } & {
-  type?: (
+  type?:
     | PhoneNumberShapeType.Dom
     | PhoneNumberShapeType.Home
     | PhoneNumberShapeType.Isdn
@@ -2627,15 +2581,14 @@ export type PhoneNumberShape = {
     | PhoneNumberShapeType.Postal
     | PhoneNumberShapeType.Pref
     | PhoneNumberShapeType.Work
-    | PhoneNumberShapeType.X400
-  )[]; // They type of Phone Number
+    | PhoneNumberShapeType.X400; // They type of Phone Number
 };
 
 export type PhoneNumberShapeCreateArgs = {
   id?: string | NamedNode; // the url to match or create the node with e.g. 'https://example.com#this', 'https://example.com/profile/card#me'
   value: URL | NamedNode; // The value of a phone number as a tel link (Example <tel:555-555-5555>)
 } & {
-  type?: (
+  type?:
     | PhoneNumberShapeType.Dom
     | PhoneNumberShapeType.Home
     | PhoneNumberShapeType.Isdn
@@ -2646,8 +2599,7 @@ export type PhoneNumberShapeCreateArgs = {
     | PhoneNumberShapeType.Postal
     | PhoneNumberShapeType.Pref
     | PhoneNumberShapeType.Work
-    | PhoneNumberShapeType.X400
-  )[]; // They type of Phone Number
+    | PhoneNumberShapeType.X400; // They type of Phone Number
 };
 
 export type PhoneNumberShapeUpdateArgs = Partial<PhoneNumberShapeCreateArgs>;
@@ -2655,16 +2607,16 @@ export type PhoneNumberShapeUpdateArgs = Partial<PhoneNumberShapeCreateArgs>;
 export type TrustedAppShape = {
   id: string; // the url of a node of this shape
   mode:
-    | (ModeType.Append | ModeType.Control | ModeType.Read | ModeType.Write)[]
-    | (ModeType.Append | ModeType.Control | ModeType.Read | ModeType.Write)[][]; // The level of access provided to this origin
+    | (ModeType.Append | ModeType.Control | ModeType.Read | ModeType.Write)
+    | (ModeType.Append | ModeType.Control | ModeType.Read | ModeType.Write)[]; // The level of access provided to this origin
   origin: string; // The app origin the user trusts
 };
 
 export type TrustedAppShapeCreateArgs = {
   id?: string | NamedNode; // the url to match or create the node with e.g. 'https://example.com#this', 'https://example.com/profile/card#me'
   mode:
-    | (ModeType.Append | ModeType.Control | ModeType.Read | ModeType.Write)[]
-    | (ModeType.Append | ModeType.Control | ModeType.Read | ModeType.Write)[][]; // The level of access provided to this origin
+    | (ModeType.Append | ModeType.Control | ModeType.Read | ModeType.Write)
+    | (ModeType.Append | ModeType.Control | ModeType.Read | ModeType.Write)[]; // The level of access provided to this origin
   origin: URL | NamedNode; // The app origin the user trusts
 };
 

@@ -1,10 +1,10 @@
-test
-src
 .github
+src
+test
 .eslintrc.js
 .prettierrc.js
+babel.config.js
+declarations.d.ts
+jest.config.ts
 renovate.json
 shex-codegen.yml
-tsconfig.json
-declarations.d.ts
-babel.config.js
