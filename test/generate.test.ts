@@ -8,11 +8,11 @@ import TypescriptMethodsVisitor from '../lib/visitors/typescript-methods/typescr
 jest.useFakeTimers();
 
 it('should not generate anything for an empty or missing schema', async () => {
-  const generated = await generate("test/shapes/blabla", {
+  const generated = await generate('test/shapes/blabla', {
     'test/generated/empty.ts': ['typescript', 'typescript-methods'],
   });
   expect(generated).toMatchObject([]);
-  const emptyGenerated = await generate("test/shapes/empty.shex", {
+  const emptyGenerated = await generate('test/shapes/empty.shex', {
     'test/generated/empty.ts': ['typescript', 'typescript-methods'],
   });
   expect(emptyGenerated).toMatchObject([]);
@@ -44,9 +44,9 @@ it('matches snapshots when invoked from a browser env', async () => {
 
 it('should not generate anything for an empty or missing schema in the browser', async () => {
   const emptyGenerated = await browserGenerate({
-    schema: "",
+    schema: '',
     visitors: [TypescriptVisitor, TypescriptMethodsVisitor],
     name: 'solidProfile',
   });
-  expect(emptyGenerated).toBe("");
+  expect(emptyGenerated).toBe('');
 });
