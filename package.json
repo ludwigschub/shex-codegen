@@ -62,7 +62,7 @@
     "rdflib": "2.2.15",
     "rimraf": "3.0.2",
     "shex-methods": "0.1.21",
-    "ts-node": "9.1.1",
+    "ts-node": "10.9.1",
     "typescript": "4.5.4"
   },
   "bin": "./lib/index.js"
