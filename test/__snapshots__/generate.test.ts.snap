@@ -2468,6 +2468,7 @@ import { Shape } from 'lalamethods';
 
 export type SolidProfileShape = {
   id: string; // the url of a node of this shape
+  type: SolidProfileShapeType.SchemPerson | SolidProfileShapeType.FoafPerson; // Defines the node as a Person (from foaf)
   vcardName?: string; // The formatted name of a person. Example: John Smith
   foafName?: string; // An alternate way to define a person's name.
   hasAddress?: AddressShape | AddressShape[]; // The person's street address.
@@ -2487,12 +2488,11 @@ export type SolidProfileShape = {
   privateTypeIndex?: string | string[]; // A registry of all types used on the user's Pod (for private access only)
   publicTypeIndex?: string | string[]; // A registry of all types used on the user's Pod (for public access)
   knows?: string | string[]; // A list of WebIds for all the people this user knows.
-} & {
-  type: SolidProfileShapeType.SchemPerson | SolidProfileShapeType.FoafPerson; // Defines the node as a Person (from foaf)
 };
 
 export type SolidProfileShapeCreateArgs = {
   id?: string | NamedNode; // the url to match or create the node with e.g. 'https://example.com#this', 'https://example.com/profile/card#me'
+  type: SolidProfileShapeType.SchemPerson | SolidProfileShapeType.FoafPerson; // Defines the node as a Person (from foaf)
   vcardName?: string | Literal; // The formatted name of a person. Example: John Smith
   foafName?: string | Literal; // An alternate way to define a person's name.
   hasAddress?:
@@ -2532,8 +2532,6 @@ export type SolidProfileShapeCreateArgs = {
   privateTypeIndex?: URL | NamedNode | (URL | NamedNode)[]; // A registry of all types used on the user's Pod (for private access only)
   publicTypeIndex?: URL | NamedNode | (URL | NamedNode)[]; // A registry of all types used on the user's Pod (for public access)
   knows?: URL | NamedNode | (URL | NamedNode)[]; // A list of WebIds for all the people this user knows.
-} & {
-  type: SolidProfileShapeType.SchemPerson | SolidProfileShapeType.FoafPerson; // Defines the node as a Person (from foaf)
 };
 
 export type SolidProfileShapeUpdateArgs = Partial<SolidProfileShapeCreateArgs>;
@@ -2560,8 +2558,6 @@ export type AddressShapeUpdateArgs = Partial<AddressShapeCreateArgs>;
 
 export type EmailShape = {
   id: string; // the url of a node of this shape
-  value: string; // The value of an email as a mailto link (Example <mailto:jane@example.com>)
-} & {
   type?:
     | EmailShapeType.Dom
     | EmailShapeType.Home
@@ -2574,12 +2570,11 @@ export type EmailShape = {
     | EmailShapeType.Pref
     | EmailShapeType.Work
     | EmailShapeType.X400; // The type of email.
+  value: string; // The value of an email as a mailto link (Example <mailto:jane@example.com>)
 };
 
 export type EmailShapeCreateArgs = {
   id?: string | NamedNode; // the url to match or create the node with e.g. 'https://example.com#this', 'https://example.com/profile/card#me'
-  value: URL | NamedNode; // The value of an email as a mailto link (Example <mailto:jane@example.com>)
-} & {
   type?:
     | EmailShapeType.Dom
     | EmailShapeType.Home
@@ -2592,14 +2587,13 @@ export type EmailShapeCreateArgs = {
     | EmailShapeType.Pref
     | EmailShapeType.Work
     | EmailShapeType.X400; // The type of email.
+  value: URL | NamedNode; // The value of an email as a mailto link (Example <mailto:jane@example.com>)
 };
 
 export type EmailShapeUpdateArgs = Partial<EmailShapeCreateArgs>;
 
 export type PhoneNumberShape = {
   id: string; // the url of a node of this shape
-  value: string; // The value of a phone number as a tel link (Example <tel:555-555-5555>)
-} & {
   type?:
     | PhoneNumberShapeType.Dom
     | PhoneNumberShapeType.Home
@@ -2612,12 +2606,11 @@ export type PhoneNumberShape = {
     | PhoneNumberShapeType.Pref
     | PhoneNumberShapeType.Work
     | PhoneNumberShapeType.X400; // They type of Phone Number
+  value: string; // The value of a phone number as a tel link (Example <tel:555-555-5555>)
 };
 
 export type PhoneNumberShapeCreateArgs = {
   id?: string | NamedNode; // the url to match or create the node with e.g. 'https://example.com#this', 'https://example.com/profile/card#me'
-  value: URL | NamedNode; // The value of a phone number as a tel link (Example <tel:555-555-5555>)
-} & {
   type?:
     | PhoneNumberShapeType.Dom
     | PhoneNumberShapeType.Home
@@ -2630,6 +2623,7 @@ export type PhoneNumberShapeCreateArgs = {
     | PhoneNumberShapeType.Pref
     | PhoneNumberShapeType.Work
     | PhoneNumberShapeType.X400; // They type of Phone Number
+  value: URL | NamedNode; // The value of a phone number as a tel link (Example <tel:555-555-5555>)
 };
 
 export type PhoneNumberShapeUpdateArgs = Partial<PhoneNumberShapeCreateArgs>;

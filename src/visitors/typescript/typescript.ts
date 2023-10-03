@@ -35,7 +35,7 @@ import {
 import { Visitor, ShExVisitorIface } from '@shexjs/visitor';
 
 interface ITypescriptVisitor extends ShExVisitorIface {
-  generateImports: () => any[];
+  generateImports: (config: CustomImportConfig) => any[];
   _visitValue: (v: any[]) => string;
   _expect: (v: any, t: string, m: string) => void;
 }

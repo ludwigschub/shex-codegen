@@ -6110,6 +6110,13 @@ rdf-data-factory@^1.1.1:
   dependencies:
     "@rdfjs/types" "*"
 
+rdf-js@^4.0.2:
+  version "4.0.2"
+  resolved "https://registry.yarnpkg.com/rdf-js/-/rdf-js-4.0.2.tgz#f01510528bbfc6e004012b71a8a533896c4c4c10"
+  integrity sha512-ApvlFa/WsQh8LpPK/6hctQwG06Z9ztQQGWVtrcrf9L6+sejHNXLPOqL+w7q3hF+iL0C4sv3AX1PUtGkLNzyZ0Q==
+  dependencies:
+    "@rdfjs/types" "*"
+
 rdflib@2.2.15:
   version "2.2.15"
   resolved "https://registry.yarnpkg.com/rdflib/-/rdflib-2.2.15.tgz#83d8714966759d9f465dcc819f7aaf8c8a4c08c4"
