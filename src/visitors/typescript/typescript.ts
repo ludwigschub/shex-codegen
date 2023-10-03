@@ -164,7 +164,7 @@ TypescriptVisitor.visitTripleConstraint = function (
     context.prefixes,
     comment,
     visited.min > 0 || (!visited.min && !visited.max),
-    visited.max === -1,
+    (visited.max === -1 || context?.extra?.includes(visited.predicate)),
     not,
   );
   visited.generatedToCreate = generateTripleConstraint(
@@ -174,7 +174,7 @@ TypescriptVisitor.visitTripleConstraint = function (
     context.prefixes,
     comment,
     visited.min > 0 || (!visited.min && !visited.max),
-    visited.max === -1,
+    (visited.max === -1 || context?.extra?.includes(visited.predicate)),
     not,
   );
 
@@ -237,7 +237,7 @@ TypescriptVisitor.visitShape = function (shape: any, context: any) {
     shape.expression.expressions,
   );
 
-  const visited = maybeGenerate(this, shape, ShapeMembers, context);
+  const visited = maybeGenerate(this, shape, ShapeMembers, { ...context, extra: shape.extra });
   const {
     generated,
     generatedToCreate,

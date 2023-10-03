@@ -17,6 +17,11 @@ export function generateShapeMethodsExport(
   fileName: string
 ) {
   const shapeName = normalizeUrl(id, true);
+  const type = typed && `type: ${shapeName + "Type"},`
+  const childContexts = Array.isArray(childShapes) && childShapes.length > 0
+    && `childContexts: [${childShapes
+      .map((shape) => generateNameContextName(shape))
+      .join(", ")}],`
   const shape = `
 export const ${normalizeUrl(id).replace(
     "Shape",
@@ -25,13 +30,9 @@ export const ${normalizeUrl(id).replace(
   id: "${id}",
   shape: ${generateShexName(fileName)},
   context: ${generateNameContextName(id)},
-  ${typed ? `type: ${shapeName + "Type"},` : ""}${Array.isArray(childShapes) && childShapes.length > 0
-      ? `childContexts: [${childShapes
-        .map((shape) => generateNameContextName(shape))
-        .join(", ")}],`
-      : ""
-    }
-})\n`;
+  ${type || ""}
+  ${childContexts || ""}
+  })\n`;
 
   return shape;
 }

@@ -6583,6 +6583,24 @@ shellwords@^0.1.1:
   resolved "https://registry.yarnpkg.com/shellwords/-/shellwords-0.1.1.tgz#d6b9181c1a48d397324c84871efbcfc73fc0654b"
   integrity sha512-vFwSUfQvqybiICwZY5+DAWIPLKsWO31Q91JSKl3UYv+K5c2QRPzn0qzec6QPu1Qc9eHYItiP3NdJqNVqetYAww==
 
+shex-codegen@^0.4.8:
+  version "0.4.8"
+  resolved "https://registry.yarnpkg.com/shex-codegen/-/shex-codegen-0.4.8.tgz#bceb708eff10b74ea7de7cfcb75770a536675a17"
+  integrity sha512-qz/hRJBKCy2uIJiuQTxICQiMMsxfhz+fTkpUfpX0LtK1PZLNevrS/vt2rVfiu+40cs907qcuMWErmpv6hMdDGA==
+  dependencies:
+    "@shexjs/parser" "^1.0.0-alpha.25"
+    "@shexjs/visitor" "^1.0.0-alpha.25"
+    "@types/shexj" "^2.1.0"
+    camelcase "^6.2.0"
+    chalk "^4.1.0"
+    findit "^2.0.0"
+    fs-extra "^10.0.0"
+    js-yaml "^4.0.0"
+    nodemon "^2.0.7"
+    own-namespace "^0.4.5"
+    prettier "^2.2.1"
+    rdf-js "^4.0.2"
+
 shex-methods@0.1.21:
   version "0.1.21"
   resolved "https://registry.yarnpkg.com/shex-methods/-/shex-methods-0.1.21.tgz#a8065f12046f9a9e3f0d8c40140fe6557a844299"
