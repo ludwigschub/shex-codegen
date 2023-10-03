@@ -15,9 +15,15 @@ import {
 } from './generates';
 import { mapExpression } from './mapExpressions';
 
-const ShExUtil = require('@shexjs/core').Util;
+import { Visitor, ShExVisitorIface } from '@shexjs/visitor';
 
-const TypescriptVisitor = ShExUtil.Visitor();
+interface ITypescriptVisitor extends ShExVisitorIface {
+  generateImports: () => any[];
+  _visitValue: (v: any[]) => string;
+  _expect: (v: any, t: string, m: string) => void;
+}
+
+const TypescriptVisitor: ITypescriptVisitor = Visitor() as ITypescriptVisitor;
 
 TypescriptVisitor.generateImports = ({ customMethodsImport }: CustomImportConfig) => {
   return [generateShapeMethodsImport(customMethodsImport)];
@@ -28,7 +34,7 @@ TypescriptVisitor._visitValue = function (v: any[]) {
 };
 
 TypescriptVisitor.visitSchema = function (schema: any, fileName: string) {
-  ShExUtil._expect(schema, 'type', 'Schema');
+  this._expect(schema, 'type', 'Schema');
   const shapeDeclarations = this.visitShapes(
     schema['shapes'],
     schema._prefixes,
@@ -123,7 +129,7 @@ TypescriptVisitor.visitTripleConstraint = function (expr: any, context?: any) {
 };
 
 TypescriptVisitor.visitNodeConstraint = function (expr: any, context: any) {
-  ShExUtil._expect(expr, 'type', 'NodeConstraint');
+  this._expect(expr, 'type', 'NodeConstraint');
 
   const visited: Record<string, any> = {
     expression: maybeGenerate(this, expr, NodeConstraintMembers, context),
@@ -132,8 +138,15 @@ TypescriptVisitor.visitNodeConstraint = function (expr: any, context: any) {
   return visited;
 };
 
+TypescriptVisitor.visitShapeDecl = function (shapeDecl: any, prefixes: any) {
+  return this.visitShape(
+    { id: shapeDecl.id, ...shapeDecl.shapeExpr },
+    { id: shapeDecl.id, prefixes },
+  );
+};
+
 TypescriptVisitor.visitShape = function (shape: any, context: any) {
-  ShExUtil._expect(shape, 'type', 'Shape');
+  this._expect(shape, 'type', 'Shape');
   shape.expression.expressions = normalizeDuplicateProperties(
     shape.expression.expressions,
   );

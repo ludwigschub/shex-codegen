@@ -32,9 +32,15 @@ import {
   reduceNameContexts,
 } from './nameContextHelpers';
 
-const ShExUtil = require('@shexjs/core').Util;
+import { Visitor, ShExVisitorIface } from '@shexjs/visitor';
 
-const TypescriptVisitor = ShExUtil.Visitor();
+interface ITypescriptVisitor extends ShExVisitorIface {
+  generateImports: () => any[];
+  _visitValue: (v: any[]) => string;
+  _expect: (v: any, t: string, m: string) => void;
+}
+
+const TypescriptVisitor: ITypescriptVisitor = Visitor() as ITypescriptVisitor;
 
 TypescriptVisitor.generateImports = ({ customRdfImport }: CustomImportConfig) => {
   return [generateRdfImport(customRdfImport)];
@@ -45,7 +51,7 @@ TypescriptVisitor._visitValue = function (v: any[]) {
 };
 
 TypescriptVisitor.visitSchema = function (schema: any, fileName: string) {
-  ShExUtil._expect(schema, 'type', 'Schema');
+  this._expect(schema, 'type', 'Schema');
   const shapeDeclarations = this.visitShapes(
     schema['shapes'],
     schema._prefixes,
@@ -192,7 +198,7 @@ TypescriptVisitor.visitTripleConstraint = function (
 };
 
 TypescriptVisitor.visitNodeConstraint = function (shape: any, context: any) {
-  ShExUtil._expect(shape, 'type', 'NodeConstraint');
+  this._expect(shape, 'type', 'NodeConstraint');
 
   const visited: Record<string, any> = {
     expression: maybeGenerate(this, shape, NodeConstraintMembers, context),
@@ -226,7 +232,7 @@ TypescriptVisitor.visitNodeConstraint = function (shape: any, context: any) {
 };
 
 TypescriptVisitor.visitShape = function (shape: any, context: any) {
-  ShExUtil._expect(shape, 'type', 'Shape');
+  this._expect(shape, 'type', 'Shape');
   shape.expression.expressions = normalizeDuplicateProperties(
     shape.expression.expressions,
   );
@@ -269,6 +275,13 @@ TypescriptVisitor.visitShape = function (shape: any, context: any) {
   };
 };
 
+TypescriptVisitor.visitShapeDecl = function (shapeDecl: any, prefixes: any) {
+  return this.visitShape(
+    { id: shapeDecl.id, ...shapeDecl.shapeExpr },
+    { id: shapeDecl.id, prefixes },
+  );
+};
+
 TypescriptVisitor.visitShapes = function (shapes: any[], prefixes: any) {
   if (shapes === undefined) return undefined;
   const nameContexts: Record<string, string>[] = [];
@@ -279,7 +292,7 @@ TypescriptVisitor.visitShapes = function (shapes: any[], prefixes: any) {
       generateEnumExport('', shape.values, prefixes, shape.id);
     }
 
-    const visitedShape = this.visitShapeDecl({ ...shape, prefixes: prefixes });
+    const visitedShape = this.visitShapeDecl({ ...shape }, prefixes);
 
     if (visitedShape.inlineEnums) {
       inlineEnums = addUniqueInlineEnums(inlineEnums, visitedShape.inlineEnums);
@@ -354,4 +367,4 @@ function maybeGenerate(
   return generated;
 }
 
-export default TypescriptVisitor;
+export default TypescriptVisitor as ITypescriptVisitor;
