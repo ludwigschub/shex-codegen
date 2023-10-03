@@ -1,6 +1,6 @@
 {
   "name": "shex-codegen",
-  "version": "0.4.2",
+  "version": "0.4.5",
   "description": "",
   "repository": {
     "type": "git",
@@ -14,7 +14,7 @@
     "build": "rimraf ./lib && tsc",
     "preversion": "yarn build && yarn build:browser",
     "develop": "concurrently \"yarn build -w\" \"nodemon --watch ./lib --watch shex-codegen.yml ./node_modules/.bin/jest test\"",
-    "test": "rimraf ./test/generated && mkdir ./test/generated && jest test",
+    "test": "yarn build && rimraf ./test/generated && mkdir ./test/generated && jest test",
     "test:watch": "rimraf ./test/generated && mkdir ./test/generated && node ./lib/watch.js",
     "lint": "eslint --ext .ts src/"
   },
