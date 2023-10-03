@@ -17,13 +17,13 @@ export interface CodegenConfig extends CustomImportConfig {
 
 export const readConfig = () => {
   try {
-    const { schema, generates } = yaml.load(
+    const config = yaml.load(
       readFileSync(path.join(process.cwd(), 'shex-codegen.yml'), {
         encoding: 'utf8',
       }),
       { json: true },
     ) as CodegenConfig;
-    return { schema, generates };
+    return config;
   } catch {
     return;
   }

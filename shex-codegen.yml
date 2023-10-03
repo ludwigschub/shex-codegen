@@ -1,4 +1,4 @@
-schema: "test"
+schema: 'test'
 generates:
   test/generated/withConfig.ts:
     - typescript
