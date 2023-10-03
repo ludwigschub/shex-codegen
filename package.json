@@ -1,6 +1,6 @@
 {
   "name": "shex-codegen",
-  "version": "0.4.5",
+  "version": "0.4.6",
   "description": "",
   "repository": {
     "type": "git",
@@ -29,8 +29,8 @@
     "*.{tsx,ts}": "yarn lint --cache"
   },
   "dependencies": {
-    "@shexjs/visitor": "^1.0.0-alpha.25",
     "@shexjs/parser": "^1.0.0-alpha.25",
+    "@shexjs/visitor": "^1.0.0-alpha.25",
     "@types/shexj": "^2.1.0",
     "camelcase": "^6.2.0",
     "chalk": "^4.1.0",
@@ -39,7 +39,8 @@
     "js-yaml": "^4.0.0",
     "nodemon": "^2.0.7",
     "own-namespace": "^0.4.5",
-    "prettier": "^2.2.1"
+    "prettier": "^2.2.1",
+    "rdf-js": "^4.0.2"
   },
   "devDependencies": {
     "@babel/preset-env": "7.16.7",
