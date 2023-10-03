@@ -25,18 +25,17 @@ export const ${normalizeUrl(id).replace(
   id: "${id}",
   shape: ${generateShexName(fileName)},
   context: ${generateNameContextName(id)},
-  ${typed ? `type: ${shapeName + "Type"},` : ""}${
-    Array.isArray(childShapes) && childShapes.length > 0
+  ${typed ? `type: ${shapeName + "Type"},` : ""}${Array.isArray(childShapes) && childShapes.length > 0
       ? `childContexts: [${childShapes
-          .map((shape) => generateNameContextName(shape))
-          .join(", ")}],`
+        .map((shape) => generateNameContextName(shape))
+        .join(", ")}],`
       : ""
-  }
+    }
 })\n`;
 
   return shape;
 }
 
-export function generateShapeMethodsImport() {
-  return `import { Shape } from "shex-methods";\n`;
+export function generateShapeMethodsImport(customMethodsImport?: string) {
+  return `import { Shape } from "${customMethodsImport ?? "shex-methods"}";\n`;
 }

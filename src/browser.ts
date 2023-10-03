@@ -3,14 +3,15 @@ import prettier from 'prettier/standalone';
 import prettierTypescript from 'prettier/parser-typescript';
 
 import { generateShexExport } from './visitors/typescript/generates';
+import { CustomImportConfig } from './config';
 
-export type BrowserConfig = {
+export interface BrowserConfig extends CustomImportConfig {
   schema: string;
   visitors: any[];
   name: string;
 };
 
-export const generate = ({ schema, visitors, name }: BrowserConfig) => {
+export const generate = ({ schema, visitors, name, customMethodsImport, customRdfImport }: BrowserConfig) => {
   const generated = visitors.map((visitor: any, index: number) => {
     // Parse and visit shape
     const parser = ShExParser.construct('http://example.com/', null, {
@@ -29,7 +30,7 @@ export const generate = ({ schema, visitors, name }: BrowserConfig) => {
   const imports = visitors.reduce(
     (allImports: string[], visitor: any) => {
       const visitorImport =
-        visitor?.generateImports && visitor?.generateImports().join('\n');
+        visitor?.generateImports && visitor?.generateImports({ customMethodsImport, customRdfImport }).join('\n');
       return visitorImport ? [...allImports, visitorImport] : allImports;
     },
     [],

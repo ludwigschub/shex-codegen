@@ -11,8 +11,8 @@ export function putInBraces(expr: string, wrapInParentheses?: boolean) {
   return `{\n${expr}\n}`;
 }
 
-export function generateRdfImport() {
-  return `import { NamedNode, Literal } from "rdflib"; \n`;
+export function generateRdfImport(customRdfImport?: string) {
+  return `import { NamedNode, Literal } from "${customRdfImport ?? "rdflib"}"; \n`;
 }
 
 export function generateShexExport(name: string, shex: string) {
@@ -89,8 +89,8 @@ export function generateExpressions(
       [toCreate ? 'generatedToCreate' : 'generated']: join?.includes('|')
         ? null
         : toCreate
-        ? idFieldToCreate
-        : idField,
+          ? idFieldToCreate
+          : idField,
     },
     ...expressions,
   ]
@@ -117,14 +117,14 @@ export function generateExtras(
         return expression.extraToCreate
           ? [...extras, expression.extraToCreate]
           : expression.extrasToCreate
-          ? [...extras, expression.extrasToCreate]
-          : extras;
+            ? [...extras, expression.extrasToCreate]
+            : extras;
       }
       return expression.extra
         ? [...extras, expression.extra]
         : expression.extras
-        ? [...extras, expression.extras]
-        : extras;
+          ? [...extras, expression.extras]
+          : extras;
     }, [])
     .join(join ?? ' & ');
 }
@@ -146,21 +146,21 @@ export function generateEnumValues(
 ) {
   return `{
   ${values
-    .map((value: any, _index: number, values: any[]) => {
-      const duplicate = findDuplicateIdentifier(values, value);
-      if (duplicate) {
-        const normalizedValue = normalizeUrl(
-          value,
-          true,
-          normalizeUrl(duplicate, true),
-          prefixes,
-        );
-        return { name: normalizedValue, value };
-      }
-      return { name: normalizeUrl(value, true), value };
-    })
-    .map((value: any) => `${value.name} = "${value.value}"`)
-    .join(',\n')}
+      .map((value: any, _index: number, values: any[]) => {
+        const duplicate = findDuplicateIdentifier(values, value);
+        if (duplicate) {
+          const normalizedValue = normalizeUrl(
+            value,
+            true,
+            normalizeUrl(duplicate, true),
+            prefixes,
+          );
+          return { name: normalizedValue, value };
+        }
+        return { name: normalizeUrl(value, true), value };
+      })
+      .map((value: any) => `${value.name} = "${value.value}"`)
+      .join(',\n')}
   }`;
 }
 
@@ -171,8 +171,8 @@ export function generateNameContextName(id: string) {
 export function generateNameContextValues(nameContext: Record<string, string>) {
   return `{
   ${Object.keys(nameContext)
-    .map((key: string) => `${key} = "${nameContext[key]}"`)
-    .join(',\n')}
+      .map((key: string) => `${key} = "${nameContext[key]}"`)
+      .join(',\n')}
   }`;
 }
 
@@ -195,20 +195,18 @@ export function generateTripleConstraint(
   not?: string,
 ) {
   if (multiple) {
-    typeValue += ` | ${
-      valueExpr?.nodeKind === 'iri' || !valueExpr?.values
-        ? `(${typeValue})`
-        : typeValue
-    }[]`;
+    typeValue += ` | ${valueExpr?.nodeKind === 'iri' || !valueExpr?.values
+      ? `(${typeValue})`
+      : typeValue
+      }[]`;
   }
 
   const normalizedUrl = not
     ? normalizeUrl(predicate, false, normalizeUrl(not, true), prefixes)
     : normalizeUrl(predicate, false);
 
-  return `${normalizedUrl}${
-    !required ? '?' : ''
-  }: ${typeValue}; ${comment}`.trim();
+  return `${normalizedUrl}${!required ? '?' : ''
+    }: ${typeValue}; ${comment}`.trim();
 }
 
 export const iriOrIriStem = (value: string) => {
@@ -259,7 +257,7 @@ export function generateValueExpression(
     return generateTsType(valueExpr, toCreate);
   } else if (valueExpr?.typeValue) {
     if (valueExpr.expression.values) {
-      if(valueExpr.expression.values[0].type === "IriStem") {
+      if (valueExpr.expression.values[0].type === "IriStem") {
         return valueExpr.typeValue
       }
       return generateValues(

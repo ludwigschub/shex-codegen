@@ -1,3 +1,4 @@
+import { CustomImportConfig } from '../../config';
 import {
   findDuplicateIdentifier,
   normalizeDuplicateProperties,
@@ -18,8 +19,8 @@ const ShExUtil = require('@shexjs/core').Util;
 
 const TypescriptVisitor = ShExUtil.Visitor();
 
-TypescriptVisitor.generateImports = () => {
-  return [generateShapeMethodsImport()];
+TypescriptVisitor.generateImports = ({ customMethodsImport }: CustomImportConfig) => {
+  return [generateShapeMethodsImport(customMethodsImport)];
 };
 
 TypescriptVisitor._visitValue = function (v: any[]) {
@@ -42,10 +43,10 @@ TypescriptVisitor.visitExpression = function (expr: any, context?: any) {
     expr.type === 'TripleConstraint'
       ? this.visitTripleConstraint(expr, context)
       : expr.type === 'OneOf'
-      ? this.visitOneOf(expr, context)
-      : expr.type === 'EachOf'
-      ? this.visitEachOf(expr, context)
-      : null;
+        ? this.visitOneOf(expr, context)
+        : expr.type === 'EachOf'
+          ? this.visitEachOf(expr, context)
+          : null;
   if (visited === null) throw Error('unexpected expression type: ' + expr.type);
   else return visited;
 };
@@ -58,10 +59,10 @@ TypescriptVisitor.visitOneOf = function (expr: any, context?: any) {
         expression,
         context,
         expression.predicate &&
-          findDuplicateIdentifier(
-            expr.expressions.map((expr: any) => expr.predicate).filter(Boolean),
-            expression.predicate,
-          ),
+        findDuplicateIdentifier(
+          expr.expressions.map((expr: any) => expr.predicate).filter(Boolean),
+          expression.predicate,
+        ),
       ),
     ),
   };

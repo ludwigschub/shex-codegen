@@ -1,3 +1,4 @@
+import { CustomImportConfig } from '../../config';
 import {
   findDuplicateIdentifier,
   normalizeDuplicateProperties,
@@ -35,8 +36,8 @@ const ShExUtil = require('@shexjs/core').Util;
 
 const TypescriptVisitor = ShExUtil.Visitor();
 
-TypescriptVisitor.generateImports = () => {
-  return [generateRdfImport()];
+TypescriptVisitor.generateImports = ({ customRdfImport }: CustomImportConfig) => {
+  return [generateRdfImport(customRdfImport)];
 };
 
 TypescriptVisitor._visitValue = function (v: any[]) {
@@ -59,10 +60,10 @@ TypescriptVisitor.visitExpression = function (expr: any, context?: any) {
     expr.type === 'TripleConstraint'
       ? this.visitTripleConstraint(expr, context)
       : expr.type === 'OneOf'
-      ? this.visitOneOf(expr, context)
-      : expr.type === 'EachOf'
-      ? this.visitEachOf(expr, context)
-      : null;
+        ? this.visitOneOf(expr, context)
+        : expr.type === 'EachOf'
+          ? this.visitEachOf(expr, context)
+          : null;
   if (visited === null) throw Error('unexpected expression type: ' + expr.type);
   else return visited;
 };
@@ -75,10 +76,10 @@ TypescriptVisitor.visitOneOf = function (expr: any, context?: any) {
         expression,
         context,
         expression.predicate &&
-          findDuplicateIdentifier(
-            expr.expressions.map((expr: any) => expr.predicate).filter(Boolean),
-            expression.predicate,
-          ),
+        findDuplicateIdentifier(
+          expr.expressions.map((expr: any) => expr.predicate).filter(Boolean),
+          expression.predicate,
+        ),
       ),
     ),
   };
@@ -105,10 +106,10 @@ TypescriptVisitor.visitEachOf = function (expr: any, context?: any) {
         expression,
         context,
         expression.predicate &&
-          findDuplicateIdentifier(
-            expr.expressions.map((expr: any) => expr.predicate).filter(Boolean),
-            expression.predicate,
-          ),
+        findDuplicateIdentifier(
+          expr.expressions.map((expr: any) => expr.predicate).filter(Boolean),
+          expression.predicate,
+        ),
       ),
     ),
   };
@@ -200,9 +201,8 @@ TypescriptVisitor.visitNodeConstraint = function (shape: any, context: any) {
   if (visited.expression.values) {
     if (visited.expression.values[0].type === 'IriStem') {
       const stem = visited.expression.values[0].stem;
-      visited.typeValue = `\`${
-        stem + (stem.endsWith('/') ? '' : '/')
-      }\${string}\``;
+      visited.typeValue = `\`${stem + (stem.endsWith('/') ? '' : '/')
+        }\${string}\``;
     } else {
       visited.typeValue = generateEnumName(
         context.id as string,

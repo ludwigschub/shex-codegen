@@ -30,6 +30,13 @@ it('matches snapshots without config file', async () => {
   expect(generated).toMatchSnapshot();
 });
 
+it('matches snapshots with custom imports', async () => {
+  const generated = await generate('test/shapes/solidProfile.shex', {
+    'test/generated/withoutConfig.ts': ['typescript', 'typescript-methods'],
+  }, { customMethodsImport: "lalamethods" });
+  expect(generated).toMatchSnapshot();
+});
+
 it('matches snapshots when invoked from a browser env', async () => {
   const schemaFile = readFileSync('test/shapes/solidProfile.shex', {
     encoding: 'utf-8',

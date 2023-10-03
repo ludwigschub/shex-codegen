@@ -2,22 +2,16 @@ import { existsSync, readFileSync, rmSync, statSync } from 'fs';
 import path from 'path';
 
 import ShExParser from '@shexjs/parser';
+import find from 'findit';
 import { outputFile } from 'fs-extra';
 import prettier from 'prettier';
-import find from 'findit';
 
-import { readConfig } from './config';
+import { CodegenConfig, GeneratorConfig, readConfig } from './config';
 import { generateShexExport } from './visitors';
-
-interface CodegenConfig {
-  schema: string;
-  generates: Record<string, string[]>;
-  matchSuffix?: string;
-}
 
 export const generate = (
   schema?: string,
-  generates?: Record<string, string[]>,
+  generates?: GeneratorConfig,
   config?: CodegenConfig,
 ): Promise<string[]> =>
   new Promise(async (resolve, reject) => {
@@ -31,15 +25,15 @@ export const generate = (
       );
     }
 
+    const { customMethodsImport, customRdfImport } = config
     const generatesFiles = Object.keys(generates as Record<string, any>);
     const generated: Record<string, Record<string, Promise<string>[]>> = {};
 
     // delete possibly previously generated files
     generatesFiles.forEach((file: string) => {
-      try {
+      const exists = existsSync(file)
+      if (exists) {
         rmSync(file);
-      } catch (err) {
-        console.log('No previously generated file found for path ' + file);
       }
     });
 
@@ -53,7 +47,7 @@ export const generate = (
     const visitors: Record<string, any> = Object.assign(
       {},
       ...generatesFiles.map((key) => ({
-        [key]: (generates as Record<string, string[]>)[key].map(
+        [key]: (generates as GeneratorConfig)[key].map(
           (visitor: string) => {
             const visitorPath = `./visitors/${visitor}/${visitor}.js`;
             return require(visitorPath).default;
@@ -111,7 +105,7 @@ export const generate = (
               (allImports: string[], visitor: any) => {
                 const visitorImport =
                   visitor?.generateImports &&
-                  visitor?.generateImports().join('\n');
+                  visitor?.generateImports({ customMethodsImport, customRdfImport }).join('\n');
                 return visitorImport
                   ? [...allImports, visitorImport]
                   : allImports;
