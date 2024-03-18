@@ -739,6 +739,7 @@ export const cryptocurrency = new Shape<
 
 export type BasicContainerShape = {
   id: string; // the url of a node of this shape
+  description: string; // Gives a description for the resource
   contains?: ResourceShape | ResourceShape[]; // Contains these Resources
   size: number; // Size of Container
   mtime: number; // Time of Container creation created
@@ -757,6 +758,7 @@ export type BasicContainerShape = {
 
 export type BasicContainerShapeCreateArgs = {
   id?: string | NamedNode; // the url to match or create the node with e.g. 'https://example.com#this', 'https://example.com/profile/card#me'
+  description: string | Literal; // Gives a description for the resource
   contains?:
     | URL
     | NamedNode
@@ -810,6 +812,7 @@ export enum ResourceShapeType {
 
 export enum BasicContainerShapeContext {
   type = 'rdf:type',
+  description = 'terms:description',
   contains = 'ldp:contains',
   size = 'st:size',
   mtime = 'st:mtime',
@@ -836,6 +839,8 @@ ldp:BasicContainerShape EXTRA a {
     // rdfs:comment  \\"Defines the node as a Container\\" ;
   a [ ldp:Container ]
     // rdfs:comment  \\"Defines the node as a Container\\" ;
+  terms:description xsd:language
+    // rdfs:comment  \\"Gives a description for the resource\\" ;
   ldp:contains @ldp:ResourceShape *
     // rdfs:comment  \\"Contains these Resources\\" ;
   st:size xsd:integer
