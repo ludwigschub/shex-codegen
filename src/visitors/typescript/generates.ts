@@ -286,6 +286,8 @@ export function generateTsType(valueExpr: any, toCreate?: boolean) {
     return toCreate ? 'Date | Literal' : 'Date';
   } else if (valueExpr?.datatype === ns.xsd('string')) {
     return toCreate ? 'string | Literal' : 'string';
+  } else if (valueExpr?.datatype === ns.rdf('langString')) {
+    return toCreate ? 'string | Literal' : 'string';
   } else if (valueExpr?.datatype) {
     return valueExpr?.datatype;
   } else if (typeof valueExpr === 'string') {

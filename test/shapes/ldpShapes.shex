@@ -1,5 +1,6 @@
 PREFIX ldp: <http://www.w3.org/ns/ldp#>
 PREFIX st: <http://www.w3.org/ns/posix/stat#>
+PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
 PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
 PREFIX terms: <http://purl.org/dc/terms/>
 PREFIX xsd: <http://www.w3.org/2001/XMLSchema#>
@@ -23,6 +24,8 @@ ldp:BasicContainerShape EXTRA a {
 ldp:ResourceShape EXTRA a {
   a [ ldp:Resource ]
     // rdfs:comment  "Defines the node as a Resource" ;
+  terms:description rdf:langString
+    // rdfs:comment  "Gives a description for the resource" ;
   st:size xsd:integer
     // rdfs:comment  "Size of Container" ;
   st:mtime xsd:decimal
